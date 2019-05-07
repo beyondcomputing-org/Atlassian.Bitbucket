@@ -1,11 +1,8 @@
-Atlassian.Bitbucket
-==========
+# Atlassian.Bitbucket
 See module manifest `.psd1` for more information.
 
-Changes
-----------
+## Changes
 See CHANGELOG.md for more information.
 
-Contributing
-----------
+## Contributing
 See CONTRIBUTING.md for more information.
