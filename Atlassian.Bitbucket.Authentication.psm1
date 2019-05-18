@@ -16,20 +16,22 @@ using module .\Classes\Atlassian.Bitbucket.Settings.psm1
         The description of a parameter. Add a ".PARAMETER" keyword for each parameter in the function.
 #>
 function New-BitbucketLogin {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Low')]
     [Alias('Login-Bitbucket')]
     param(
         [PSCredential]$Credential = (Get-Credential),
         [Switch]$Save
     )
+    if ($pscmdlet.ShouldProcess('Bitbucket Login', 'create'))
+    {
+        $Auth = [BitbucketAuth]::NewInstance($Credential)
+        Write-Output "Welcome $($Auth.User.display_name)"
 
-    $Auth = [BitbucketAuth]::NewInstance($Credential)
-    Write-Host "Welcome $($Auth.User.display_name)" -ForegroundColor Green
+        Select-BitbucketTeam
 
-    Select-BitbucketTeam
-
-    if($Save){
-        Save-BitbucketLogin
+        if($Save){
+            Save-BitbucketLogin
+        }
     }
 }
 
@@ -53,11 +55,13 @@ function Get-BitbucketLogin {
 }
 
 function Remove-BitbucketLogin {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Low')]
     param(
     )
-
-    [BitbucketAuth]::ClearInstance()
+    if ($pscmdlet.ShouldProcess('Bitbucket Login', 'remove'))
+    {
+        [BitbucketAuth]::ClearInstance()
+    }
 }
 
 function Invoke-BitbucketAPI {
@@ -69,7 +73,7 @@ function Invoke-BitbucketAPI {
     )
     $Auth = [BitbucketAuth]::GetInstance()
     $URI = [BitbucketSettings]::VERSION_URL + $Path
-    
+
     Invoke-RestMethod -Uri $URI -Method $Method -Body $Body -Headers @{Authorization=("Basic {0}" -f $Auth.GetBasicAuth())}
 }
 
@@ -106,7 +110,7 @@ function Select-BitbucketTeam {
         if($Teams.count -gt 1){
 
             for ($i = 0; $i -lt $Teams.Count; $i++) {
-                Write-Host "$i - $($Teams[$i].username)"
+                Write-Output "$i - $($Teams[$i].username)"
             }
             [int]$index = Read-Host 'Which team would you like to use?'
         }

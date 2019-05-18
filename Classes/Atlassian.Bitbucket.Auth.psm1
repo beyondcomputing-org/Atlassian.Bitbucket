@@ -3,7 +3,7 @@ using module .\Atlassian.Bitbucket.Settings.psm1
 class BitbucketAuth {
     # Singleton Storage
     static [BitbucketAuth] $Instance
-    
+
     # Parameters
     [PSCredential]$Credential
     [Object]$User
@@ -13,7 +13,7 @@ class BitbucketAuth {
     static [BitbucketAuth] NewInstance([PSCredential]$Credential) {
         # Remove existing instance
         [BitbucketAuth]::ClearInstance()
-        
+
         # Create new instance and validate
         $Auth = [BitbucketAuth]::new()
         $Auth.Credential = $Credential
@@ -29,7 +29,7 @@ class BitbucketAuth {
 
     # Get Instance or return error requesting login
     static [BitbucketAuth] GetInstance() {
-        if ([BitbucketAuth]::instance -eq $null) {
+        if ($null -eq [BitbucketAuth]::instance) {
             # Try loading saved settings
             if([BitbucketAuth]::load()){
                 return [BitbucketAuth]::instance
@@ -50,7 +50,7 @@ class BitbucketAuth {
         }
         catch {
             throw 'Login Failed - credentials are invalid.  Use Login-Bitbucket to re-authenticate.'
-        } 
+        }
     }
 
     # Convert credentials to basic auth form
@@ -76,7 +76,7 @@ class BitbucketAuth {
             $Auth.Credential = $Import.Credential
             $Auth.User = $Import.User
             $Auth.Team = $Import.Team
-            
+
             $Auth.ValidateLoginAndSaveUser()
             [BitbucketAuth]::instance = $Auth
             return [BitbucketAuth]::instance

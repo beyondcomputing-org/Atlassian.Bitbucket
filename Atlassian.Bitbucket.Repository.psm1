@@ -47,7 +47,7 @@ function Get-BitbucketRepository {
         {
             $_endpoint += "?q=project.key=%22$ProjectKey%22"
         }
-        
+
         # Get all repos
         do
         {

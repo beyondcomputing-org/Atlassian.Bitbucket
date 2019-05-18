@@ -1,5 +1,5 @@
-$here = (Split-Path -Parent $MyInvocation.MyCommand.Path).Replace('Tests', '')
-$scriptsModules = Get-ChildItem $here -Include *.psd1, *.psm1, *.ps1 -Exclude *.tests.ps1 -Recurse
+﻿$here = (Split-Path -Parent $MyInvocation.MyCommand.Path).Replace('Tests', '')
+$scriptsModules = Get-ChildItem $here -Include *.psd1, *.psm1, *.ps1 -Exclude *.Tests.ps1 -Recurse
 
 Describe 'Testing all scripts and modules against the Script Analyzer Rules' {
 	Context 'Checking files to test exist and Invoke-ScriptAnalyzer cmdLet is available' {
@@ -14,10 +14,10 @@ Describe 'Testing all scripts and modules against the Script Analyzer Rules' {
 	$scriptAnalyzerRules = Get-ScriptAnalyzerRule
 
 	forEach ($scriptModule in $scriptsModules) {
-		switch -wildCard ($scriptModule) { 
-			'*.psm1' { $typeTesting = 'Module' } 
-			'*.ps1'  { $typeTesting = 'Script' } 
-			'*.psd1' { $typeTesting = 'Manifest' } 
+		switch -wildCard ($scriptModule) {
+			'*.psm1' { $typeTesting = 'Module' }
+			'*.ps1'  { $typeTesting = 'Script' }
+			'*.psd1' { $typeTesting = 'Manifest' }
 		}
 
 		Context "Checking $typeTesting – $($scriptModule) - conforms to Script Analyzer Rules" {

@@ -57,7 +57,7 @@ function Get-BitbucketProject {
                 $projects += $return.values
             }
             while ($return.next)
-    
+
             return $projects
         }
     }
