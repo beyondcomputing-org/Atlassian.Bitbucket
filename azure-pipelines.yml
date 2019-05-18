@@ -4,7 +4,7 @@ jobs:
       vmImage: vs2017-win2016
     steps:
     - powershell: |
-        Invoke-Pester
+        .\Build.ps1
       displayName: 'Test'
 
     - task: PublishTestResults@2
@@ -26,7 +26,7 @@ jobs:
       displayName: 'Install PowerShell Core'
  
     - script: |
-        pwsh -c 'Invoke-Pester'
+        pwsh -c '.\build.ps1'
       displayName: 'Test'
  
     - task: PublishTestResults@2
@@ -47,7 +47,7 @@ jobs:
       displayName: 'Install PowerShell Core'
  
     - script: |
-        pwsh -c 'Invoke-Pester'
+        pwsh -c '.\build.ps1'
       displayName: 'Test'
  
     - task: PublishTestResults@2
