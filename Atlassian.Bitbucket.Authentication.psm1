@@ -84,6 +84,15 @@ function Get-BitbucketTeam {
     return (Invoke-BitbucketAPI -Path $endpoint).values
 }
 
+function Get-BitbucketSelectedTeam {
+    [CmdletBinding()]
+    param(
+    )
+
+    $Auth = [BitbucketAuth]::GetInstance()
+    return $Auth.Team
+}
+
 function Select-BitbucketTeam {
     [CmdletBinding()]
     param(

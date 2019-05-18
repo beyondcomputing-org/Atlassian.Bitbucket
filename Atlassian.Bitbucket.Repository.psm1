@@ -17,16 +17,14 @@ using module .\Atlassian.Bitbucket.Authentication.psm1
 function Get-BitbucketRepository {
     [CmdletBinding()]
     param(
-        [Parameter( Mandatory=$true,
-                    Position=0,
-                    ValueFromPipelineByPropertyName=$true,
-                    HelpMessage="Name of the team in Bitbucket.")]
-        [string]$Team,
+        [Parameter( ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='Name of the team in Bitbucket.  Will use selected team if not provided.')]
+        [string]$Team = (Get-BitbucketSelectedTeam),
         [Parameter( Mandatory=$false,
-                    Position=1,
+                    Position=0,
                     ValueFromPipeline=$true,
                     ValueFromPipelineByPropertyName=$true,
-                    HelpMessage="Project key in Bitbucket")]
+                    HelpMessage='Project key in Bitbucket')]
         [string]$ProjectKey
     )
 
