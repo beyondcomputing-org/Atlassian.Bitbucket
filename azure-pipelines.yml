@@ -17,7 +17,7 @@ jobs:
 
     - task: ArchiveFiles@2
       inputs:
-        rootFolderOrFile: ''
+        rootFolderOrFile: '/Build/'
         includeRootFolder: true
         archiveType: 'zip'
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
