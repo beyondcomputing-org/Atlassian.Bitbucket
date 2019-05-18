@@ -15,15 +15,31 @@ using module .\Classes\Atlassian.Bitbucket.Settings.psm1
     .PARAMETER Name
         The description of a parameter. Add a ".PARAMETER" keyword for each parameter in the function.
 #>
-function Add-BitbucketLogin {
+function New-BitbucketLogin {
     [CmdletBinding()]
     [Alias('Login-Bitbucket')]
     param(
-        [PSCredential]$Credential = (Get-Credential)
+        [PSCredential]$Credential = (Get-Credential),
+        [Switch]$Save
     )
 
     $Auth = [BitbucketAuth]::NewInstance($Credential)
     Write-Host "Welcome $($Auth.User.display_name)" -ForegroundColor Green
+
+    Select-BitbucketTeam
+
+    if($Save){
+        Save-BitbucketLogin
+    }
+}
+
+function Save-BitbucketLogin {
+    [CmdletBinding()]
+    param(
+    )
+
+    $Auth = [BitbucketAuth]::GetInstance()
+    $Auth.save()
 }
 
 function Get-BitbucketLogin {
@@ -68,7 +84,7 @@ function Get-BitbucketTeam {
     return (Invoke-BitbucketAPI -Path $endpoint).values
 }
 
-function Set-BitbucketTeam {
+function Select-BitbucketTeam {
     [CmdletBinding()]
     param(
         [String]$Team
