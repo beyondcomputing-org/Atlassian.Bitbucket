@@ -12,6 +12,7 @@ jobs:
         testRunner: 'NUnit'
         testResultsFiles: '**/TestResults.xml'
         testRunTitle: 'PS_Win2016'
+      condition: always()
       displayName: 'Publish Test Results'
  
   - job: Build_PSCore_Ubuntu1604
@@ -34,6 +35,7 @@ jobs:
         testRunner: 'NUnit'
         testResultsFiles: '**/TestResults.xml'
         testRunTitle: 'PSCore_Ubuntu1604'
+      condition: always()
       displayName: 'Publish Test Results'
  
   - job: Build_PSCore_MacOS1013
@@ -55,4 +57,5 @@ jobs:
         testRunner: 'NUnit'
         testResultsFiles: '**/TestResults.xml'
         testRunTitle: 'PSCore_MacOS1013'
+      condition: always()
       displayName: 'Publish Test Results'
