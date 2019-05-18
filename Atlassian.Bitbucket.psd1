@@ -67,12 +67,21 @@ PowerShellVersion = '5.0'
 
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
 NestedModules = @(
-    'Atlassian.Bitbucket.Project.psm1'
+    'Atlassian.Bitbucket.Authentication.psm1',
+    'Atlassian.Bitbucket.Project.psm1',
+    'Atlassian.Bitbucket.Repository.psm1'
 )
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @(
-    'Get-BitbucketProject'
+    'New-BitbucketLogin',
+    'Save-BitbucketLogin',
+    'Get-BitbucketLogin',
+    'Remove-BitbucketLogin',
+    'Get-BitbucketTeam',
+    'Select-BitbucketTeam',
+    'Get-BitbucketProject',
+    'Get-BitbucketRepository',
 )
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
@@ -105,20 +114,20 @@ PrivateData = @{
         # LicenseUri = ''
 
         # A URL to the main website for this project.
-        # ProjectUri = ''
+        ProjectUri = 'https://github.com/beyondcomputing-org/Atlassian.Bitbucket'
 
         # A URL to an icon representing this module.
         # IconUri = ''
 
         # ReleaseNotes of this module
-        # ReleaseNotes = ''
+        ReleaseNotes = 'https://github.com/beyondcomputing-org/Atlassian.Bitbucket/blob/master/CHANGELOG.md'
 
     } # End of PSData hashtable
 
 } # End of PrivateData hashtable
 
 # HelpInfo URI of this module
-# HelpInfoURI = ''
+HelpInfoURI = 'https://github.com/beyondcomputing-org/Atlassian.Bitbucket'
 
 # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
 # DefaultCommandPrefix = ''
