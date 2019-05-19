@@ -19,6 +19,7 @@ jobs:
       displayName: 'Archive Build'
       inputs:
         rootFolderOrFile: Build
+        includeRootFolder: false
         replaceExistingArchive: true
 
     - task: PublishBuildArtifacts@1
