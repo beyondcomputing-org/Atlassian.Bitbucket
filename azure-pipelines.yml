@@ -8,19 +8,17 @@ jobs:
       displayName: 'Test'
 
     - task: PublishTestResults@2
+      displayName: 'Publish Test Results'
+      condition: always()
       inputs:
         testRunner: 'NUnit'
         testResultsFiles: '**/TestResults.xml'
         testRunTitle: 'PS_Win2016'
-      condition: always()
-      displayName: 'Publish Test Results'
 
     - task: ArchiveFiles@2
+      displayName: 'Archive Build'
       inputs:
-        rootFolderOrFile: '/Build/'
-        includeRootFolder: true
-        archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+        rootFolderOrFile: Build
         replaceExistingArchive: true
 
     - task: PublishBuildArtifacts@1
