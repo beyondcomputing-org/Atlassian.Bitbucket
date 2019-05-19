@@ -18,7 +18,7 @@ function Get-BitbucketRepositoryDeployment {
 
     Process {
         $endpoint = "repositories/$Team/$RepoSlug/deployments/"
-        
+
         if($State){
             $endpoint += "?state.name=$State"
         }
