@@ -69,12 +69,28 @@ function Invoke-BitbucketAPI {
     param(
         [String]$Path = '',
         [Microsoft.PowerShell.Commands.WebRequestMethod]$Method = 'Get',
-        [Object]$Body
+        [Object]$Body,
+        [Switch]$Paginated
     )
     $Auth = [BitbucketAuth]::GetInstance()
     $URI = [BitbucketSettings]::VERSION_URL + $Path
 
-    Invoke-RestMethod -Uri $URI -Method $Method -Body $Body -Headers @{Authorization=("Basic {0}" -f $Auth.GetBasicAuth())}
+    if($Paginated){
+        $_endpoint = $URI
+
+        # Process Pagination
+        do
+        {
+            $return = Invoke-RestMethod -Uri $_endpoint -Method $Method -Body $Body -Headers @{Authorization=("Basic {0}" -f $Auth.GetBasicAuth())}
+            $_endpoint = $return.next
+            $response += $return.values
+        }
+        while ($return.next)
+
+        return $response
+    }else{
+        return Invoke-RestMethod -Uri $URI -Method $Method -Body $Body -Headers @{Authorization=("Basic {0}" -f $Auth.GetBasicAuth())}
+    }
 }
 
 function Get-BitbucketTeam {

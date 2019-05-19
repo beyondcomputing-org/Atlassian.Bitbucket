@@ -35,28 +35,15 @@ function Get-BitbucketRepository {
         [string]$ProjectKey
     )
 
-    Begin {
-        $endpoint = "repositories/$Team"
-    }
-
     Process {
-        $_endpoint = $endpoint
+        $endpoint = "repositories/$Team"
 
         # Filter to a specific project
         if($ProjectKey)
         {
-            $_endpoint += "?q=project.key=%22$ProjectKey%22"
+            $endpoint += "?q=project.key=%22$ProjectKey%22"
         }
 
-        # Get all repos
-        do
-        {
-            $return = Invoke-BitbucketAPI -Path $_endpoint
-            $_endpoint = $return.next
-            $repos += $return.values
-        }
-        while ($return.next)
-
-        return $repos
+        return Invoke-BitbucketAPI -Path $endpoint -Paginated
     }
 }

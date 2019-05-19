@@ -35,30 +35,17 @@ function Get-BitbucketProject {
         [string]$ProjectKey
     )
 
-    Begin {
-        $endpoint = "teams/$Team/projects/"
-    }
-
     Process {
+        $endpoint = "teams/$Team/projects/"
         if($ProjectKey)
         {
             # Fetch a specific project
-            $_endpoint = "$endpoint$ProjectKey"
-            return Invoke-BitbucketAPI -Path $_endpoint
+            $endpoint += $ProjectKey
+            return Invoke-BitbucketAPI -Path $endpoint
         }
         else
         {
-            $_endpoint = $endpoint
-            # Get all projects
-            do
-            {
-                $return = Invoke-BitbucketAPI -Path $_endpoint
-                $_endpoint = $return.next
-                $projects += $return.values
-            }
-            while ($return.next)
-
-            return $projects
+            return Invoke-BitbucketAPI -Path $endpoint -Paginated
         }
     }
 }
