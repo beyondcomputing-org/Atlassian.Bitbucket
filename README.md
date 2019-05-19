@@ -36,6 +36,7 @@ To get more information on each cmdlet run `Get-Help <CMDLET Name>`
 
 #### Repository CMDLETs
 - Get-BitbucketRepository
+- Get-BitbucketRepositoryEnvironment
 
 ## Changes
 See CHANGELOG.md for more information.
