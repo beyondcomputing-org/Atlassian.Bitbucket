@@ -12,7 +12,7 @@
 RootModule = 'Atlassian.Bitbucket.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.3.0'
+ModuleVersion = '0.4.0'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -68,6 +68,7 @@ PowerShellVersion = '5.0'
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
 NestedModules = @(
     'Atlassian.Bitbucket.Authentication.psm1',
+    'Atlassian.Bitbucket.Pipeline.psm1',
     'Atlassian.Bitbucket.Project.psm1',
     'Atlassian.Bitbucket.Repository.psm1',
     'Atlassian.Bitbucket.Repository.Deployment.psm1'
@@ -86,7 +87,9 @@ FunctionsToExport = @(
     'New-BitbucketLogin',
     'Remove-BitbucketLogin',
     'Save-BitbucketLogin',
-    'Select-BitbucketTeam'
+    'Select-BitbucketTeam',
+    'Start-BitbucketPipeline',
+    'Wait-BitbucketPipeline'
 )
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.

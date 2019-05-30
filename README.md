@@ -31,6 +31,10 @@ To get more information on each cmdlet run `Get-Help <CMDLET Name>`
 - Save-BitbucketLogin
 - Select-BitbucketTeam
 
+#### Pipeline CMDLETs
+- Start-BitbucketPipeline
+- Wait-BitbucketPipeline
+
 #### Project CMDLETs
 - Get-BitbucketProject
 

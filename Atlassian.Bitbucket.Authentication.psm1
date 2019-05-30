@@ -81,7 +81,7 @@ function Invoke-BitbucketAPI {
         # Process Pagination
         do
         {
-            $return = Invoke-RestMethod -Uri $_endpoint -Method $Method -Body $Body -Headers @{Authorization=("Basic {0}" -f $Auth.GetBasicAuth())}
+            $return = Invoke-RestMethod -Uri $_endpoint -Method $Method -Body $Body -Headers @{Authorization=("Basic {0}" -f $Auth.GetBasicAuth())}  -ContentType 'application/json'
             $_endpoint = $return.next
             $response += $return.values
         }
@@ -89,7 +89,7 @@ function Invoke-BitbucketAPI {
 
         return $response
     }else{
-        return Invoke-RestMethod -Uri $URI -Method $Method -Body $Body -Headers @{Authorization=("Basic {0}" -f $Auth.GetBasicAuth())}
+        return Invoke-RestMethod -Uri $URI -Method $Method -Body $Body -Headers @{Authorization=("Basic {0}" -f $Auth.GetBasicAuth())}  -ContentType 'application/json'
     }
 }
 

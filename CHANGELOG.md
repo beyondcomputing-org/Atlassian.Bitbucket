@@ -4,6 +4,10 @@
 *These will be removed in the next major release*
 - N/A
 
+0.4.0
+-----
+- Added `Start-BitbucketPipeline` and `Wait-BitbucketPipeline`
+
 0.3.0
 -----
 - Added `Get-BitbucketRepositoryDeployment`
