@@ -42,6 +42,8 @@ To get more information on each cmdlet run `Get-Help <CMDLET Name>`
 - Get-BitbucketRepository
 - Get-BitbucketRepositoryEnvironment
 - Get-BitbucketRepositoryDeployment
+- New-BitbucketRepository
+- Remove-BitbucketRepository
 
 ## Changes
 See CHANGELOG.md for more information.

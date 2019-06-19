@@ -12,7 +12,7 @@
 RootModule = 'Atlassian.Bitbucket.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.4.0'
+ModuleVersion = '0.5.0'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -85,7 +85,9 @@ FunctionsToExport = @(
     'Get-BitbucketSelectedTeam',
     'Get-BitbucketTeam',
     'New-BitbucketLogin',
+    'New-BitbucketRepository',
     'Remove-BitbucketLogin',
+    'Remove-BitbucketRepository',
     'Save-BitbucketLogin',
     'Select-BitbucketTeam',
     'Start-BitbucketPipeline',
