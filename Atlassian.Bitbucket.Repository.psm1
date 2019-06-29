@@ -214,32 +214,32 @@ function Set-BitbucketRepository {
 
     Process {
         $endpoint = "repositories/$Team/$RepoSlug"
-        $body =@{}
+        $body = [ordered]@{}
 
         if($ProjectKey){
-            $body += @{
-                project = @{
+            $body += [ordered]@{
+                project = [ordered]@{
                     key = $ProjectKey
                 }
             }
         }
         if($Private){
-            $body += @{
+            $body += [ordered]@{
                 is_private = $Private
             }
         }
         if($Description){
-            $body += @{
+            $body += [ordered]@{
                 description = $Description
             }
         }
         if($Language){
-            $body += @{
+            $body += [ordered]@{
                 language = $Language
             }
         }
         if($ForkPolicy){
-            $body += @{
+            $body += [ordered]@{
                 fork_policy = $ForkPolicy
             }
         }

@@ -33,10 +33,10 @@ Describe 'Start-BitbucketPipeline' {
 
         It 'Has a valid body'{
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Pipeline -ParameterFilter {
-                (@{
-                    target = @{
-                        ref_type = 'branch'
+                ([ordered]@{
+                    target = [ordered]@{
                         type     = 'pipeline_ref_target'
+                        ref_type = 'branch'
                         ref_name = $Branch
                     }
                 } | ConvertTo-Json -Compress) -eq $Body
@@ -49,10 +49,10 @@ Describe 'Start-BitbucketPipeline' {
 
         It 'Defaults to master branch'{
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Pipeline -ParameterFilter {
-                (@{
-                    target = @{
-                        ref_type = 'branch'
+                ([ordered]@{
+                    target = [ordered]@{
                         type     = 'pipeline_ref_target'
+                        ref_type = 'branch'
                         ref_name = 'master'
                     }
                 } | ConvertTo-Json -Compress) -eq $Body
@@ -66,12 +66,12 @@ Describe 'Start-BitbucketPipeline' {
 
         It 'Has a valid body'{
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Pipeline -ParameterFilter {
-                (@{
-                    target = @{
-                        ref_type = 'branch'
+                ([ordered]@{
+                    target = [ordered]@{
                         type     = 'pipeline_ref_target'
+                        ref_type = 'branch'
                         ref_name = $Branch
-                        selector = @{
+                        selector = [ordered]@{
                             type    = 'custom'
                             pattern = $Custom
                         }
@@ -88,12 +88,11 @@ Describe 'Start-BitbucketPipeline' {
 
         It 'Has a valid body'{
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Pipeline -ParameterFilter {
-                Write-Host $Body
-                (@{
-                    target = @{
+                ([ordered]@{
+                    target = [ordered]@{
+                        type     = 'pipeline_ref_target'
                         ref_type = 'branch'
                         ref_name = $Branch
-                        type     = 'pipeline_ref_target'
                     }
                     variables = [array]$Var
                 } | ConvertTo-Json -Compress) -eq $Body
@@ -108,12 +107,11 @@ Describe 'Start-BitbucketPipeline' {
 
         It 'Has a valid body'{
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Pipeline -ParameterFilter {
-                Write-Host $Body
-                (@{
-                    target = @{
+                ([ordered]@{
+                    target = [ordered]@{
+                        type     = 'pipeline_ref_target'
                         ref_type = 'branch'
                         ref_name = $Branch
-                        type     = 'pipeline_ref_target'
                     }
                     variables = $Var
                 } | ConvertTo-Json -Compress) -eq $Body

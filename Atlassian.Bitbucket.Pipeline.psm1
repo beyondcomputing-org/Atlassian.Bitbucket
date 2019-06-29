@@ -28,22 +28,22 @@ function Start-BitbucketPipeline {
 
         # Add selector for custom pipes
         if ($CustomPipe) {
-            $body = @{
-                target = @{
-                    ref_type = 'branch'
+            $body = [ordered]@{
+                target = [ordered]@{
                     type     = 'pipeline_ref_target'
+                    ref_type = 'branch'
                     ref_name = $Branch
-                    selector = @{
+                    selector = [ordered]@{
                         type    = 'custom'
                         pattern = $CustomPipe
                     }
                 }
             }
         }else {
-            $body = @{
-                target = @{
-                    ref_type = 'branch'
+            $body = [ordered]@{
+                target = [ordered]@{
                     type     = 'pipeline_ref_target'
+                    ref_type = 'branch'
                     ref_name = $Branch
                 }
             }
