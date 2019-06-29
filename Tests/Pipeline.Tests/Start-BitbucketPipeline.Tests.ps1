@@ -92,8 +92,8 @@ Describe 'Start-BitbucketPipeline' {
                 (@{
                     target = @{
                         ref_type = 'branch'
-                        type     = 'pipeline_ref_target'
                         ref_name = $Branch
+                        type     = 'pipeline_ref_target'
                     }
                     variables = [array]$Var
                 } | ConvertTo-Json -Compress) -eq $Body
@@ -112,8 +112,8 @@ Describe 'Start-BitbucketPipeline' {
                 (@{
                     target = @{
                         ref_type = 'branch'
-                        type     = 'pipeline_ref_target'
                         ref_name = $Branch
+                        type     = 'pipeline_ref_target'
                     }
                     variables = $Var
                 } | ConvertTo-Json -Compress) -eq $Body
