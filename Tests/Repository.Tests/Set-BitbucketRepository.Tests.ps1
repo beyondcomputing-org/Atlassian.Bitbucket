@@ -46,10 +46,10 @@ Describe 'Set-BitbucketRepository' {
         It 'Has a valid body'{
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
                 (@{
-                    project = @{
-                        key = $Key
-                    }
                     language = $Language
+                    project  = @{
+                        key  = $Key
+                    }
                 } | ConvertTo-Json) -eq $Body
             }
         }
