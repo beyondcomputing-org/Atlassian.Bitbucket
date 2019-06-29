@@ -39,11 +39,15 @@ To get more information on each cmdlet run `Get-Help <CMDLET Name>`
 - Get-BitbucketProject
 
 #### Repository CMDLETs
+- Add-BitbucketRepositoryReviewer
 - Get-BitbucketRepository
 - Get-BitbucketRepositoryEnvironment
 - Get-BitbucketRepositoryDeployment
+- Get-BitbucketRepositoryReviewer
 - New-BitbucketRepository
 - Remove-BitbucketRepository
+- Remove-BitbucketRepositoryReviewer
+- Set-BitbucketRepositoryReviewer
 
 ## Changes
 See CHANGELOG.md for more information.

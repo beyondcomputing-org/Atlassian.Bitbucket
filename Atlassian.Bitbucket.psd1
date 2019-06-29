@@ -12,7 +12,7 @@
 RootModule = 'Atlassian.Bitbucket.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.5.0'
+ModuleVersion = '0.6.0'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -71,25 +71,30 @@ NestedModules = @(
     'Atlassian.Bitbucket.Pipeline.psm1',
     'Atlassian.Bitbucket.Project.psm1',
     'Atlassian.Bitbucket.Repository.psm1',
-    'Atlassian.Bitbucket.Repository.Deployment.psm1'
-    'Atlassian.Bitbucket.Repository.Environment.psm1'
+    'Atlassian.Bitbucket.Repository.Deployment.psm1',
+    'Atlassian.Bitbucket.Repository.Environment.psm1',
+    'Atlassian.Bitbucket.Repository.Reviewer.psm1'
 )
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @(
+    'Add-BitbucketRepositoryReviewer',
     'Get-BitbucketLogin',
     'Get-BitbucketProject',
     'Get-BitbucketRepository',
     'Get-BitbucketRepositoryDeployment',
     'Get-BitbucketRepositoryEnvironment',
+    'Get-BitbucketRepositoryReviewer',
     'Get-BitbucketSelectedTeam',
     'Get-BitbucketTeam',
     'New-BitbucketLogin',
     'New-BitbucketRepository',
     'Remove-BitbucketLogin',
     'Remove-BitbucketRepository',
+    'Remove-BitbucketRepositoryReviewer',
     'Save-BitbucketLogin',
     'Select-BitbucketTeam',
+    'Set-BitbucketRepositoryReviewer',
     'Start-BitbucketPipeline',
     'Wait-BitbucketPipeline'
 )

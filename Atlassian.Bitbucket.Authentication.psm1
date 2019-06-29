@@ -89,7 +89,14 @@ function Invoke-BitbucketAPI {
 
         return $response
     }else{
-        return Invoke-RestMethod -Uri $URI -Method $Method -Body $Body -Headers @{Authorization=("Basic {0}" -f $Auth.GetBasicAuth())}  -ContentType 'application/json'
+        if($Body){
+            Write-Debug 'Sending request with a body and content type'
+            Write-Debug "Body: $Body"
+            return Invoke-RestMethod -Uri $URI -Method $Method -Body $Body -Headers @{Authorization=("Basic {0}" -f $Auth.GetBasicAuth())}  -ContentType 'application/json'
+        }else{
+            Write-Debug 'Sending request with no body or content type'
+            return Invoke-RestMethod -Uri $URI -Method $Method -Headers @{Authorization=("Basic {0}" -f $Auth.GetBasicAuth())}
+        }
     }
 }
 

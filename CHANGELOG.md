@@ -4,6 +4,14 @@
 *These will be removed in the next major release*
 - N/A
 
+0.6.0
+-----
+- Added cmdlets for managing default reviewers on a repository
+- Added `Add-BitbucketRepositoryReviewer`
+- Added `Get-BitbucketRepositoryReviewer`
+- Added `Remove-BitbucketRepositoryReviewer`
+- Added `Set-BitbucketRepositoryReviewer`
+
 0.5.0
 -----
 - Added `New-BitbucketRepository`
