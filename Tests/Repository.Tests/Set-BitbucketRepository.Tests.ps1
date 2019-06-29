@@ -34,7 +34,7 @@ Describe 'Set-BitbucketRepository' {
                     project = @{
                         key = $Key
                     }
-                } | ConvertTo-Json) -eq $Body
+                } | ConvertTo-Json -Compress) -eq $Body
             }
         }
     }
@@ -52,7 +52,7 @@ Describe 'Set-BitbucketRepository' {
                     project  = @{
                         key  = $Key
                     }
-                } | ConvertTo-Json) -eq $Body
+                } | ConvertTo-Json -Compress) -eq $Body
             }
         }
     }

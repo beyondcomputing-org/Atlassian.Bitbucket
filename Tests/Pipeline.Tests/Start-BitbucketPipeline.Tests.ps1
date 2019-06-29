@@ -39,7 +39,7 @@ Describe 'Start-BitbucketPipeline' {
                         type     = 'pipeline_ref_target'
                         ref_name = $Branch
                     }
-                } | ConvertTo-Json) -eq $Body
+                } | ConvertTo-Json -Compress) -eq $Body
             }
         }
     }
@@ -55,7 +55,7 @@ Describe 'Start-BitbucketPipeline' {
                         type     = 'pipeline_ref_target'
                         ref_name = 'master'
                     }
-                } | ConvertTo-Json) -eq $Body
+                } | ConvertTo-Json -Compress) -eq $Body
             }
         }
     }
@@ -76,7 +76,7 @@ Describe 'Start-BitbucketPipeline' {
                             pattern = $Custom
                         }
                     }
-                } | ConvertTo-Json) -eq $Body
+                } | ConvertTo-Json -Compress) -eq $Body
             }
         }
     }
@@ -95,7 +95,7 @@ Describe 'Start-BitbucketPipeline' {
                         ref_name = $Branch
                     }
                     variables = [array]$Var
-                } | ConvertTo-Json) -eq $Body
+                } | ConvertTo-Json -Compress) -eq $Body
             }
         }
     }
@@ -114,7 +114,7 @@ Describe 'Start-BitbucketPipeline' {
                         ref_name = $Branch
                     }
                     variables = $Var
-                } | ConvertTo-Json) -eq $Body
+                } | ConvertTo-Json -Compress) -eq $Body
             }
         }
     }

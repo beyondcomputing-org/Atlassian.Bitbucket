@@ -54,7 +54,7 @@ function Start-BitbucketPipeline {
             $body | Add-Member -NotePropertyName variables -NotePropertyValue $Variables
         }
 
-        $body = $body | ConvertTo-Json -Depth 5
+        $body = $body | ConvertTo-Json -Depth 5 -Compress
 
         if ($pscmdlet.ShouldProcess('pipeline', 'start'))
         {

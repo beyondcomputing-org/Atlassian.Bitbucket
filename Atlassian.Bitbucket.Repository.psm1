@@ -128,7 +128,7 @@ function New-BitbucketRepository {
                 description = $Description
                 language = $Language
                 fork_policy = $ForkPolicy
-            } | ConvertTo-Json -Depth 2
+            } | ConvertTo-Json -Depth 2 -Compress
         }else{
             $body = @{
                 scm = 'git'
@@ -136,7 +136,7 @@ function New-BitbucketRepository {
                 description = $Description
                 language = $Language
                 fork_policy = $ForkPolicy
-            } | ConvertTo-Json -Depth 2
+            } | ConvertTo-Json -Depth 2 -Compress
         }
 
         if ($pscmdlet.ShouldProcess($RepoSlug, 'create')){
@@ -247,7 +247,7 @@ function Set-BitbucketRepository {
             throw "No settings provided to update"
         }
 
-        $body = $body | ConvertTo-Json -Depth 2
+        $body = $body | ConvertTo-Json -Depth 2 -Compress
 
         if ($pscmdlet.ShouldProcess($RepoSlug, 'update')){
             return Invoke-BitbucketAPI -Path $endpoint -Body $body -Method Put
