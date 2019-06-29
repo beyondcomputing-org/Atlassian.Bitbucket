@@ -147,6 +147,116 @@ function New-BitbucketRepository {
 
 <#
     .SYNOPSIS
+        Updates an existing repository.
+
+    .DESCRIPTION
+        Updates properties on an existing repository in Bitbucket.  You can set one or many properties at a time.
+
+    .EXAMPLE
+        C:\PS> Set-BitbucketRepository -RepoSlug 'Repo' -Language 'Java'
+        Sets the repo's language to Java
+
+    .EXAMPLE
+        C:\PS> Set-BitbucketRepository -RepoSlug 'Repo' -ProjectKey 'KEY'
+        Moves the repo to the Project 'KEY'
+
+    .PARAMETER Team
+        Name of the team in Bitbucket.  Defaults to selected team if not provided.
+
+    .PARAMETER RepoSlug
+        Name of the repo in Bitbucket.
+
+    .PARAMETER ProjectKey
+        Project key in Bitbucket.
+
+    .PARAMETER Private
+        Whether the repo should be private or public.
+
+    .PARAMETER Description
+        Description for the repo.
+
+    .PARAMETER Language
+        Programming language used in the repo.
+
+    .PARAMETER ForkPolicy
+        Fork policy of the repo.  [allow_forks, no_public_forks, no_forks]
+#>
+function Set-BitbucketRepository {
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
+    param(
+        [Parameter( ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
+        [string]$Team = (Get-BitbucketSelectedTeam),
+        [Parameter( Mandatory=$true,
+                    Position=0,
+                    ValueFromPipeline=$true,
+                    ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='The repository slug.')]
+        [string]$RepoSlug,
+        [Parameter( ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='Project key in Bitbucket')]
+        [string]$ProjectKey,
+        [Parameter( ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='Is the repo private?')]
+        [boolean]$Private,
+        [Parameter( ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='Description for the repo')]
+        [string]$Description,
+        [Parameter( ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='Programming language used in the repo')]
+        [ValidateSet('java', 'javascript','python','ruby','php','powershell')]
+        [string]$Language,
+        [Parameter( ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='Fork policy of the repo.  [allow_forks, no_public_forks, no_forks]')]
+        [ValidateSet('allow_forks', 'no_public_forks', 'no_forks')]
+        [string]$ForkPolicy
+    )
+
+    Process {
+        $endpoint = "repositories/$Team/$RepoSlug"
+        $body =@{}
+
+        if($ProjectKey){
+            $body += @{
+                project = @{
+                    key = $ProjectKey
+                }
+            }
+        }
+        if($Private){
+            $body += @{
+                is_private = $Private
+            }
+        }
+        if($Description){
+            $body += @{
+                description = $Description
+            }
+        }
+        if($Language){
+            $body += @{
+                language = $Language
+            }
+        }
+        if($ForkPolicy){
+            $body += @{
+                fork_policy = $ForkPolicy
+            }
+        }
+        if($body.Count -eq 0){
+            throw "No settings provided to update"
+        }
+
+        $body = $body | ConvertTo-Json -Depth 2
+
+        if ($pscmdlet.ShouldProcess($RepoSlug, 'update')){
+            return Invoke-BitbucketAPI -Path $endpoint -Body $body -Method Put
+        }
+    }
+}
+
+<#
+    .SYNOPSIS
         Deletes the specified repository.
 
     .DESCRIPTION

@@ -4,6 +4,10 @@
 *These will be removed in the next major release*
 - N/A
 
+0.7.0
+-----
+- Added `Set-BitbucketRepository`
+
 0.6.0
 -----
 - Added cmdlets for managing default reviewers on a repository

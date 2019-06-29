@@ -47,6 +47,7 @@ To get more information on each cmdlet run `Get-Help <CMDLET Name>`
 - New-BitbucketRepository
 - Remove-BitbucketRepository
 - Remove-BitbucketRepositoryReviewer
+- Set-BitbucketRepository
 - Set-BitbucketRepositoryReviewer
 
 ## Changes
