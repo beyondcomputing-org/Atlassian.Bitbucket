@@ -88,6 +88,7 @@ Describe 'Start-BitbucketPipeline' {
 
         It 'Has a valid body'{
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Pipeline -ParameterFilter {
+                Write-Host $Body
                 (@{
                     target = @{
                         ref_type = 'branch'
@@ -107,6 +108,7 @@ Describe 'Start-BitbucketPipeline' {
 
         It 'Has a valid body'{
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Pipeline -ParameterFilter {
+                Write-Host $Body
                 (@{
                     target = @{
                         ref_type = 'branch'
