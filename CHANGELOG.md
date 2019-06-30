@@ -4,6 +4,11 @@
 *These will be removed in the next major release*
 - N/A
 
+0.10.0
+-----
+- Added `Get-BitbucketPullRequestComment`
+- Added `New-BitbucketPullRequestComment`
+
 0.9.0
 -----
 - Added `Get-BitbucketPullRequest`

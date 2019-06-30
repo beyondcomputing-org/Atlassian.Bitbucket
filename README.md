@@ -40,7 +40,9 @@ To get more information on each cmdlet run `Get-Help <CMDLET Name>`
 
 #### Pull Request CMDLETs
 - Get-BitbucketPullRequest
+- Get-BitbucketPullRequestComment
 - New-BitbucketPullRequest
+- New-BitbucketPullRequestComment
 
 #### Repository CMDLETs
 - Add-BitbucketRepositoryReviewer

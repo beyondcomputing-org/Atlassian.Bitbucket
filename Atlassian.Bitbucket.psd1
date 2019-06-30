@@ -70,10 +70,11 @@ NestedModules = @(
     'Atlassian.Bitbucket.Authentication.psm1',
     'Atlassian.Bitbucket.Pipeline.psm1',
     'Atlassian.Bitbucket.Project.psm1',
+    'Atlassian.Bitbucket.PullRequest.Comment.psm1',
     'Atlassian.Bitbucket.PullRequest.psm1',
-    'Atlassian.Bitbucket.Repository.psm1',
     'Atlassian.Bitbucket.Repository.Deployment.psm1',
     'Atlassian.Bitbucket.Repository.Environment.psm1',
+    'Atlassian.Bitbucket.Repository.psm1',
     'Atlassian.Bitbucket.Repository.Reviewer.psm1'
 )
 
@@ -83,6 +84,7 @@ FunctionsToExport = @(
     'Get-BitbucketLogin',
     'Get-BitbucketProject',
     'Get-BitbucketPullRequest',
+    'Get-BitbucketPullRequestComment',
     'Get-BitbucketRepository',
     'Get-BitbucketRepositoryDeployment',
     'Get-BitbucketRepositoryEnvironment',
@@ -91,6 +93,7 @@ FunctionsToExport = @(
     'Get-BitbucketTeam',
     'New-BitbucketLogin',
     'New-BitbucketPullRequest',
+    'New-BitbucketPullRequestComment',
     'New-BitbucketRepository',
     'New-BitbucketRepositoryEnvironment',
     'Remove-BitbucketLogin',
