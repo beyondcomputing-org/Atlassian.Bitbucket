@@ -12,7 +12,7 @@
 RootModule = 'Atlassian.Bitbucket.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.8.0'
+ModuleVersion = '0.9.0'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -70,6 +70,7 @@ NestedModules = @(
     'Atlassian.Bitbucket.Authentication.psm1',
     'Atlassian.Bitbucket.Pipeline.psm1',
     'Atlassian.Bitbucket.Project.psm1',
+    'Atlassian.Bitbucket.PullRequest.psm1',
     'Atlassian.Bitbucket.Repository.psm1',
     'Atlassian.Bitbucket.Repository.Deployment.psm1',
     'Atlassian.Bitbucket.Repository.Environment.psm1',
@@ -81,6 +82,7 @@ FunctionsToExport = @(
     'Add-BitbucketRepositoryReviewer',
     'Get-BitbucketLogin',
     'Get-BitbucketProject',
+    'Get-BitbucketPullRequest',
     'Get-BitbucketRepository',
     'Get-BitbucketRepositoryDeployment',
     'Get-BitbucketRepositoryEnvironment',
@@ -88,6 +90,7 @@ FunctionsToExport = @(
     'Get-BitbucketSelectedTeam',
     'Get-BitbucketTeam',
     'New-BitbucketLogin',
+    'New-BitbucketPullRequest',
     'New-BitbucketRepository',
     'New-BitbucketRepositoryEnvironment',
     'Remove-BitbucketLogin',

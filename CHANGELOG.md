@@ -4,6 +4,11 @@
 *These will be removed in the next major release*
 - N/A
 
+0.9.0
+-----
+- Added `Get-BitbucketPullRequest`
+- Added `New-BitbucketPullRequest`
+
 0.8.0
 -----
 - Added `New-BitbucketRepositoryEnvironment`

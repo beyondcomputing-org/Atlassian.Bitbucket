@@ -38,6 +38,10 @@ To get more information on each cmdlet run `Get-Help <CMDLET Name>`
 #### Project CMDLETs
 - Get-BitbucketProject
 
+#### Pull Request CMDLETs
+- Get-BitbucketPullRequest
+- New-BitbucketPullRequest
+
 #### Repository CMDLETs
 - Add-BitbucketRepositoryReviewer
 - Get-BitbucketRepository
