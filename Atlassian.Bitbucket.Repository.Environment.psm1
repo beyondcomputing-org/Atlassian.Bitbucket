@@ -111,7 +111,7 @@ function New-BitbucketRepositoryEnvironment {
             }
             hidden = $true
             environment_lock_enabled = $true
-        } | ConvertTo-Json -Compress
+        } | ConvertTo-Json -Depth 3 -Compress
 
         if ($pscmdlet.ShouldProcess("$Environment in $RepoSlug", 'create')){
             return Invoke-BitbucketAPI -Path $endpoint -Method Post -Body $body

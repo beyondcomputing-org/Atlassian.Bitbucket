@@ -119,9 +119,9 @@ function New-BitbucketRepository {
         $endpoint = "repositories/$Team/$RepoSlug"
 
         if($ProjectKey){
-            $body = @{
+            $body = [ordered]@{
                 scm = 'git'
-                project = @{
+                project = [ordered]@{
                     key = $ProjectKey
                 }
                 is_private = $Private
@@ -130,7 +130,7 @@ function New-BitbucketRepository {
                 fork_policy = $ForkPolicy
             } | ConvertTo-Json -Depth 2 -Compress
         }else{
-            $body = @{
+            $body = [ordered]@{
                 scm = 'git'
                 is_private = $Private
                 description = $Description
