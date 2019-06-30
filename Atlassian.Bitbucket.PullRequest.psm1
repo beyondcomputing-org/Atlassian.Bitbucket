@@ -67,6 +67,10 @@ function Get-BitbucketPullRequest {
         C:\PS> New-BitbucketPullRequest -RepoSlug 'Repo' -Title 'PR Title' -SourceBranch 'BranchName'
         Creates a new PR against the `Repo` repository from BranchName to the repositories main branch.
 
+    .EXAMPLE
+        C:\PS> New-BitbucketPullRequest -RepoSlug 'Repo' -Title 'Markdown' -SourceBranch 'BranchName' -Description "# Heading1 `n * Item1 `n * Item2"
+        Creates a PR with markdown in the Description.  Includes an h1 heading and bullet items.
+
     .PARAMETER Team
         Name of the team in Bitbucket.  Defaults to selected team if not provided.
 
@@ -80,7 +84,7 @@ function Get-BitbucketPullRequest {
         The source branch for the PR.
 
     .PARAMETER Description
-        Description for the PR.
+        Description for the PR.  Supports Markdown.
 
     .PARAMETER CloseBranch
         Specifies if the source branch should be closed when the PR is merged.  Defaults to True.
@@ -89,7 +93,7 @@ function Get-BitbucketPullRequest {
         The destination branch for the PR.  Defaults to the repositories main branch specified in Bitbucket.
 #>
 function New-BitbucketPullRequest {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Low')]
     param(
         [Parameter( ValueFromPipelineByPropertyName=$true,
                     HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
@@ -145,6 +149,8 @@ function New-BitbucketPullRequest {
 
         $body = $body | ConvertTo-Json -Depth 3 -Compress
 
-        return Invoke-BitbucketAPI -Path $endpoint -Body $body -Method Post
+        if ($pscmdlet.ShouldProcess($RepoSlug, 'Create pull request')){
+            return Invoke-BitbucketAPI -Path $endpoint -Body $body -Method Post
+        }
     }
 }
