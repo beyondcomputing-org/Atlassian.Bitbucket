@@ -15,7 +15,7 @@
     ModuleVersion     = '0.11.0'
 
     # Supported PSEditions
-    # CompatiblePSEditions = @()
+    # CompatiblePSEditions = @('Desktop', 'Core')
 
     # ID used to uniquely identify this module
     GUID              = '55fe2007-2819-4bc9-a72e-c5f8a98ba0a9'
@@ -112,10 +112,10 @@
     CmdletsToExport   = @()
 
     # Variables to export from this module
-    VariablesToExport = ''
+    VariablesToExport = @()
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport   = 'Login-Bitbucket'
+    AliasesToExport   = @('Login-Bitbucket')
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()
