@@ -4,6 +4,10 @@
 *These will be removed in the next major release*
 - N/A
 
+0.11.0
+-----
+- Added License, Icon and Tags
+
 0.10.0
 -----
 - Added `Get-BitbucketPullRequestComment`

@@ -8,153 +8,159 @@
 
 @{
 
-# Script module or binary module file associated with this manifest.
-RootModule = 'Atlassian.Bitbucket.psm1'
+    # Script module or binary module file associated with this manifest.
+    RootModule        = 'Atlassian.Bitbucket.psm1'
 
-# Version number of this module.
-ModuleVersion = '0.9.0'
+    # Version number of this module.
+    ModuleVersion     = '0.11.0'
 
-# Supported PSEditions
-# CompatiblePSEditions = @()
+    # Supported PSEditions
+    # CompatiblePSEditions = @()
 
-# ID used to uniquely identify this module
-GUID = '55fe2007-2819-4bc9-a72e-c5f8a98ba0a9'
+    # ID used to uniquely identify this module
+    GUID              = '55fe2007-2819-4bc9-a72e-c5f8a98ba0a9'
 
-# Author of this module
-Author = 'Mark Studer'
+    # Author of this module
+    Author            = 'Mark Studer'
 
-# Company or vendor of this module
-CompanyName = 'BeyondComputing'
+    # Company or vendor of this module
+    CompanyName       = 'BeyondComputing'
 
-# Copyright statement for this module
-Copyright = '(c) BeyondComputing. All rights reserved.'
+    # Copyright statement for this module
+    Copyright         = '(c) BeyondComputing. All rights reserved.'
 
-# Description of the functionality provided by this module
-Description = 'Provides cmdlets for easy automation and CLI access to Bitbucket.'
+    # Description of the functionality provided by this module
+    Description       = 'Provides cmdlets for easy automation and CLI access to Bitbucket.'
 
-# Minimum version of the PowerShell engine required by this module
-PowerShellVersion = '5.0'
+    # Minimum version of the PowerShell engine required by this module
+    PowerShellVersion = '5.0'
 
-# Name of the PowerShell host required by this module
-# PowerShellHostName = ''
+    # Name of the PowerShell host required by this module
+    # PowerShellHostName = ''
 
-# Minimum version of the PowerShell host required by this module
-# PowerShellHostVersion = ''
+    # Minimum version of the PowerShell host required by this module
+    # PowerShellHostVersion = ''
 
-# Minimum version of Microsoft .NET Framework required by this module. This prerequisite is valid for the PowerShell Desktop edition only.
-# DotNetFrameworkVersion = ''
+    # Minimum version of Microsoft .NET Framework required by this module. This prerequisite is valid for the PowerShell Desktop edition only.
+    # DotNetFrameworkVersion = ''
 
-# Minimum version of the common language runtime (CLR) required by this module. This prerequisite is valid for the PowerShell Desktop edition only.
-# CLRVersion = ''
+    # Minimum version of the common language runtime (CLR) required by this module. This prerequisite is valid for the PowerShell Desktop edition only.
+    # CLRVersion = ''
 
-# Processor architecture (None, X86, Amd64) required by this module
-# ProcessorArchitecture = ''
+    # Processor architecture (None, X86, Amd64) required by this module
+    # ProcessorArchitecture = ''
 
-# Modules that must be imported into the global environment prior to importing this module
-# RequiredModules = @()
+    # Modules that must be imported into the global environment prior to importing this module
+    # RequiredModules = @()
 
-# Assemblies that must be loaded prior to importing this module
-# RequiredAssemblies = @()
+    # Assemblies that must be loaded prior to importing this module
+    # RequiredAssemblies = @()
 
-# Script files (.ps1) that are run in the caller's environment prior to importing this module.
-# ScriptsToProcess = @()
+    # Script files (.ps1) that are run in the caller's environment prior to importing this module.
+    # ScriptsToProcess = @()
 
-# Type files (.ps1xml) to be loaded when importing this module
-# TypesToProcess = @()
+    # Type files (.ps1xml) to be loaded when importing this module
+    # TypesToProcess = @()
 
-# Format files (.ps1xml) to be loaded when importing this module
-# FormatsToProcess = @()
+    # Format files (.ps1xml) to be loaded when importing this module
+    # FormatsToProcess = @()
 
-# Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-NestedModules = @(
-    'Atlassian.Bitbucket.Authentication.psm1',
-    'Atlassian.Bitbucket.Pipeline.psm1',
-    'Atlassian.Bitbucket.Project.psm1',
-    'Atlassian.Bitbucket.PullRequest.Comment.psm1',
-    'Atlassian.Bitbucket.PullRequest.psm1',
-    'Atlassian.Bitbucket.Repository.Deployment.psm1',
-    'Atlassian.Bitbucket.Repository.Environment.psm1',
-    'Atlassian.Bitbucket.Repository.psm1',
-    'Atlassian.Bitbucket.Repository.Reviewer.psm1'
-)
+    # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
+    NestedModules     = @(
+        'Atlassian.Bitbucket.Authentication.psm1',
+        'Atlassian.Bitbucket.Pipeline.psm1',
+        'Atlassian.Bitbucket.Project.psm1',
+        'Atlassian.Bitbucket.PullRequest.Comment.psm1',
+        'Atlassian.Bitbucket.PullRequest.psm1',
+        'Atlassian.Bitbucket.Repository.Deployment.psm1',
+        'Atlassian.Bitbucket.Repository.Environment.psm1',
+        'Atlassian.Bitbucket.Repository.psm1',
+        'Atlassian.Bitbucket.Repository.Reviewer.psm1'
+    )
 
-# Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @(
-    'Add-BitbucketRepositoryReviewer',
-    'Get-BitbucketLogin',
-    'Get-BitbucketProject',
-    'Get-BitbucketPullRequest',
-    'Get-BitbucketPullRequestComment',
-    'Get-BitbucketRepository',
-    'Get-BitbucketRepositoryDeployment',
-    'Get-BitbucketRepositoryEnvironment',
-    'Get-BitbucketRepositoryReviewer',
-    'Get-BitbucketSelectedTeam',
-    'Get-BitbucketTeam',
-    'New-BitbucketLogin',
-    'New-BitbucketPullRequest',
-    'New-BitbucketPullRequestComment',
-    'New-BitbucketRepository',
-    'New-BitbucketRepositoryEnvironment',
-    'Remove-BitbucketLogin',
-    'Remove-BitbucketRepository',
-    'Remove-BitbucketRepositoryEnvironment',
-    'Remove-BitbucketRepositoryReviewer',
-    'Save-BitbucketLogin',
-    'Select-BitbucketTeam',
-    'Set-BitbucketRepository',
-    'Set-BitbucketRepositoryReviewer',
-    'Start-BitbucketPipeline',
-    'Wait-BitbucketPipeline'
-)
+    # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
+    FunctionsToExport = @(
+        'Add-BitbucketRepositoryReviewer',
+        'Get-BitbucketLogin',
+        'Get-BitbucketProject',
+        'Get-BitbucketPullRequest',
+        'Get-BitbucketPullRequestComment',
+        'Get-BitbucketRepository',
+        'Get-BitbucketRepositoryDeployment',
+        'Get-BitbucketRepositoryEnvironment',
+        'Get-BitbucketRepositoryReviewer',
+        'Get-BitbucketSelectedTeam',
+        'Get-BitbucketTeam',
+        'New-BitbucketLogin',
+        'New-BitbucketPullRequest',
+        'New-BitbucketPullRequestComment',
+        'New-BitbucketRepository',
+        'New-BitbucketRepositoryEnvironment',
+        'Remove-BitbucketLogin',
+        'Remove-BitbucketRepository',
+        'Remove-BitbucketRepositoryEnvironment',
+        'Remove-BitbucketRepositoryReviewer',
+        'Save-BitbucketLogin',
+        'Select-BitbucketTeam',
+        'Set-BitbucketRepository',
+        'Set-BitbucketRepositoryReviewer',
+        'Start-BitbucketPipeline',
+        'Wait-BitbucketPipeline'
+    )
 
-# Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-CmdletsToExport = @()
+    # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
+    CmdletsToExport   = @()
 
-# Variables to export from this module
-VariablesToExport = ''
+    # Variables to export from this module
+    VariablesToExport = ''
 
-# Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-AliasesToExport = 'Login-Bitbucket'
+    # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
+    AliasesToExport   = 'Login-Bitbucket'
 
-# DSC resources to export from this module
-# DscResourcesToExport = @()
+    # DSC resources to export from this module
+    # DscResourcesToExport = @()
 
-# List of all modules packaged with this module
-# ModuleList = @()
+    # List of all modules packaged with this module
+    # ModuleList = @()
 
-# List of all files packaged with this module
-# FileList = @()
+    # List of all files packaged with this module
+    # FileList = @()
 
-# Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
-PrivateData = @{
+    # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
+    PrivateData = @{
 
-    PSData = @{
+        PSData = @{
 
-        # Tags applied to this module. These help with module discovery in online galleries.
-        # Tags = @()
+            # Tags applied to this module. These help with module discovery in online galleries.
+            Tags = @(
+                'Atlassian',
+                'BB',
+                'BBP',
+                'Bitbucket',
+                'Git',
+                'Pipelines'
+            )
 
-        # A URL to the license for this module.
-        # LicenseUri = ''
+            # A URL to the license for this module.
+            LicenseUri   = 'https://raw.githubusercontent.com/beyondcomputing-org/Atlassian.Bitbucket/master/LICENSE.md'
 
-        # A URL to the main website for this project.
-        ProjectUri = 'https://github.com/beyondcomputing-org/Atlassian.Bitbucket'
+            # A URL to the main website for this project.
+            ProjectUri   = 'https://github.com/beyondcomputing-org/Atlassian.Bitbucket'
 
-        # A URL to an icon representing this module.
-        # IconUri = ''
+            # A URL to an icon representing this module.
+            IconUri      = 'https://raw.githubusercontent.com/beyondcomputing-org/Atlassian.Bitbucket/master/Icon/icon-small.png'
 
-        # ReleaseNotes of this module
-        ReleaseNotes = 'https://github.com/beyondcomputing-org/Atlassian.Bitbucket/blob/master/CHANGELOG.md'
+            # ReleaseNotes of this module
+            ReleaseNotes = 'https://raw.githubusercontent.com/beyondcomputing-org/Atlassian.Bitbucket/master/CHANGELOG.md'
 
-    } # End of PSData hashtable
+        } # End of PSData hashtable
 
-} # End of PrivateData hashtable
+    } # End of PrivateData hashtable
 
-# HelpInfo URI of this module
-HelpInfoURI = 'https://github.com/beyondcomputing-org/Atlassian.Bitbucket'
+    # HelpInfo URI of this module
+    HelpInfoURI       = 'https://github.com/beyondcomputing-org/Atlassian.Bitbucket'
 
-# Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
-# DefaultCommandPrefix = ''
+    # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
+    # DefaultCommandPrefix = ''
 
 }
-

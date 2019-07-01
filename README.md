@@ -63,3 +63,6 @@ See CHANGELOG.md for more information.
 
 ## Contributing
 See CONTRIBUTING.md for more information.
+
+## License
+See LICENSE.md for more information.
