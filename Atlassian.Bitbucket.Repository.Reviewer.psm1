@@ -11,6 +11,7 @@ function Get-BitbucketRepositoryReviewer {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true,
             HelpMessage = 'The repository slug.')]
+        [Alias('Slug')]
         [string]$RepoSlug
     )
     Process {
@@ -31,6 +32,7 @@ function Add-BitbucketRepositoryReviewer {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true,
             HelpMessage = 'The repository slug.')]
+        [Alias('Slug')]
         [string]$RepoSlug,
         [Parameter( Mandatory = $true,
             Position = 1,
@@ -71,6 +73,7 @@ function Remove-BitbucketRepositoryReviewer {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true,
             HelpMessage = 'The repository slug.')]
+        [Alias('Slug')]
         [string]$RepoSlug,
         [Parameter( Mandatory = $true,
             Position = 1,
@@ -106,6 +109,7 @@ function Set-BitbucketRepositoryReviewer {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true,
             HelpMessage = 'The repository slug.')]
+        [Alias('Slug')]
         [string]$RepoSlug,
         [Parameter( Mandatory = $true,
             Position = 1,

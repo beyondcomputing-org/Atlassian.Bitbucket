@@ -11,6 +11,7 @@ function Get-BitbucketRepositoryDeployment {
                     ValueFromPipeline=$true,
                     ValueFromPipelineByPropertyName=$true,
                     HelpMessage='The repository slug.')]
+        [Alias('Slug')]
         [string]$RepoSlug,
         [ValidateSet('COMPLETED', 'IN_PROGRESS', 'UNDEPLOYED')]
         [string]$State

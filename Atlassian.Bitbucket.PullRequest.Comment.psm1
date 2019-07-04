@@ -30,6 +30,7 @@ function Get-BitbucketPullRequestComment {
                     Position = 0,
                     ValueFromPipelineByPropertyName = $true,
                     HelpMessage = 'The repository slug.')]
+        [Alias('Slug')]
         [string]$RepoSlug,
         [Parameter( Mandatory = $true,
                     Position = 1,
@@ -83,6 +84,7 @@ function New-BitbucketPullRequestComment {
                     Position = 0,
                     ValueFromPipelineByPropertyName = $true,
                     HelpMessage = 'The repository slug.')]
+        [Alias('Slug')]
         [string]$RepoSlug,
         [Parameter( Mandatory = $true,
                     Position = 1,

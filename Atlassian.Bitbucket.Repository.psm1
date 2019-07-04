@@ -95,6 +95,7 @@ function New-BitbucketRepository {
                     ValueFromPipeline=$true,
                     ValueFromPipelineByPropertyName=$true,
                     HelpMessage='The repository slug.')]
+        [Alias('Slug')]
         [string]$RepoSlug,
         [Parameter( ValueFromPipelineByPropertyName=$true,
                     HelpMessage='Project key in Bitbucket')]
@@ -192,6 +193,7 @@ function Set-BitbucketRepository {
                     ValueFromPipeline=$true,
                     ValueFromPipelineByPropertyName=$true,
                     HelpMessage='The repository slug.')]
+        [Alias('Slug')]
         [string]$RepoSlug,
         [Parameter( ValueFromPipelineByPropertyName=$true,
                     HelpMessage='Project key in Bitbucket')]
@@ -290,6 +292,7 @@ function Remove-BitbucketRepository {
                     ValueFromPipeline=$true,
                     ValueFromPipelineByPropertyName=$true,
                     HelpMessage='The repository slug.')]
+        [Alias('Slug')]
         [string]$RepoSlug,
         [Parameter( ValueFromPipelineByPropertyName=$true,
                     HelpMessage='Redirect string')]

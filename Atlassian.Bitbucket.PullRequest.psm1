@@ -35,6 +35,7 @@ function Get-BitbucketPullRequest {
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true,
             HelpMessage = 'The repository slug.')]
+        [Alias('Slug')]
         [string]$RepoSlug,
         [Parameter( ValueFromPipelineByPropertyName = $true,
                     HelpMessage = 'The state of the PR.  Defaults to OPEN')]
@@ -103,6 +104,7 @@ function New-BitbucketPullRequest {
                     ValueFromPipeline = $true,
                     ValueFromPipelineByPropertyName = $true,
                     HelpMessage = 'The repository slug.')]
+        [Alias('Slug')]
         [string]$RepoSlug,
         [Parameter( Mandatory = $true,
                     ValueFromPipelineByPropertyName = $true,

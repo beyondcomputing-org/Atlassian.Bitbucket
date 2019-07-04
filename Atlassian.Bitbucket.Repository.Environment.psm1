@@ -28,6 +28,7 @@ function Get-BitbucketRepositoryEnvironment {
                     ValueFromPipeline=$true,
                     ValueFromPipelineByPropertyName=$true,
                     HelpMessage='The repository slug.')]
+        [Alias('Slug')]
         [string]$RepoSlug
     )
 
@@ -74,6 +75,7 @@ function New-BitbucketRepositoryEnvironment {
                     ValueFromPipeline=$true,
                     ValueFromPipelineByPropertyName=$true,
                     HelpMessage='The repository slug.')]
+        [Alias('Slug')]
         [string]$RepoSlug,
         [Parameter( Mandatory=$true,
                     Position=1,
@@ -150,6 +152,7 @@ function Remove-BitbucketRepositoryEnvironment {
                     ValueFromPipeline=$true,
                     ValueFromPipelineByPropertyName=$true,
                     HelpMessage='The repository slug.')]
+        [Alias('Slug')]
         [string]$RepoSlug,
         [Parameter( Mandatory=$true,
                     Position=1,

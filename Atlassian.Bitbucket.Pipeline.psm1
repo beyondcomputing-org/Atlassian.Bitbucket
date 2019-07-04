@@ -11,6 +11,7 @@ function Start-BitbucketPipeline {
                     ValueFromPipeline=$true,
                     ValueFromPipelineByPropertyName=$true,
                     HelpMessage='The repository slug.')]
+        [Alias('Slug')]
         [string]$RepoSlug,
         [Parameter( Position=1,
                     ValueFromPipelineByPropertyName=$true)]
@@ -72,6 +73,7 @@ function Wait-BitbucketPipeline {
         [Parameter( Position=0,
                     ValueFromPipelineByPropertyName=$true,
                     HelpMessage='The repository slug.')]
+        [Alias('Slug')]
         [string]$RepoSlug,
         [Parameter( ValueFromPipelineByPropertyName=$true,
                     HelpMessage='The repository object from Bitbucket.')]
