@@ -4,6 +4,10 @@
 *These will be removed in the next major release*
 - N/A
 
+0.13.0
+-----
+- Updated `Get-BitbucketRepository` to allow specifying a specific repository*
+
 0.12.0
 -----
 - Added Slug alias to RepoSlug to simplify pipelining
@@ -62,3 +66,7 @@
 
 - - - - -
 Check the [Mastering Markdown](https://guides.github.com/features/mastering-markdown/) for basic syntax.
+- - - - -
+Following [Semantic Versioning](https://semver.org/)
+- - - - -
+*Major version zero (0.y.z) is for initial development. Anything may change at any time.  Thus a breaking change was introduced in this version.

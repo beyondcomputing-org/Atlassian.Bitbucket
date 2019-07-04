@@ -12,7 +12,7 @@
     RootModule        = 'Atlassian.Bitbucket.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.12.0'
+    ModuleVersion     = '0.13.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @('Desktop', 'Core')

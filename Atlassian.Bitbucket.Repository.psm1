@@ -18,6 +18,9 @@ using module .\Atlassian.Bitbucket.Authentication.psm1
     .PARAMETER Team
         Name of the team in Bitbucket.  Defaults to selected team if not provided.
 
+    .PARAMETER RepoSlug
+        Name of the repo in Bitbucket.
+
     .PARAMETER ProjectKey
         Project key in Bitbucket
 #>
@@ -27,9 +30,13 @@ function Get-BitbucketRepository {
         [Parameter( ValueFromPipelineByPropertyName=$true,
                     HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
         [string]$Team = (Get-BitbucketSelectedTeam),
-        [Parameter( Mandatory=$false,
-                    Position=0,
+        [Parameter( Position=0,
                     ValueFromPipeline=$true,
+                    ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='The repository slug.')]
+        [Alias('Slug')]
+        [string]$RepoSlug,
+        [Parameter( Position=1,
                     ValueFromPipelineByPropertyName=$true,
                     HelpMessage='Project key in Bitbucket')]
         [string]$ProjectKey
@@ -38,12 +45,12 @@ function Get-BitbucketRepository {
     Process {
         $endpoint = "repositories/$Team"
 
-        # Filter to a specific project
-        if($ProjectKey)
-        {
+        if($RepoSlug){
+            return Invoke-BitbucketAPI -Path "$endpoint/$RepoSlug"
+        }elseif($ProjectKey){
+            # Filter to a specific project
             $endpoint += "?q=project.key=%22$ProjectKey%22"
         }
-
         return Invoke-BitbucketAPI -Path $endpoint -Paginated
     }
 }
