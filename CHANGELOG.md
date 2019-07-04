@@ -4,6 +4,10 @@
 *These will be removed in the next major release*
 - N/A
 
+0.12.0
+-----
+- Added Slug alias to RepoSlug to simplify pipelining
+
 0.11.0
 -----
 - Added License, Icon and Tags
