@@ -202,21 +202,16 @@ function Set-BitbucketRepository {
                     HelpMessage='The repository slug.')]
         [Alias('Slug')]
         [string]$RepoSlug,
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Project key in Bitbucket')]
+        [Parameter( HelpMessage='Project key in Bitbucket')]
         [string]$ProjectKey,
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Is the repo private?')]
+        [Parameter( HelpMessage='Is the repo private?')]
         [boolean]$Private,
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Description for the repo')]
+        [Parameter( HelpMessage='Description for the repo')]
         [string]$Description,
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Programming language used in the repo')]
+        [Parameter( HelpMessage='Programming language used in the repo')]
         [ValidateSet('java', 'javascript','python','ruby','php','powershell')]
         [string]$Language,
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Fork policy of the repo.  [allow_forks, no_public_forks, no_forks]')]
+        [Parameter( HelpMessage='Fork policy of the repo.  [allow_forks, no_public_forks, no_forks]')]
         [ValidateSet('allow_forks', 'no_public_forks', 'no_forks')]
         [string]$ForkPolicy
     )

@@ -4,6 +4,11 @@
 *These will be removed in the next major release*
 - N/A
 
+0.14.0
+-----
+- Updated `Set-BitbucketRepository` pipeline parameter options*
+- Added more unit tests
+
 0.13.0
 -----
 - Updated `Get-BitbucketRepository` to allow specifying a specific repository*

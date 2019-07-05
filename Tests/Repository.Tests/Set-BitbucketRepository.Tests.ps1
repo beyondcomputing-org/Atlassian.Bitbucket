@@ -60,4 +60,33 @@ Describe 'Set-BitbucketRepository' {
             {Set-BitbucketRepository -Team $Team -RepoSlug $Repo} | Should -Throw
         }
     }
+
+    Context 'Accepts pipeline input only for slug' {
+        $Key = 'K'
+        $Repo = New-Object PSObject -Property @{
+            scm = 'git'
+            uuid = (New-Guid)
+            slug = 'reponame'
+            description = 'desc'
+            language = 'powershell'
+        }
+
+        $Repo | Set-BitbucketRepository -Team $Team -ProjectKey $Key
+
+        It 'Has a valid path' {
+            Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
+                $Path -eq "repositories/$Team/$($Repo.slug)"
+            }
+        }
+
+        It 'Has a valid body with no other properties'{
+            Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
+                ([ordered]@{
+                    project  = [ordered]@{
+                        key  = $Key
+                    }
+                } | ConvertTo-Json -Compress) -eq $Body
+            }
+        }
+    }
 }
