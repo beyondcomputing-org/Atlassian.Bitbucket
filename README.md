@@ -26,7 +26,22 @@ The module provides session level authentication with optional machine / user en
 The module supports both Basic authentication and OAuth 2.0 for the Bitbucket API's.
 
 #### How To Login
- `Login-Bitbucket`
+##### Basic Auth
+```powershell
+Login-Bitbucket
+```
+
+##### OAuth 2.0
+For OAuth 2.0 Login you will need two sets of credentials.  
+1. Your Atlassian credentials: `email` and `password`
+2. Key and Secret for [OAuth Consumer](https://confluence.atlassian.com/bitbucket/oauth-on-bitbucket-cloud-238027431.html#OAuthonBitbucketCloud-Createaconsumer).
+
+```powershell
+$Cred = Get-Credential -UserName '<Email>'
+$OAuth = Get-Credential -UserName '<OAuth Consumer Key>'
+
+Login-Bitbucket -AtlassianCredential $Cred -OAuthConsumer $OAuth
+```
 
 #### Persistence
 Use `Login-Bitbucket -Save` when logging in or `Save-BitbucketLogin` at any time to save the information to an encrypted file that will be automatically loaded when you start a new session.
