@@ -1,5 +1,5 @@
 # Atlassian.Bitbucket
-See module manifest `Atlassian.Bitbucket.psd1` for more information.
+See [PowerShell Gallery](https://www.powershellgallery.com/packages/Atlassian.Bitbucket) for more information.
 
 ## Build Status
 |Windows|Linux|macOS|
