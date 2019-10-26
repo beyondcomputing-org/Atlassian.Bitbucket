@@ -11,7 +11,7 @@ using module .\Classes\Atlassian.Bitbucket.Settings.psm1
     .EXAMPLE
         Login-Bitbucket -Credential (Get-Credential)
         # Provide authentication for API calls using Basic Auth
-    
+
     .EXAMPLE
         Login-Bitbucket -AtlassianCredential (Get-Credential) -OAuthConsumer (Get-Credential)
         # Provide authentication for API calls using OAuth 2.0
@@ -21,7 +21,7 @@ using module .\Classes\Atlassian.Bitbucket.Settings.psm1
 
     .PARAMETER AtlassianCredential
         Email and password for Atlassian Authentication.  Used with OAuthConsumer to generate token.
-    
+
     .PARAMETER OAuthConsumer
         Key and Secret for OAuth Consumer.  https://confluence.atlassian.com/bitbucket/oauth-on-bitbucket-cloud-238027431.html#OAuthonBitbucketCloud-Createaconsumer
 #>
