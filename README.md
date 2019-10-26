@@ -7,19 +7,31 @@ See module manifest `Atlassian.Bitbucket.psd1` for more information.
 |[![Build Status](https://beyondcomputing.visualstudio.com/PowerShell%20Modules/_apis/build/status/beyondcomputing-org.Atlassian.Bitbucket?branchName=master&jobName=Build_PS_Win2016)](https://beyondcomputing.visualstudio.com/PowerShell%20Modules/_build/latest?definitionId=6&branchName=master)|[![Build Status](https://beyondcomputing.visualstudio.com/PowerShell%20Modules/_apis/build/status/beyondcomputing-org.Atlassian.Bitbucket?branchName=master&jobName=Build_PSCore_Ubuntu1604)](https://beyondcomputing.visualstudio.com/PowerShell%20Modules/_build/latest?definitionId=6&branchName=master)|[![Build Status](https://beyondcomputing.visualstudio.com/PowerShell%20Modules/_apis/build/status/beyondcomputing-org.Atlassian.Bitbucket?branchName=master&jobName=Build_PSCore_MacOS1013)](https://beyondcomputing.visualstudio.com/PowerShell%20Modules/_build/latest?definitionId=6&branchName=master)|
 
 ## Using The Module
+### Installation
+Run the following command in an elevated PowerShell session to install the module from the PowerShell Gallery.
+```powershell
+Install-Module Atlassian.Bitbucket
+```
+
+### Update
+If you already have the module installed, run the following command in an elevated PowerShell session to update the module from the PowerShell Gallery to the latest version.
+```powershell
+Update-Module Atlassian.Bitbucket
+```
+
 ### Authentication
 The module provides session level authentication with optional machine / user encrypted persistance between sessions.
 
 #### Authentication Methods
 The module supports both Basic authentication and OAuth 2.0 for the Bitbucket API's.
 
-#### Login
+#### How To Login
  `Login-Bitbucket`
 
 #### Persistence
 Use `Login-Bitbucket -Save` when logging in or `Save-BitbucketLogin` at any time to save the information to an encrypted file that will be automatically loaded when you start a new session.
 
-### Teams
+#### Teams
 The module will automatically select your team if you have 1 when logging in or prompt you to choose from a list of teams.  Cmdlets will default to the team selected unless specified.  If you wish to change the team run `Select-BitbucketTeam`.  If you want to save the change run `Save-BitbucketLogin` again.
 
 ### CMDLETs
