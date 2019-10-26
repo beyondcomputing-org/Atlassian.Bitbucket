@@ -5,16 +5,20 @@ Install-Module PSScriptAnalyzer -Force
 # Run Unit Tests
 Invoke-Pester -EnableExit -OutputFile 'TestResults.xml' -OutputFormat NUnitXml
 
+# Get Module Name
+$ModuleName = (Get-Item '*.psd1').Name.Replace('.psd1','')
+
 # Create Build Folder
-$BuildFolder = 'Build/Atlassian.Bitbucket'
+$BuildFolder = "Build/$ModuleName"
 if(!(Test-Path $BuildFolder)){
     New-Item -ItemType Directory -Path $BuildFolder
 }
 
 # Copy in Items for Release
-Copy-Item -Path 'Atlassian.Bitbucket.psd1' -Destination $BuildFolder -Force
+Copy-Item -Path "$ModuleName.psd1" -Destination $BuildFolder -Force
 Copy-Item -Path 'README.md' -Destination $BuildFolder -Force
 Copy-Item -Path 'CHANGELOG.md' -Destination $BuildFolder -Force
+Copy-Item -Path 'LICENSE.md' -Destination $BuildFolder -Force
 
 # Module Files
 Copy-Item -Path '*' -Destination $BuildFolder -Recurse -Include '*.psm1' -Force
