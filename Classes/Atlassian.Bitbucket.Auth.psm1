@@ -8,6 +8,12 @@ class BitbucketAuth {
     [PSCredential]$Credential
     [Object]$User
     [String]$Team
+    [String]$AuthType
+
+    # OAuth Parameters
+    [PSCredential]$AtlassianCredential
+    [PSCredential]$OAuthConsumer
+    $Token
 
     # Instatiator
     static [BitbucketAuth] NewInstance([PSCredential]$Credential) {
@@ -17,6 +23,24 @@ class BitbucketAuth {
         # Create new instance and validate
         $Auth = [BitbucketAuth]::new()
         $Auth.Credential = $Credential
+        $Auth.AuthType = 'Basic'
+        $Auth.ValidateLoginAndSaveUser()
+
+        [BitbucketAuth]::instance = $Auth
+        return [BitbucketAuth]::instance
+    }
+
+    # OAuth 2 Instantiator
+    static [BitbucketAuth] NewInstance([PSCredential]$AtlassianCredential, [PSCredential]$OAuthConsumer){
+        # Remove existing instance
+        [BitbucketAuth]::ClearInstance()
+
+        # Create new instance and validate
+        $Auth = [BitbucketAuth]::new()
+        $Auth.AtlassianCredential = $AtlassianCredential
+        $Auth.OAuthConsumer = $OAuthConsumer
+        $Auth.AuthType = 'Bearer'
+        $Auth.GetAuthToken()
         $Auth.ValidateLoginAndSaveUser()
 
         [BitbucketAuth]::instance = $Auth
@@ -46,16 +70,64 @@ class BitbucketAuth {
         $URI = [BitbucketSettings]::VERSION_URL + 'user'
 
         try {
-            $this.User = Invoke-RestMethod -Uri $URI -Method Get -Headers @{Authorization=("Basic {0}" -f $this.GetBasicAuth())}
+            $this.User = Invoke-RestMethod -Uri $URI -Method Get -Headers $this.GetAuthHeader()
         }
         catch {
             throw 'Login Failed - credentials are invalid.  Use Login-Bitbucket to re-authenticate.'
         }
     }
 
-    # Convert credentials to basic auth form
-    [string] GetBasicAuth() {
-        return [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $this.Credential.GetNetworkCredential().UserName, $this.Credential.GetNetworkCredential().Password)))
+    # Get Authentication Header
+    [Hashtable] GetAuthHeader() {
+        switch ($this.AuthType) {
+            'Basic' {
+                $basicAuth = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $this.Credential.GetNetworkCredential().UserName, $this.Credential.GetNetworkCredential().Password)))
+                return @{Authorization = "Basic $basicAuth"}
+            }
+            'Bearer' {
+                if($this.Token.expires -le (Get-Date)){
+                    $this.GetAuthToken()
+                }
+                return @{Authorization = "Bearer $($this.Token.accessToken)"}
+            }
+            Default {
+                Throw "Unknown Authentication Type: $($this.AuthType)"
+            }
+        }
+        Throw 'Unhandled condition'
+    }
+
+    # Get Token
+    hidden [Void] GetAuthToken() {
+        $body = @{
+            grant_type = 'password'
+            username = $this.AtlassianCredential.GetNetworkCredential().UserName
+            password = $this.AtlassianCredential.GetNetworkCredential().Password
+        }
+
+        # Get the token from Bitbucket
+        $response = Invoke-RestMethod 'https://bitbucket.org/site/oauth2/access_token' -Method Post -Authentication Basic -Credential $this.OAuthConsumer -Body $body
+
+        # Parse the scopes from the response
+        $scope_parts = $response.scopes -split ' '
+        $scopes = @()
+        foreach ($scope in $scope_parts) {
+            $parts = $scope -split ':'
+
+            $scopes += [PSCustomObject]@{
+                Name = $parts[0]
+                Permission = $parts[1]
+            }
+        }
+
+        # Store the token
+        $this.Token = [PSCustomObject]@{
+            accessToken = $response.access_token
+            scopes = $scopes
+            expires = (Get-Date).AddSeconds($response.expires_in)
+            refreshToken = $response.refresh_token
+            tokenType = $response.token_type
+        }
     }
 
     # Save the settings to the local system
@@ -64,7 +136,17 @@ class BitbucketAuth {
             New-Item -Type Directory -Path [BitbucketSettings]::SAVE_DIR
         }
 
-        $this | Export-CliXml -Path ([BitbucketSettings]::SAVE_PATH)  -Encoding 'utf8' -Force
+        # Create a filtered object to save
+        $Save = [PSCustomObject]@{
+            User = $this.User
+            Team = $this.Team
+            Credential = $this.Credential
+            AtlassianCredential = $this.AtlassianCredential
+            OAuthConsumer = $this.OAuthConsumer
+            AuthType = $this.AuthType
+        }
+
+        $Save | Export-CliXml -Path ([BitbucketSettings]::SAVE_PATH)  -Encoding 'utf8' -Force
     }
 
     # Load Saved Credentials
@@ -73,11 +155,26 @@ class BitbucketAuth {
             $Import = Import-CliXml -Path ([BitbucketSettings]::SAVE_PATH)
             $Auth = [BitbucketAuth]::new()
 
-            $Auth.Credential = $Import.Credential
             $Auth.User = $Import.User
             $Auth.Team = $Import.Team
+            $Auth.Credential = $Import.Credential
+            $Auth.AtlassianCredential = $Import.AtlassianCredential
+            $Auth.OAuthConsumer = $Import.OAuthConsumer
+            $Auth.AuthType = $Import.AuthType
 
-            $Auth.ValidateLoginAndSaveUser()
+            switch ($Auth.AuthType) {
+                'Basic' {
+                    $Auth.ValidateLoginAndSaveUser()
+                }
+                'Bearer' {
+                    $Auth.GetAuthToken()
+                    $Auth.ValidateLoginAndSaveUser()
+                }
+                Default {
+                    Throw "Unknown Authentication Type: $($Auth.AuthType)"
+                }
+            }
+
             [BitbucketAuth]::instance = $Auth
             return [BitbucketAuth]::instance
         }

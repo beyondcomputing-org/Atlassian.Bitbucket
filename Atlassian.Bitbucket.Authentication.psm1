@@ -3,28 +3,54 @@ using module .\Classes\Atlassian.Bitbucket.Settings.psm1
 
 <#
     .SYNOPSIS
-        A brief description of the function.
+        Login to Bitbucket
 
     .DESCRIPTION
-        A detailed description of the function.
+        Allows logins to Bitbucket for both Basic authentication or OAuth 2.0.
 
     .EXAMPLE
-        C:\PS> Verb-Noun
-        Describe the above example
+        Login-Bitbucket -Credential (Get-Credential)
+        # Provide authentication for API calls using Basic Auth
+    
+    .EXAMPLE
+        Login-Bitbucket -AtlassianCredential (Get-Credential) -OAuthConsumer (Get-Credential)
+        # Provide authentication for API calls using OAuth 2.0
 
-    .PARAMETER Name
-        The description of a parameter. Add a ".PARAMETER" keyword for each parameter in the function.
+    .PARAMETER Credential
+        Username and password in Bitbucket for basic authentication.
+
+    .PARAMETER AtlassianCredential
+        Email and password for Atlassian Authentication.  Used with OAuthConsumer to generate token.
+    
+    .PARAMETER OAuthConsumer
+        Key and Secret for OAuth Consumer.  https://confluence.atlassian.com/bitbucket/oauth-on-bitbucket-cloud-238027431.html#OAuthonBitbucketCloud-Createaconsumer
 #>
 function New-BitbucketLogin {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Low')]
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Low', DefaultParameterSetName='Basic')]
     [Alias('Login-Bitbucket')]
     param(
-        [PSCredential]$Credential = (Get-Credential),
+        [Parameter(Mandatory = $true, ParameterSetName = 'Basic')]
+        [PSCredential]$Credential,
+        [Parameter(Mandatory = $true, ParameterSetName = 'OAuth2')]
+        [PSCredential]$AtlassianCredential,
+        [Parameter(Mandatory = $true, ParameterSetName = 'OAuth2')]
+        [PSCredential]$OAuthConsumer,
         [Switch]$Save
     )
     if ($pscmdlet.ShouldProcess('Bitbucket Login', 'create'))
     {
-        $Auth = [BitbucketAuth]::NewInstance($Credential)
+        switch ($PSCmdlet.ParameterSetName) {
+            'Basic' {
+                $Auth = [BitbucketAuth]::NewInstance($Credential)
+            }
+            'OAuth2' {
+                $Auth = [BitbucketAuth]::NewInstance($AtlassianCredential, $OAuthConsumer)
+            }
+            Default {
+                'You must specify either Basic or OAuth Credentials.'
+            }
+        }
+
         Write-Output "Welcome $($Auth.User.display_name)"
 
         Select-BitbucketTeam
@@ -70,10 +96,19 @@ function Invoke-BitbucketAPI {
         [String]$Path = '',
         [Microsoft.PowerShell.Commands.WebRequestMethod]$Method = 'Get',
         [Object]$Body,
-        [Switch]$Paginated
+        [Switch]$Paginated,
+        [Switch]$InternalAPI
     )
     $Auth = [BitbucketAuth]::GetInstance()
-    $URI = [BitbucketSettings]::VERSION_URL + $Path
+
+    if($InternalAPI){
+        $URI = [BitbucketSettings]::INTERNAL_URL + $Path
+        if($Auth.AuthType -ne 'OAuth2'){
+            Throw 'You must use OAuth 2.0 for Internal APIs.  Login using: Login-Bitbucket -AtlassianCredential (Get-Credential) -OAuthConsumer (Get-Credential)'
+        }
+    }else{
+        $URI = [BitbucketSettings]::VERSION_URL + $Path
+    }
 
     if($Paginated){
         $_endpoint = $URI
@@ -81,7 +116,8 @@ function Invoke-BitbucketAPI {
         # Process Pagination
         do
         {
-            $return = Invoke-RestMethod -Uri $_endpoint -Method $Method -Body $Body -Headers @{Authorization=("Basic {0}" -f $Auth.GetBasicAuth())}  -ContentType 'application/json'
+            Write-Debug "URI: $_endpoint"
+            $return = Invoke-RestMethod -Uri $_endpoint -Method $Method -Body $Body -Headers $Auth.GetAuthHeader()  -ContentType 'application/json'
             $_endpoint = $return.next
             $response += $return.values
         }
@@ -92,10 +128,10 @@ function Invoke-BitbucketAPI {
         if($Body){
             Write-Debug 'Sending request with a body and content type'
             Write-Debug "Body: $Body"
-            return Invoke-RestMethod -Uri $URI -Method $Method -Body $Body -Headers @{Authorization=("Basic {0}" -f $Auth.GetBasicAuth())}  -ContentType 'application/json'
+            return Invoke-RestMethod -Uri $URI -Method $Method -Body $Body -Headers $Auth.GetAuthHeader()  -ContentType 'application/json'
         }else{
             Write-Debug 'Sending request with no body or content type'
-            return Invoke-RestMethod -Uri $URI -Method $Method -Headers @{Authorization=("Basic {0}" -f $Auth.GetBasicAuth())}
+            return Invoke-RestMethod -Uri $URI -Method $Method -Headers $Auth.GetAuthHeader()
         }
     }
 }

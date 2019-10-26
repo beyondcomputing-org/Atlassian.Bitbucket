@@ -10,6 +10,9 @@ See module manifest `Atlassian.Bitbucket.psd1` for more information.
 ### Authentication
 The module provides session level authentication with optional machine / user encrypted persistance between sessions.
 
+#### Authentication Methods
+The module supports both Basic authentication and OAuth 2.0 for the Bitbucket API's.
+
 #### Login
  `Login-Bitbucket`
 
@@ -57,6 +60,12 @@ To get more information on each cmdlet run `Get-Help <CMDLET Name>`
 - Remove-BitbucketRepositoryReviewer
 - Set-BitbucketRepository
 - Set-BitbucketRepositoryReviewer
+
+#### Experimental Internal CMDLETs
+The following CMDLETs are provided but use internal Bitbucket APIs.  These CMDLETs would not be possible without accessing the internal APIs, but are much more likely to break if Atlassian changes their internal API.  To use these CMDLETs you must also use OAuth 2.0 when logging in.
+- Get-BitbucketRepositoryEnvironmentVariable
+- New-BitbucketRepositoryEnvironmentVariable
+- Remove-BitbucketRepositoryEnvironmentVariable
 
 ## Changes
 See CHANGELOG.md for more information.

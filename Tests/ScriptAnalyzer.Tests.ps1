@@ -1,29 +1,28 @@
-﻿$here = (Split-Path -Parent $MyInvocation.MyCommand.Path).Replace('Tests', '')
-$scriptsModules = Get-ChildItem $here -Include *.psd1, *.psm1, *.ps1 -Exclude *.Tests.ps1 -Recurse
-
-Describe 'Testing all scripts and modules against the Script Analyzer Rules' {
-	Context 'Checking files to test exist and Invoke-ScriptAnalyzer cmdLet is available' {
-		It 'Checking files exist to test.' {
-			$scriptsModules.count | Should Not Be 0
-		}
+﻿Describe 'ScriptAnalyzer' {
+	Context 'Validating ScriptAnalyzer installation' {
 		It 'Checking Invoke-ScriptAnalyzer exists.' {
 			{ Get-Command Invoke-ScriptAnalyzer -ErrorAction Stop } | Should Not Throw
 		}
 	}
+}
 
-	$scriptAnalyzerRules = Get-ScriptAnalyzerRule
+Describe 'ScriptAnalyzer issues found' {
+	$results = Invoke-ScriptAnalyzer *
+	$scripts = $results.ScriptName | Get-Unique
 
-	forEach ($scriptModule in $scriptsModules) {
-		switch -wildCard ($scriptModule) {
-			'*.psm1' { $typeTesting = 'Module' }
-			'*.ps1'  { $typeTesting = 'Script' }
-			'*.psd1' { $typeTesting = 'Manifest' }
+	Context 'Checking results' {
+		It 'Should have no issues' {
+			$results.count | Should Be 0
 		}
+	}
 
-		Context "Checking $typeTesting – $($scriptModule) - conforms to Script Analyzer Rules" {
-			forEach ($scriptAnalyzerRule in $scriptAnalyzerRules) {
-				It "Script Analyzer Rule $scriptAnalyzerRule" {
-					(Invoke-ScriptAnalyzer -Path $scriptModule -IncludeRule $scriptAnalyzerRule).count | Should Be 0
+	foreach ($script in $scripts) {
+		Context $script {
+			$issues = $results | Where-Object {$_.ScriptName -eq $script}
+
+			foreach ($issue in $issues) {
+				It "On line: $($issue.Line) - $($issue.Message)" {
+					$true | Should Be $False
 				}
 			}
 		}

@@ -4,6 +4,15 @@
 *These will be removed in the next major release*
 - N/A
 
+0.15.0
+-----
+- Added Experimental support for OAuth 2.0 Authentication
+- Added Experimental support for Internal API's (See below)
+- Added `Get-BitbucketRepositoryEnvironmentVariable` (Experimental)
+- Added `New-BitbucketRepositoryEnvironmentVariable` (Experimental)
+- Added `Remove-BitbucketRepositoryEnvironmentVariable` (Experimental)
+- Rewrote Pester tests for ScriptAnalyzer to improve speed and issue resolution
+
 0.14.0
 -----
 - Updated `Set-BitbucketRepository` pipeline parameter options*

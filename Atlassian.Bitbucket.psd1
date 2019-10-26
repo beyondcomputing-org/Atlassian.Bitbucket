@@ -12,7 +12,7 @@
     RootModule        = 'Atlassian.Bitbucket.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.14.0'
+    ModuleVersion     = '0.15.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @('Desktop', 'Core')
@@ -74,6 +74,7 @@
         'Atlassian.Bitbucket.PullRequest.psm1',
         'Atlassian.Bitbucket.Repository.Deployment.psm1',
         'Atlassian.Bitbucket.Repository.Environment.psm1',
+        'Atlassian.Bitbucket.Repository.Environment.Variable.psm1',
         'Atlassian.Bitbucket.Repository.psm1',
         'Atlassian.Bitbucket.Repository.Reviewer.psm1'
     )
@@ -88,6 +89,7 @@
         'Get-BitbucketRepository',
         'Get-BitbucketRepositoryDeployment',
         'Get-BitbucketRepositoryEnvironment',
+        'Get-BitbucketRepositoryEnvironmentVariable',
         'Get-BitbucketRepositoryReviewer',
         'Get-BitbucketSelectedTeam',
         'Get-BitbucketTeam',
@@ -96,9 +98,11 @@
         'New-BitbucketPullRequestComment',
         'New-BitbucketRepository',
         'New-BitbucketRepositoryEnvironment',
+        'New-BitbucketRepositoryEnvironmentVariable',
         'Remove-BitbucketLogin',
         'Remove-BitbucketRepository',
         'Remove-BitbucketRepositoryEnvironment',
+        'Remove-BitbucketRepositoryEnvironmentVariable',
         'Remove-BitbucketRepositoryReviewer',
         'Save-BitbucketLogin',
         'Select-BitbucketTeam',
