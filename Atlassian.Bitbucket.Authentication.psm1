@@ -103,7 +103,7 @@ function Invoke-BitbucketAPI {
 
     if($InternalAPI){
         $URI = [BitbucketSettings]::INTERNAL_URL + $Path
-        if($Auth.AuthType -ne 'OAuth2'){
+        if($Auth.AuthType -ne 'Bearer'){
             Throw 'You must use OAuth 2.0 for Internal APIs.  Login using: Login-Bitbucket -AtlassianCredential (Get-Credential) -OAuthConsumer (Get-Credential)'
         }
     }else{
