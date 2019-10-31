@@ -105,8 +105,13 @@ class BitbucketAuth {
             password = $this.AtlassianCredential.GetNetworkCredential().Password
         }
 
+        # Generate the Authentication Header using the ClientID / Secret
+        # Not using -Authentication as older versions of Invoke-RestMethod don't support it
+        $basicAuth = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $this.OAuthConsumer.GetNetworkCredential().UserName, $this.OAuthConsumer.GetNetworkCredential().Password)))
+        $header = @{Authorization = "Basic $basicAuth"}
+
         # Get the token from Bitbucket
-        $response = Invoke-RestMethod 'https://bitbucket.org/site/oauth2/access_token' -Method Post -Authentication Basic -Credential $this.OAuthConsumer -Body $body
+        $response = Invoke-RestMethod 'https://bitbucket.org/site/oauth2/access_token' -Method Post -Headers $header -Body $body
 
         # Parse the scopes from the response
         $scope_parts = $response.scopes -split ' '

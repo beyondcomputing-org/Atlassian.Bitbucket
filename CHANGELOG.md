@@ -4,6 +4,10 @@
 *These will be removed in the next major release*
 - N/A
 
+0.15.3
+-----
+- Updated OAuth 2.0 to not use Authentication parameter on Invoke-RestMethod to support older versions of PowerShell
+
 0.15.2
 -----
 - Fixed issue with save command when the folder did not already exist
