@@ -4,6 +4,10 @@
 *These will be removed in the next major release*
 - N/A
 
+0.15.2
+-----
+- Fixed issue with save command when the folder did not already exist
+
 0.15.1
 -----
 - Fixed OAuth 2.0 bug

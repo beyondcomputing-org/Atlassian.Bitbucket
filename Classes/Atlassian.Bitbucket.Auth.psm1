@@ -133,7 +133,7 @@ class BitbucketAuth {
     # Save the settings to the local system
     [void] Save(){
         if(!(Test-Path([BitbucketSettings]::SAVE_DIR))){
-            New-Item -Type Directory -Path [BitbucketSettings]::SAVE_DIR
+            New-Item -Type Directory -Path ([BitbucketSettings]::SAVE_DIR)
         }
 
         # Create a filtered object to save
