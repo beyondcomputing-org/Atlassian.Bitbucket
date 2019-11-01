@@ -88,6 +88,9 @@ To get more information on each cmdlet run `Get-Help <CMDLET Name>`
 - `Set-BitbucketRepository`
 - `Set-BitbucketRepositoryReviewer`
 
+#### Reports
+- `Get-BitbucketProjectDeploymentReport`
+
 #### Experimental Internal CMDLETs
 The following CMDLETs are provided but use internal Bitbucket APIs.  These CMDLETs would not be possible without accessing the internal APIs, but are much more likely to break if Atlassian changes their internal API.  To use these CMDLETs you must also use OAuth 2.0 when logging in.
 - `Get-BitbucketRepositoryEnvironmentVariable`

@@ -29,12 +29,19 @@ function Get-BitbucketRepositoryEnvironment {
                     ValueFromPipelineByPropertyName=$true,
                     HelpMessage='The repository slug.')]
         [Alias('Slug')]
-        [string]$RepoSlug
+        [string]$RepoSlug,
+        [string]$EnvironmentName
     )
 
     Process {
         $endpoint = "repositories/$Team/$RepoSlug/environments/"
-        return Invoke-BitbucketAPI -Path $endpoint -Paginated
+        $response = Invoke-BitbucketAPI -Path $endpoint -Paginated
+
+        if($EnvironmentName){
+            return $response | Where-Object {$_.Name -eq $EnvironmentName}
+        }else{
+            return $response
+        }
     }
 }
 

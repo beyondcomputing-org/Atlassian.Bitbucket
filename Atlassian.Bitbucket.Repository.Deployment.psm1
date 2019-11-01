@@ -14,14 +14,22 @@ function Get-BitbucketRepositoryDeployment {
         [Alias('Slug')]
         [string]$RepoSlug,
         [ValidateSet('COMPLETED', 'IN_PROGRESS', 'UNDEPLOYED')]
-        [string]$State
+        [string]$State,
+        [string]$EnvironmentUUID,
+        [string]$Sort = '-state.started_on',
+        [int]$Page = 1,
+        [int]$Limit = 20
     )
 
     Process {
-        $endpoint = "repositories/$Team/$RepoSlug/deployments/"
+        $endpoint = "repositories/$Team/$RepoSlug/deployments/?sort=$Sort&page=$Page&pagelen=$Limit"
 
         if($State){
-            $endpoint += "?state.name=$State"
+            $endpoint += "&state.name=$State"
+        }
+
+        if($EnvironmentUUID){
+            $endpoint += "&environment=$EnvironmentUUID"
         }
 
         return Invoke-BitbucketAPI -Path $endpoint -Paginated

@@ -4,6 +4,13 @@
 *These will be removed in the next major release*
 - N/A
 
+0.16.0
+-----
+- Added EnvironmentName filter to `Get-BitbucketRepositoryEnvironment`
+- Updated `Get-BitbucketRepositoryDeployment` to have sort option and sort by latest deployment
+- Updated `Get-BitbucketRepositoryDeployment` to add new filter options for environment
+- Added `Get-BitbucketProjectDeploymentReport`
+
 0.15.3
 -----
 - Updated OAuth 2.0 to not use Authentication parameter on Invoke-RestMethod to support older versions of PowerShell
