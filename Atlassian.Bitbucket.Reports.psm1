@@ -38,7 +38,7 @@ function Get-BitbucketProjectDeploymentReport {
         [Parameter( ValueFromPipelineByPropertyName=$true,
                     HelpMessage='Project key in Bitbucket')]
         [string]$ProjectKey,
-        [string[]]$Environments = ('Dev','Test', 'Staging', 'Production'),
+        [string[]]$Environments = ('Test', 'Staging', 'Production'),
         [ValidateSet('JSON', 'HTML')]
         [string]$Format = 'JSON'
     )
