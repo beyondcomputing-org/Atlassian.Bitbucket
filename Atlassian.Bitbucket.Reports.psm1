@@ -61,8 +61,6 @@ function Get-BitbucketProjectDeploymentReport {
             $deployment = Get-BitbucketRepositoryDeployment -RepoSlug $repo.slug -EnvironmentUUID $_env[$e].uuid -Limit 1 -Fields $Fields
 
             if($deployment){
-                
-                
                 $envList += [PSCustomObject]@{
                     EnvironmentName = $_env[$e].name
                     State = $deployment.State.Name
