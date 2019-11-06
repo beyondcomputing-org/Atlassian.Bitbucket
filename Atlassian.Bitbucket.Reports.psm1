@@ -57,13 +57,25 @@ function Get-BitbucketProjectDeploymentReport {
 
         for ($e = 0; $e -lt $_env.Count; $e++) {
             Write-Progress -Id 1 -Activity "Environment: $($_env[$e].name)" -PercentComplete ((($e + 1) / $_env.Count)*100)
-            $deployment = Get-BitbucketRepositoryDeployment -RepoSlug $repo.slug -EnvironmentUUID $_env[$e].uuid -Limit 1
+            $Fields = ('values.deployable.commit.message', 'values.deployable.commit.date', 'values.deployable.commit.author.user')
+            $deployment = Get-BitbucketRepositoryDeployment -RepoSlug $repo.slug -EnvironmentUUID $_env[$e].uuid -Limit 1 -Fields $Fields
 
             if($deployment){
+                
+                
                 $envList += [PSCustomObject]@{
                     EnvironmentName = $_env[$e].name
                     State = $deployment.State.Name
-                    Commit = $deployment.release.commit.hash
+                    Commit = [PSCustomObject]@{
+                        Hash = $deployment.deployable.commit.hash
+                        Message = $deployment.deployable.commit.message
+                        Date = $deployment.deployable.commit.date
+                        Author = [PSCustomObject]@{
+                            User = [PSCustomObject]@{
+                                DisplayName = $deployment.deployable.commit.author.user.display_name
+                            }
+                        }
+                    }
                     Pipeline = $deployment.release.name
                     URL = $deployment.release.url
                     Time = $deployment.last_update_time
@@ -95,85 +107,61 @@ function Get-BitbucketProjectDeploymentReportHTML {
         $Content
     )
 
-$HTML = @'
-<!DOCTYPE html>
-<html>
-<head>
-<style>
-table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-}
+    $HTMLReport = Get-Content "$PSScriptRoot\Templates\DeploymentReport.html"
+    $HTMLRow = Get-Content "$PSScriptRoot\Templates\DeploymentReportRow.html"
+    $HTMLCell = Get-Content "$PSScriptRoot\Templates\DeploymentReportCell.html"
 
-td, th {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
-}
+    $rows = @()
 
-td {
-    background-color: red;
-}
-
-td.HEADER {
-    background-color: #dddddd;
-}
-
-td.COMPLETED {
-    background-color: rgb(54, 179, 126);
-}
-
-td.IN_PROGRESS {
-    background-color: yellow;
-}
-
-td.UNDEPLOYED {
-    background-color: gray;
-}
-
-td.BLANK {
-    background-color: White;
-}
-
-</style>
-</head>
-<body>
-<h2>Deployment Report</h2>
-<table>
-    <tr>
-        <th>Repo</th> ##HEADER##
-    </tr>
-    ##TABLEROWS##
-</table>
-</body>
-</html>
-'@
-
-    $header = @()
-    foreach ($Environment in $Environments) {
-        $header += "<th>$Environment</th>"
-    }
-
-    $tableRows = @()
+    # Build each row
     foreach ($repo in $content) {
-        $row = "<tr><td Class='HEADER'>$($repo.RepoName)</td>"
+        # Build each Cell
+        $cells = @()
+        $previous = -1
 
         foreach ($env in $Environments) {
             $deployment = $repo.environments | Where-Object {$_.EnvironmentName -eq $env}
+
+            # Attempt to grab the pipeline run
+            [int]$current = 0
             if($deployment){
-                $row += "<td Class='$($deployment.State)'><a href='$($deployment.URL)'>$($deployment.Pipeline)</a><br/>$($deployment.Commit.Substring(0,7))...<br/>$($deployment.Time)</td>"
+                [int]::TryParse($deployment.Pipeline.Replace('#',''), [ref]$current) | Out-Null
+            }
+
+            if($previous -ne -1){
+                if($previous -gt $current){
+                    $cells += '<div class="compare gt">&gt;</div>'
+                }elseif($previous -eq $current){
+                    $cells += '<div class="compare">=</div>'
+                }else{
+                    $cells += '<div class="compare lt">&lt;</div>'
+                }
+            }
+
+            $previous = $current
+
+            if($deployment){
+                $cells += $HTMLCell.
+                    Replace('##ENVIRONMENT_NAME##', $env).
+                    Replace('##STATE##',$deployment.State).
+                    Replace('##URL##',$deployment.URL).
+                    Replace('##PIPELINE##',$deployment.Pipeline).
+                    Replace('##COMMIT_HASH##',$deployment.Commit.Hash.Substring(0,7)).
+                    Replace('##COMMIT_MESSAGE##', $deployment.Commit.Message).
+                    Replace('##TIME##',$deployment.Time)
             }else{
-                $row += '<td Class="BLANK"></td>'
+                $cells += $HTMLCell.
+                    Replace('##ENVIRONMENT_NAME##', $env).
+                    Replace('##STATE##', 'BLANK').
+                    Replace('##URL##', '').
+                    Replace('##PIPELINE##', '').
+                    Replace('##COMMIT_HASH##', '').
+                    Replace('##COMMIT_MESSAGE##', '').
+                    Replace('##TIME##', '')
             }
         }
-        $row += '</tr>'
-
-        $tableRows += $row
+        $rows += $HTMLRow.Replace('##REPO##', $repo.RepoName).Replace('##CELLS##', $cells)
     }
 
-    $HTML = $HTML.Replace('##HEADER##', $header)
-    $HTML = $HTML.Replace('##TABLEROWS##', $tableRows)
-
-    return $HTML
+    return $HTMLReport.Replace('##ROWS##', $rows)
 }

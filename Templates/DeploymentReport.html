@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body {
+                font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            }
+
+            div.COMPLETED {
+                background-color: rgb(54, 179, 126);
+            }
+
+            div.IN_PROGRESS {
+                background-color: yellow;
+            }
+
+            div.UNDEPLOYED {
+                background-color: gray;
+            }
+
+            div.BLANK {
+                background-color: rgb(244, 245, 247);
+            }
+
+            .row {
+                display: grid;
+                grid-auto-flow: column;
+                grid-auto-columns: 1fr;
+                grid-column-gap: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .repo {
+                grid-column: span 10;
+                height: 205px;
+                padding-left: 20px;
+                line-height: 205px;
+                font-size: 30px;
+                font-weight: 500;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+
+            .deployment {
+                grid-column: span 10;
+                height: 205px;
+                background-color: rgb(244, 245, 247);
+                border-radius: 7px;
+            }
+
+            .compare {
+                grid-column: span 1;
+                line-height: 205px;
+                font-size: 30px;
+                font-weight: 800;
+            }
+
+            .compare.lt {
+                color: red;
+            }
+            
+            .compare.gt {
+                color: orange;
+            }
+
+            .header {
+                height: 50px;
+                line-height: 50px;
+                padding: 7px;
+                border-top-left-radius: 7px;
+                border-top-right-radius: 7px;
+                font-size: 20px;
+                font-weight: 500;
+                color: rgb(255, 255, 255);
+            }
+
+            .header > div {
+                padding-left: 7px;
+            }
+
+            .body {
+                height: 80px;
+                margin: 7px;
+                padding: 7px;
+                border-radius: 7px;
+                background-color: rgb(255, 255, 255);
+                border-color: rgba(23, 43, 77, .1);
+                border-style: solid;
+                border-width: 1px;
+                border-bottom-color:rgba(23, 43, 77, .2);
+            }
+
+            .body > .number > a {
+                text-decoration: none;
+                color: rgb(0, 0, 0);
+                font-size: 16px;
+                font-weight: 600;
+                line-height: 30px;
+            }
+
+            .body > .content > span {
+                font-size: 14px;
+                font-weight: 600;
+            }
+
+            .body > .content {
+                font-size: 14px;
+                font-weight: 400;
+                display: -webkit-box;
+                    -webkit-line-clamp: 3;
+                    -webkit-box-orient: vertical; 
+                overflow: hidden;
+                height: 58px;
+            }
+
+            .deployment > .date {
+                padding: 0 7px;
+                color: rgb(107, 119, 140);
+                font-size: 14px;
+                font-weight: 400;
+                text-transform: uppercase;
+                line-height: 30px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Deployment Report</h1>
+        <div>
+            ##ROWS##
+        </div>
+    </body>
+</html>

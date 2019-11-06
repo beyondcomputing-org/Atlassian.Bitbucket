@@ -17,6 +17,7 @@ function Get-BitbucketRepositoryDeployment {
         [string]$State,
         [string]$EnvironmentUUID,
         [string]$Sort = '-state.started_on',
+        [string[]]$Fields,
         [int]$Page = 1,
         [int]$Limit = 20
     )
@@ -30,6 +31,17 @@ function Get-BitbucketRepositoryDeployment {
 
         if($EnvironmentUUID){
             $endpoint += "&environment=$EnvironmentUUID"
+        }
+
+        if($Fields){
+            $endpoint += '&fields='
+            for ($i = 0; $i -lt $Fields.Count; $i++) {
+                if($i -lt ($Fields.Count -1)){
+                    $endpoint += "%2B$($Fields[$i])%2C"
+                }else{
+                    $endpoint += "%2B$($Fields[$i])"
+                }
+            }
         }
 
         return Invoke-BitbucketAPI -Path $endpoint -Paginated

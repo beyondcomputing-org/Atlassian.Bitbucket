@@ -4,6 +4,11 @@
 *These will be removed in the next major release*
 - N/A
 
+0.17.0
+-----
+- Improved styling of HTML report from `Get-BitbucketProjectDeploymentReport`
+- Adding fields parameter for fetching additional fields to `Get-BitbucketRepositoryDeployment`
+
 0.16.0
 -----
 - Added EnvironmentName filter to `Get-BitbucketRepositoryEnvironment`
