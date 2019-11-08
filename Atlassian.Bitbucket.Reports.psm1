@@ -161,5 +161,7 @@ function Get-BitbucketProjectDeploymentReportHTML {
         $rows += $HTMLRow.Replace('##REPO##', $repo.RepoName).Replace('##CELLS##', $cells)
     }
 
-    return $HTMLReport.Replace('##ROWS##', $rows)
+    return $HTMLReport.
+        Replace('##DATE##', (Get-Date).ToString()).    
+        Replace('##ROWS##', $rows)
 }

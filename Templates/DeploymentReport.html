@@ -22,6 +22,15 @@
                 background-color: rgb(244, 245, 247);
             }
 
+            span.date {
+                float: right;
+                color: rgba(107, 119, 140, .7);
+                line-height: 42.2857px;
+                font-size: 20px;
+                font-weight: 400;
+                text-transform: uppercase;
+            }
+
             .row {
                 display: grid;
                 grid-auto-flow: column;
@@ -128,7 +137,7 @@
         </style>
     </head>
     <body>
-        <h1>Deployment Report</h1>
+        <h1>Deployment Report<span class="date">##DATE##</span></h1>
         <div>
             ##ROWS##
         </div>

@@ -4,6 +4,10 @@
 *These will be removed in the next major release*
 - N/A
 
+0.18.0
+-----
+- Added Date to HTML report
+
 0.17.0
 -----
 - Improved styling of HTML report from `Get-BitbucketProjectDeploymentReport`
