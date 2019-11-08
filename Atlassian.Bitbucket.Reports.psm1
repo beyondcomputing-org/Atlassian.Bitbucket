@@ -162,6 +162,6 @@ function Get-BitbucketProjectDeploymentReportHTML {
     }
 
     return $HTMLReport.
-        Replace('##DATE##', (Get-Date).ToString()).    
+        Replace('##DATE##', (Get-Date).ToString()).
         Replace('##ROWS##', $rows)
 }
