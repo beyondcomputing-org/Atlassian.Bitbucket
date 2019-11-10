@@ -63,7 +63,8 @@ function Get-BitbucketProjectDeploymentReport {
             if($deployment){
                 $envList += [PSCustomObject]@{
                     EnvironmentName = $_env[$e].name
-                    State = $deployment.State.Name
+                    State = $deployment.state.name
+                    Status = $deployment.state.status.name
                     Commit = [PSCustomObject]@{
                         Hash = $deployment.deployable.commit.hash
                         Message = $deployment.deployable.commit.message
@@ -139,9 +140,16 @@ function Get-BitbucketProjectDeploymentReportHTML {
             $previous = $current
 
             if($deployment){
+                # Calculate Status
+                if($deployment.State -eq 'COMPLETED'){
+                    $status = $deployment.Status
+                }else{
+                    $status = $deployment.State
+                }
+
                 $cells += $HTMLCell.
                     Replace('##ENVIRONMENT_NAME##', $env).
-                    Replace('##STATE##',$deployment.State).
+                    Replace('##STATUS##',$status).
                     Replace('##URL##',$deployment.URL).
                     Replace('##PIPELINE##',$deployment.Pipeline).
                     Replace('##COMMIT_HASH##',$deployment.Commit.Hash.Substring(0,7)).
@@ -150,7 +158,7 @@ function Get-BitbucketProjectDeploymentReportHTML {
             }else{
                 $cells += $HTMLCell.
                     Replace('##ENVIRONMENT_NAME##', $env).
-                    Replace('##STATE##', 'BLANK').
+                    Replace('##STATUS##', 'BLANK').
                     Replace('##URL##', '').
                     Replace('##PIPELINE##', '').
                     Replace('##COMMIT_HASH##', '').

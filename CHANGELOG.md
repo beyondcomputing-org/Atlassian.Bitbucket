@@ -4,6 +4,10 @@
 *These will be removed in the next major release*
 - N/A
 
+0.18.1
+-----
+- Fixed `Get-BitbucketProjectDeploymentReport` to show failed runs using a combination of State and Status
+
 0.18.0
 -----
 - Added Date to HTML report
