@@ -6,6 +6,10 @@
                 font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
             }
 
+            h1 {
+                margin: 0px;
+            }
+
             div.SUCCESSFUL {
                 background-color: rgb(54, 179, 126);
             }
@@ -18,6 +22,10 @@
                 background-color: rgb(0, 101, 255);
             }
 
+            div.STOPPED {
+                background-color: rgb(255, 171, 0);
+            }
+
             div.UNDEPLOYED {
                 background-color: rgb(223, 225, 230);
             }
@@ -26,7 +34,21 @@
                 background-color: rgb(244, 245, 247);
             }
 
-            span.date {
+            #globalToggle {
+                float: right;
+                line-height: 42.2857px;
+                font-size: 20px;
+                font-weight: 400;
+                cursor: pointer;
+                margin-right: 20px;
+            }
+
+            #globalToggle::before {
+                content: 'Global Toggle: ';
+                color: rgba(107, 119, 140, .7);
+            }
+            
+            #reportDate {
                 float: right;
                 color: rgba(107, 119, 140, .7);
                 line-height: 42.2857px;
@@ -36,16 +58,30 @@
             }
 
             .row {
+                height: 205px;
                 display: grid;
                 grid-auto-flow: column;
                 grid-auto-columns: 1fr;
                 grid-column-gap: 20px;
                 margin-bottom: 20px;
+                transition: all 1s;
             }
-            
+
+            .collapsed {
+                height: 39px;
+                margin-bottom: 5px;
+            }
+
+            .collapsed .deployment-header {
+                height: 25px;
+            }
+
+            .collapsed .deployment {
+                height: 39px;
+            }
+
             .repo {
                 grid-column: span 10;
-                height: 205px;
                 padding-left: 20px;
                 line-height: 205px;
                 font-size: 30px;
@@ -53,6 +89,10 @@
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                transition: all 1s;
             }
 
             .deployment {
@@ -60,13 +100,18 @@
                 height: 205px;
                 background-color: rgb(244, 245, 247);
                 border-radius: 7px;
+                transition: all 1s;
+                overflow: hidden;
             }
 
             .compare {
                 grid-column: span 1;
-                line-height: 205px;
                 font-size: 30px;
                 font-weight: 800;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                transition: all 1s;
             }
 
             .compare.lt {
@@ -74,26 +119,46 @@
             }
             
             .compare.gt {
-                color: orange;
+                color: rgb(0, 101, 255);
             }
 
-            .header {
+            .deployment-header {
                 height: 50px;
-                line-height: 50px;
                 padding: 7px;
                 border-top-left-radius: 7px;
                 border-top-right-radius: 7px;
                 font-size: 20px;
                 font-weight: 500;
                 color: rgb(255, 255, 255);
+                transition: all 1s;
             }
 
-            .header > div {
+            .deployment-header-name {
+                height: 100%;
                 padding-left: 7px;
+                float: left;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
             }
 
-            .body {
+            .deployment-header-control {
+                height: 100%;
+                padding-right: 7px;
+                float: right;
+                cursor: pointer;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .hidden{
+                display: none;
+            }
+
+            .deployment-body {
                 height: 80px;
+                overflow: hidden;
                 margin: 7px;
                 padding: 7px;
                 border-radius: 7px;
@@ -102,9 +167,10 @@
                 border-style: solid;
                 border-width: 1px;
                 border-bottom-color:rgba(23, 43, 77, .2);
+                transition: all 1s;
             }
 
-            .body > .number > a {
+            .deployment-body-number > a {
                 text-decoration: none;
                 color: rgb(0, 0, 0);
                 font-size: 16px;
@@ -112,12 +178,12 @@
                 line-height: 30px;
             }
 
-            .body > .content > span {
+            .deployment-body-content > span {
                 font-size: 14px;
                 font-weight: 600;
             }
 
-            .body > .content {
+            .deployment-body-content {
                 font-size: 14px;
                 font-weight: 400;
                 display: -webkit-box;
@@ -127,7 +193,7 @@
                 height: 58px;
             }
 
-            .deployment > .date {
+            .deployment-date {
                 padding: 0 7px;
                 color: rgb(107, 119, 140);
                 font-size: 14px;
@@ -139,9 +205,57 @@
                 text-overflow: ellipsis;
             }
         </style>
+        <script>
+            function toggle(id){
+                let row = document.getElementById(id);
+                let _class = row.className;
+                let toggleText = 'v';
+
+                if(_class == 'row'){
+                    row.className = 'row collapsed';
+                }else{
+                    row.className = 'row';
+                    toggleText = '^';
+                }
+
+                // Update all box in the row
+                let controls = row.getElementsByClassName('deployment-header-control');
+                for (var i = 0; i < controls.length; i++){
+                    controls[i].innerHTML = toggleText;
+                }
+            }
+
+            function globalToggle(){
+                let toggle = document.getElementById('globalToggle');
+                let toggleText = toggle.innerHTML;
+                let rowClassName = 'row'
+
+                if(toggleText == 'v'){
+                    toggleText = '^';
+                }else{
+                    rowClassName = 'row collapsed';
+                    toggleText = 'v';
+                }
+
+                // Update main toggle
+                toggle.innerHTML = toggleText;
+
+                // Update rows
+                let rows = document.getElementsByClassName('row');
+                for (var i = 0; i < rows.length; i++){
+                    rows[i].className = rowClassName;
+                }
+
+                // Update all box toggles
+                let controls = document.getElementsByClassName('deployment-header-control');
+                for (var i = 0; i < controls.length; i++){
+                    controls[i].innerHTML = toggleText;
+                }
+            }
+        </script>
     </head>
     <body>
-        <h1>Deployment Report<span class="date">##DATE##</span></h1>
+        <h1>Deployment Report<span id="reportDate">##DATE##</span><span id="globalToggle" onclick="globalToggle()">v</span></h1>
         <div>
             ##ROWS##
         </div>

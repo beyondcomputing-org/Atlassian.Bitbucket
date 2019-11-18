@@ -1,19 +1,22 @@
 <div class='deployment'>
-    <div class='header ##STATUS##'>
-        <div>
-            ##ENVIRONMENT_NAME##
+    <div class='deployment-header ##STATUS##'>
+        <div class='deployment-header-name'>
+                ##ENVIRONMENT_NAME##
+        </div>
+        <div class='deployment-header-control' onclick="toggle('##ROW_ID##')">
+            v
         </div>
     </div>
-    <div class='body'>
-        <div class='number'>
-            <a href='##URL##'>##PIPELINE##</a>
+    <div class='deployment-body'>
+        <div class='deployment-body-number'>
+            <a href='##URL##' target="_blank">##PIPELINE##</a>
         </div>
-        <div class='content'>
+        <div class='deployment-body-content'>
             <span>##COMMIT_HASH##</span>
             ##COMMIT_MESSAGE##
         </div>
     </div>
-    <div class='date'>
+    <div class='deployment-date'>
         ##TIME##
     </div>
 </div>

@@ -10,18 +10,18 @@ using module .\Atlassian.Bitbucket.Repository.Environment.psm1
         Build a report of deployments for all repos in a project
 
     .EXAMPLE
-        C:\PS> Get-BitbucketProjectDeploymentReport -ProjectKey 'Key'
+        C:\PS> Get-BitbucketRepository -ProjectKey 'KEY' | Get-BitbucketProjectDeploymentReport
         # Get the JSON report
 
     .EXAMPLE
-        C:\PS> Get-BitbucketProjectDeploymentReport -ProjectKey 'Key' -Format HTML | Out-File C:\Temp\report.html
+        C:\PS> Get-BitbucketRepository -ProjectKey 'ZEUS' | Get-BitbucketProjectDeploymentReport -Format HTML | Out-File C:\Temp\report.html
         # Generate and save the HTML report.
 
     .PARAMETER Team
         Name of the team in Bitbucket.  Defaults to selected team if not provided.
 
-    .PARAMETER ProjectKey
-        Project key in Bitbucket
+    .PARAMETER Repo
+        Repos used to build the report.  Pipeline in input from Get-BitbucketRepository.
 
     .PARAMETER Environments
         The environments used to generate the deployment report.
@@ -35,65 +35,69 @@ function Get-BitbucketProjectDeploymentReport {
         [Parameter( ValueFromPipelineByPropertyName=$true,
                     HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
         [string]$Team = (Get-BitbucketSelectedTeam),
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Project key in Bitbucket')]
-        [string]$ProjectKey,
+        [Parameter( Mandatory=$true,
+                    ValueFromPipeline=$true,
+                    HelpMessage='Repos used to build the report.  Use the Get-BitbucketRepo command.')]
+        $Repo,
         [string[]]$Environments = ('Test', 'Staging', 'Production'),
         [ValidateSet('JSON', 'HTML')]
         [string]$Format = 'JSON'
     )
+    Begin{
+        $content = @()
+        $_repos = @()
+    }
+    Process{
+        $_repos += $Repo
+    }
+    End{
+        for ($r = 0; $r -lt $_repos.Count; $r++) {
+            $_repo = $_repos[$r]
+            Write-Progress -Id 0 -Activity "Getting Deployments for Repo: $($_repo.name)" -PercentComplete ((($r + 1) / $_repos.Count)*100)
+            $_env = Get-BitbucketRepositoryEnvironment -RepoSlug $_repo.slug | Where-Object {$_.Name -in $Environments}
 
-    Write-Progress -Id 0 -Activity "Getting repos in project $ProjectKey"
-    $repos = Get-BitbucketRepository -ProjectKey $ProjectKey
+            $envList = @()
 
-    $content = @()
+            for ($e = 0; $e -lt $_env.Count; $e++) {
+                Write-Progress -Id 1 -Activity "Environment: $($_env[$e].name)" -PercentComplete ((($e + 1) / $_env.Count)*100)
+                $Fields = ('values.deployable.commit.message', 'values.deployable.commit.date', 'values.deployable.commit.author.user')
+                $deployment = Get-BitbucketRepositoryDeployment -RepoSlug $_repo.slug -EnvironmentUUID $_env[$e].uuid -Limit 1 -Fields $Fields
 
-    for ($r = 0; $r -lt $repos.Count; $r++) {
-        $repo = $repos[$r]
-        Write-Progress -Id 0 -Activity "Getting Deployments for Repo: $($repo.name)" -PercentComplete ((($r + 1) / $repos.Count)*100)
-        $_env = Get-BitbucketRepositoryEnvironment -RepoSlug $repo.slug | Where-Object {$_.Name -in $Environments}
-
-        $envList = @()
-
-        for ($e = 0; $e -lt $_env.Count; $e++) {
-            Write-Progress -Id 1 -Activity "Environment: $($_env[$e].name)" -PercentComplete ((($e + 1) / $_env.Count)*100)
-            $Fields = ('values.deployable.commit.message', 'values.deployable.commit.date', 'values.deployable.commit.author.user')
-            $deployment = Get-BitbucketRepositoryDeployment -RepoSlug $repo.slug -EnvironmentUUID $_env[$e].uuid -Limit 1 -Fields $Fields
-
-            if($deployment){
-                $envList += [PSCustomObject]@{
-                    EnvironmentName = $_env[$e].name
-                    State = $deployment.state.name
-                    Status = $deployment.state.status.name
-                    Commit = [PSCustomObject]@{
-                        Hash = $deployment.deployable.commit.hash
-                        Message = $deployment.deployable.commit.message
-                        Date = $deployment.deployable.commit.date
-                        Author = [PSCustomObject]@{
-                            User = [PSCustomObject]@{
-                                DisplayName = $deployment.deployable.commit.author.user.display_name
+                if($deployment){
+                    $envList += [PSCustomObject]@{
+                        EnvironmentName = $_env[$e].name
+                        State = $deployment.state.name
+                        Status = $deployment.state.status.name
+                        Commit = [PSCustomObject]@{
+                            Hash = $deployment.deployable.commit.hash
+                            Message = $deployment.deployable.commit.message
+                            Date = $deployment.deployable.commit.date
+                            Author = [PSCustomObject]@{
+                                User = [PSCustomObject]@{
+                                    DisplayName = $deployment.deployable.commit.author.user.display_name
+                                }
                             }
                         }
+                        Pipeline = $deployment.release.name
+                        URL = $deployment.release.url
+                        Time = $deployment.last_update_time
                     }
-                    Pipeline = $deployment.release.name
-                    URL = $deployment.release.url
-                    Time = $deployment.last_update_time
                 }
+            }
+
+            $content += [PSCustomObject]@{
+                RepoName = $_repo.name
+                Environments = $envList
             }
         }
 
-        $content += [PSCustomObject]@{
-            RepoName = $repo.name
-            Environments = $envList
-        }
-    }
-
-    switch ($Format) {
-        'HTML' {
-            return Get-BitbucketProjectDeploymentReportHTML -Environments $Environments -Content $Content
-        }
-        Default {
-            return $content
+        switch ($Format) {
+            'HTML' {
+                return Get-BitbucketProjectDeploymentReportHTML -Environments $Environments -Content $Content
+            }
+            Default {
+                return $content
+            }
         }
     }
 }
@@ -110,6 +114,7 @@ function Get-BitbucketProjectDeploymentReportHTML {
     $HTMLRow = Get-Content "$PSScriptRoot\Templates\DeploymentReportRow.html"
     $HTMLCell = Get-Content "$PSScriptRoot\Templates\DeploymentReportCell.html"
 
+    $rowID = 1
     $rows = @()
 
     # Build each row
@@ -148,6 +153,7 @@ function Get-BitbucketProjectDeploymentReportHTML {
                 }
 
                 $cells += $HTMLCell.
+                    Replace('##ROW_ID##', $rowID).
                     Replace('##ENVIRONMENT_NAME##', $env).
                     Replace('##STATUS##',$status).
                     Replace('##URL##',$deployment.URL).
@@ -157,6 +163,7 @@ function Get-BitbucketProjectDeploymentReportHTML {
                     Replace('##TIME##',$deployment.Time)
             }else{
                 $cells += $HTMLCell.
+                    Replace('##ROW_ID##', $rowID).
                     Replace('##ENVIRONMENT_NAME##', $env).
                     Replace('##STATUS##', 'BLANK').
                     Replace('##URL##', '').
@@ -166,7 +173,12 @@ function Get-BitbucketProjectDeploymentReportHTML {
                     Replace('##TIME##', '')
             }
         }
-        $rows += $HTMLRow.Replace('##REPO##', $repo.RepoName).Replace('##CELLS##', $cells)
+        $rows += $HTMLRow.
+            Replace('##ROW_ID##', $rowID).
+            Replace('##REPO##', $repo.RepoName).
+            Replace('##CELLS##', $cells)
+
+        $rowID += 1
     }
 
     return $HTMLReport.

@@ -4,6 +4,11 @@
 *These will be removed in the next major release*
 - N/A
 
+0.19.0
+-----
+- Breaking Change: Removed ProjectKey Parameter from `Get-BitbucketProjectDeploymentReport` which now accepts pipeline input of repos
+- Improved `Get-BitbucketProjectDeploymentReport` HTML to allow minimizing and maximizing of rows
+
 0.18.1
 -----
 - Fixed `Get-BitbucketProjectDeploymentReport` to show failed runs using a combination of State and Status
