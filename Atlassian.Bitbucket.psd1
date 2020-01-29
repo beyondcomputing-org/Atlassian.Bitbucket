@@ -12,7 +12,7 @@
     RootModule        = 'Atlassian.Bitbucket.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.19.0'
+    ModuleVersion     = '0.20.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @('Desktop', 'Core')
@@ -69,6 +69,7 @@
     NestedModules     = @(
         'Atlassian.Bitbucket.Authentication.psm1',
         'Atlassian.Bitbucket.Pipeline.psm1',
+        'Atlassian.Bitbucket.Pipeline.Variable.psm1',
         'Atlassian.Bitbucket.Project.psm1',
         'Atlassian.Bitbucket.PullRequest.Comment.psm1',
         'Atlassian.Bitbucket.PullRequest.psm1',
@@ -83,7 +84,9 @@
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport = @(
         'Add-BitbucketRepositoryReviewer',
+        'Enable-BitbucketPipelineConfig',
         'Get-BitbucketLogin',
+        'Get-BitbucketPipelineConfig',
         'Get-BitbucketProject',
         'Get-BitbucketProjectDeploymentReport',
         'Get-BitbucketPullRequest',
@@ -93,6 +96,7 @@
         'Get-BitbucketRepositoryEnvironment',
         'Get-BitbucketRepositoryEnvironmentVariable',
         'Get-BitbucketRepositoryReviewer',
+        'Get-BitbucketRepositoryVariable',
         'Get-BitbucketSelectedTeam',
         'Get-BitbucketTeam',
         'New-BitbucketLogin',
@@ -101,11 +105,13 @@
         'New-BitbucketRepository',
         'New-BitbucketRepositoryEnvironment',
         'New-BitbucketRepositoryEnvironmentVariable',
+        'New-BitbucketRepositoryVariable',
         'Remove-BitbucketLogin',
         'Remove-BitbucketRepository',
         'Remove-BitbucketRepositoryEnvironment',
         'Remove-BitbucketRepositoryEnvironmentVariable',
         'Remove-BitbucketRepositoryReviewer',
+        'Remove-BitbucketRepositoryVariable',
         'Save-BitbucketLogin',
         'Select-BitbucketTeam',
         'Set-BitbucketRepository',
