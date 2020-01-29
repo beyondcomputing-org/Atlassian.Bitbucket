@@ -32,7 +32,7 @@ Login-Bitbucket
 ```
 
 ##### OAuth 2.0
-For OAuth 2.0 Login you will need two sets of credentials.  
+For OAuth 2.0 Login you will need two sets of credentials.
 1. Your Atlassian credentials: `email` and `password`
 2. Key and Secret for [OAuth Consumer](https://confluence.atlassian.com/bitbucket/oauth-on-bitbucket-cloud-238027431.html#OAuthonBitbucketCloud-Createaconsumer).
 
@@ -62,6 +62,8 @@ To get more information on each cmdlet run `Get-Help <CMDLET Name>`
 - `Select-BitbucketTeam`
 
 #### Pipeline CMDLETs
+- `Enable-BitbucketPipelineConfig`
+- `Get-BitbucketPipelineConfig`
 - `Start-BitbucketPipeline`
 - `Wait-BitbucketPipeline`
 
@@ -80,22 +82,19 @@ To get more information on each cmdlet run `Get-Help <CMDLET Name>`
 - `Get-BitbucketRepositoryEnvironment`
 - `Get-BitbucketRepositoryDeployment`
 - `Get-BitbucketRepositoryReviewer`
+- `Get-BitbucketRepositoryVariable`
 - `New-BitbucketRepository`
 - `New-BitbucketRepositoryEnvironment`
+- `New-BitbucketRepositoryVariable`
 - `Remove-BitbucketRepository`
 - `Remove-BitbucketRepositoryEnvironment`
 - `Remove-BitbucketRepositoryReviewer`
+- `Remove-BitbucketRepsitoryVariable`
 - `Set-BitbucketRepository`
 - `Set-BitbucketRepositoryReviewer`
 
 #### Reports
 - `Get-BitbucketProjectDeploymentReport`
-
-#### Experimental Internal CMDLETs
-The following CMDLETs are provided but use internal Bitbucket APIs.  These CMDLETs would not be possible without accessing the internal APIs, but are much more likely to break if Atlassian changes their internal API.  To use these CMDLETs you must also use OAuth 2.0 when logging in.
-- `Get-BitbucketRepositoryEnvironmentVariable`
-- `New-BitbucketRepositoryEnvironmentVariable`
-- `Remove-BitbucketRepositoryEnvironmentVariable`
 
 ## Changes
 See [CHANGELOG](CHANGELOG.md) for more information.
