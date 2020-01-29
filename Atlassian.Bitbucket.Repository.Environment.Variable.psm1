@@ -20,18 +20,13 @@ function Get-BitbucketRepositoryEnvironmentVariable {
                     HelpMessage='Name of the environment.')]
         [string]$Environment
     )
-    Begin {
-        Write-Warning 'This functionality uses an internal Bitbucket API.  The functionality required is not present in the Public API.'
-        Write-Warning 'Because this is using an internal API it may break in the future and require an update.'
-    }
-
     Process {
         $_environments = Get-BitbucketRepositoryEnvironment -Team $Team -RepoSlug $RepoSlug
         $_uuid = ($_environments | Where-Object {$_.name -eq $Environment}).uuid
 
         if($_uuid){
-            $endpoint = "repositories/$Team/$RepoSlug/deployments_config/environments/$_uuid/variables/"
-            return Invoke-BitbucketAPI -Path $endpoint -Paginated -InternalAPI
+            $endpoint = "repositories/$Team/$RepoSlug/deployments_config/environments/$_uuid/variables"
+            return Invoke-BitbucketAPI -Path $endpoint -Paginated
         }else{
             Throw "Couldn't find the environment: $Environment"
         }
@@ -69,11 +64,6 @@ function New-BitbucketRepositoryEnvironmentVariable {
         [switch]$Secured
 
     )
-    Begin {
-        Write-Warning 'This functionality uses an internal Bitbucket API.  The functionality required is not present in the Public API.'
-        Write-Warning 'Because this is using an internal API it may break in the future and require an update.'
-    }
-
     Process {
         $_environments = Get-BitbucketRepositoryEnvironment -Team $Team -RepoSlug $RepoSlug
         $_uuid = ($_environments | Where-Object {$_.name -eq $Environment}).uuid
@@ -85,9 +75,9 @@ function New-BitbucketRepositoryEnvironmentVariable {
                 value = $Value
             } | ConvertTo-Json -Depth 1 -Compress
 
-            $endpoint = "repositories/$Team/$RepoSlug/deployments_config/environments/$_uuid/variables/"
+            $endpoint = "repositories/$Team/$RepoSlug/deployments_config/environments/$_uuid/variables"
             if ($pscmdlet.ShouldProcess("$Key in the environment $Environment in the repo $RepoSlug", 'create')){
-                return Invoke-BitbucketAPI -Path $endpoint -Method Post -Body $body -InternalAPI
+                return Invoke-BitbucketAPI -Path $endpoint -Method Post -Body $body
             }
         }else{
             Throw "Couldn't find the environment: $Environment"
@@ -118,11 +108,6 @@ function Remove-BitbucketRepositoryEnvironmentVariable {
                     HelpMessage='Variable key')]
         [string]$Key
     )
-    Begin {
-        Write-Warning 'This functionality uses an internal Bitbucket API.  The functionality required is not present in the Public API.'
-        Write-Warning 'Because this is using an internal API it may break in the future and require an update.'
-    }
-
     Process {
         $_uuidEnv = (Get-BitbucketRepositoryEnvironment -Team $Team -RepoSlug $RepoSlug | Where-Object {$_.name -eq $Environment}).uuid
 
@@ -132,7 +117,7 @@ function Remove-BitbucketRepositoryEnvironmentVariable {
             if($_uuidVar){
                 $endpoint = "repositories/$Team/$RepoSlug/deployments_config/environments/$_uuidEnv/variables/$_uuidVar"
                 if ($pscmdlet.ShouldProcess("$Key in the environment $Environment in the repo $RepoSlug", 'delete')){
-                    return Invoke-BitbucketAPI -Path $endpoint -Method Delete -InternalAPI
+                    return Invoke-BitbucketAPI -Path $endpoint -Method Delete
                 }
             }
         }else{
