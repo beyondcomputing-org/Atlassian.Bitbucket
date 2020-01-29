@@ -1,5 +1,56 @@
 using module .\Atlassian.Bitbucket.Authentication.psm1
 
+function Enable-BitbucketPipelineConfig {
+
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Low')]
+    param (
+        [Parameter( ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
+        [string]$Team = (Get-BitbucketSelectedTeam),
+        [Parameter( Mandatory=$true,
+                    Position=0,
+                    ValueFromPipeline=$true,
+                    ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='The repository slug.')]
+        [Alias('Slug')]
+        [string]$RepoSlug
+    )
+
+    Process {
+        $endpoint = "repositories/$Team/$RepoSlug/pipelines_config"
+
+        $body = @{
+            enabled = $true
+        } | ConvertTo-Json -Depth 1 -Compress
+
+        if ($pscmdlet.ShouldProcess("pipelines on repo $RepoSlug", 'enable'))
+        {
+            return Invoke-BitbucketAPI -Path $endpoint -Body $body -Method Put
+        }
+    }
+}
+
+function Get-BitbucketPipelineConfig {
+  param (
+      [Parameter( ValueFromPipelineByPropertyName=$true,
+                  HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
+      [string]$Team = (Get-BitbucketSelectedTeam),
+      [Parameter( Mandatory=$true,
+                  Position=0,
+                  ValueFromPipeline=$true,
+                  ValueFromPipelineByPropertyName=$true,
+                  HelpMessage='The repository slug.')]
+      [Alias('Slug')]
+      [string]$RepoSlug
+  )
+
+  Process {
+      $endpoint = "repositories/$Team/$RepoSlug/pipelines_config"
+
+      return Invoke-BitbucketAPI -Path $endpoint -Method Get
+  }
+}
+
 function Start-BitbucketPipeline {
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Low')]
     param (
