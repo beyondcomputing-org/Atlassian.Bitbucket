@@ -4,6 +4,17 @@
 *These will be removed in the next major release*
 - N/A
 
+0.20.0
+-----
+ - Added `Get-BitbucketRepositoryVariable`
+ - Added `New-BitbucketRepositoryVariable`
+ - Added `Remove-BitbucketRepositoryVariable`
+ - Added `Enable-BitbucketPipelineConfig`
+ - Added `Get-BitbucketPipelineConfig`
+ - Updated `Get-BitBucketRepositoryEnvironmentVariable` to no longer be internal
+ - Updated `New-BitBucketRepositoryEnvironmentVariable` to no longer be internal
+ - Updated `Remove-BitBucketRepositoryEnvironmentVariable` to no longer be internal
+
 0.19.0
 -----
 - Breaking Change: Removed ProjectKey Parameter from `Get-BitbucketProjectDeploymentReport` which now accepts pipeline input of repos
@@ -109,7 +120,7 @@
 
 0.2.0
 -----
-- Added `Get-BitbucketRepositoryEnvironment` 
+- Added `Get-BitbucketRepositoryEnvironment`
 
 0.1.0
 -----
