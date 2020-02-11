@@ -97,7 +97,8 @@ function Invoke-BitbucketAPI {
         [Microsoft.PowerShell.Commands.WebRequestMethod]$Method = 'Get',
         [Object]$Body,
         [Switch]$Paginated,
-        [Switch]$InternalAPI
+        [Switch]$InternalAPI,
+        [string]$API_Version
     )
     $Auth = [BitbucketAuth]::GetInstance()
 
@@ -107,7 +108,13 @@ function Invoke-BitbucketAPI {
             Throw 'You must use OAuth 2.0 for Internal APIs.  Login using: Login-Bitbucket -AtlassianCredential (Get-Credential) -OAuthConsumer (Get-Credential)'
         }
     }else{
-        $URI = [BitbucketSettings]::VERSION_URL + $Path
+        if ($API_Version){
+            [BitbucketSettings]$Settings = [BitbucketSettings]::new($API_Version)
+        }
+        else{
+            [BitbucketSettings]$Settings = [BitbucketSettings]::new()
+        }
+        $URI = $Settings.VERSION_URL + $Path
     }
 
     if($Paginated){
