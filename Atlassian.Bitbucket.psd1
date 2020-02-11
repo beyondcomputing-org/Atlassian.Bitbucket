@@ -12,7 +12,7 @@
     RootModule        = 'Atlassian.Bitbucket.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.20.0'
+    ModuleVersion     = '0.21.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @('Desktop', 'Core')
@@ -78,7 +78,8 @@
         'Atlassian.Bitbucket.Repository.Environment.psm1',
         'Atlassian.Bitbucket.Repository.Environment.Variable.psm1',
         'Atlassian.Bitbucket.Repository.psm1',
-        'Atlassian.Bitbucket.Repository.Reviewer.psm1'
+        'Atlassian.Bitbucket.Repository.Reviewer.psm1',
+        'Atlassian.Bitbucket.User.psm1'
     )
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
@@ -99,6 +100,8 @@
         'Get-BitbucketRepositoryVariable',
         'Get-BitbucketSelectedTeam',
         'Get-BitbucketTeam',
+        'Get-BitbucketUser',
+        'Get-BitbucketUsersByGroup',
         'New-BitbucketLogin',
         'New-BitbucketPullRequest',
         'New-BitbucketPullRequestComment',
