@@ -37,23 +37,24 @@ function Add-BitbucketRepositoryReviewer {
         [Parameter( Mandatory = $true,
             Position = 1,
             ValueFromPipelineByPropertyName = $true,
-            HelpMessage = 'Name of the user to add as a default reviewer.')]
-        [string]$Nickname
+            HelpMessage = 'The uuid of the user to add as a default reviewer.')]
+        [string]$UUID
     )
     Process {
-        $endpoint = "repositories/$Team/$RepoSlug/default-reviewers/$Nickname"
+        $endpoint = "repositories/$Team/$RepoSlug/default-reviewers/$UUID"
 
-        if ($pscmdlet.ShouldProcess($RepoSlug, "Add $Nickname to default reviewers")) {
+        if ($pscmdlet.ShouldProcess($RepoSlug, "Add $UUID to default reviewers")) {
             $response = Invoke-BitbucketAPI -Path $endpoint -Method Put
 
-            if($response){
+            if ($response) {
                 return [pscustomobject]@{
-                    Nickname = $Nickname
+                    UUID     = $UUID
                     Team     = $Team
                     RepoSlug = $RepoSlug
                     Action   = 'Added'
                 }
-            }else{
+            }
+            else {
                 throw 'Bad Request'
             }
         }
@@ -78,17 +79,17 @@ function Remove-BitbucketRepositoryReviewer {
         [Parameter( Mandatory = $true,
             Position = 1,
             ValueFromPipelineByPropertyName = $true,
-            HelpMessage = 'Name of the user to be removed as a default reviewer.')]
-        [string]$Nickname
+            HelpMessage = 'The uuid of the user to be removed as a default reviewer.')]
+        [string]$UUID
     )
     Process {
-        $endpoint = "repositories/$Team/$RepoSlug/default-reviewers/$Nickname"
+        $endpoint = "repositories/$Team/$RepoSlug/default-reviewers/$UUID"
 
-        if ($pscmdlet.ShouldProcess($RepoSlug, "Remove $Nickname from default reviewers")) {
+        if ($pscmdlet.ShouldProcess($RepoSlug, "Remove $UUID from default reviewers")) {
             Invoke-BitbucketAPI -Path $endpoint -Method Delete
 
             [pscustomobject]@{
-                Nickname = $Nickname
+                UUID     = $UUID
                 Team     = $Team
                 RepoSlug = $RepoSlug
                 Action   = 'Deleted'
@@ -113,34 +114,38 @@ function Set-BitbucketRepositoryReviewer {
         [string]$RepoSlug,
         [Parameter( Mandatory = $true,
             Position = 1,
-            ValueFromPipelineByPropertyName = $true,
+            ValueFromPipeline = $true,
             HelpMessage = 'Array of users to set as the default reviewers.')]
-        [string[]]$Nicknames
+        [string[]]$UUIDs
     )
     Process {
-        $existingUsers = (Get-BitbucketRepositoryReviewer -Team $Team -RepoSlug $RepoSlug).nickname
+        $existingUsers = Get-BitbucketRepositoryReviewer -Team $Team -RepoSlug $RepoSlug
 
         if ($existingUsers.Count -eq 0) {
-            foreach ($nickname in $Nicknames) {
-                Add-BitbucketRepositoryReviewer -Team $Team -RepoSlug $RepoSlug -Nickname $nickname
+            foreach ($uuid in $UUIDs) {
+                Add-BitbucketRepositoryReviewer -Team $Team -RepoSlug $RepoSlug -UUID $uuid
             }
         }
         else {
             # Calculate the delta between existing and expected users
-            $delta = Compare-Object -ReferenceObject $existingUsers -DifferenceObject $Nicknames
+            $delta = Compare-Object -ReferenceObject $existingUsers.uuid -DifferenceObject $UUIDs
 
             # Add missing users
             $missingUsers = ($delta | Where-Object { $_.SideIndicator -eq '=>' }).InputObject
 
             if ($missingUsers) {
-                $missingUsers | Add-BitbucketRepositoryReviewer -Team $Team -RepoSlug $RepoSlug
+                foreach ($missingUser in $missingUsers) {
+                    Add-BitbucketRepositoryReviewer -Team $Team -RepoSlug $RepoSlug -UUID $missingUser
+                }
             }
 
             # Remove extra users
             $extraUsers = ($delta | Where-Object { $_.SideIndicator -eq '<=' }).InputObject
 
             if ($extraUsers) {
-                $extraUsers | Remove-BitbucketRepositoryReviewer -Team $Team -RepoSlug $RepoSlug
+                foreach ($extraUser in $extraUsers) {
+                    Remove-BitbucketRepositoryReviewer -Team $Team -RepoSlug $RepoSlug -UUID $extraUser
+                }
             }
         }
     }
