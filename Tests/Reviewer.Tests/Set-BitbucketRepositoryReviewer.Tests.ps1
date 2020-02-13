@@ -93,16 +93,13 @@ Describe 'Set-BitbucketRepositoryReviewer' {
 
         It 'UUID objects should match' {
             $object1, $object2 | Test-Equality | Should -BeTrue
-            #recursiveEquality $object1 $object2 | Should -BeTrue
         }
 
         It 'UUID objects should not match - one less UUID' {
-            #recursiveEquality $object1 $object3 | Should -BeFalse
             $object1, $object3 | Test-Equality | Should -BeFalse
         }
 
         It 'UUID objects should not match - one more UUID' {
-            #recursiveEquality $object1 $object4 | Should -BeFalse
             $object1, $object4 | Test-Equality | Should -BeFalse
         }
     }
