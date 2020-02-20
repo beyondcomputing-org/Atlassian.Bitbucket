@@ -6,15 +6,12 @@
 
 0.21.0
 -----
-- Updated BitbucketSettings class to default to API_VERSION 2.0 but accept overrides as well. This allows support for the [groups endpoint that's only available in verison 1.0](https://confluence.atlassian.com/bitbucket/groups-endpoint-296093143.html).  
 - Updated `Add-BitbucketRepositoryReviewer` to use uuid instead of nickname
 - Updated `Remove-BitbucketRepositoryReviewer` to use uuid instead of nickname
 - Updated `Set-BitbucketRepositoryReviewer` to use uuid instead of nickname
 - Added  `Get-BitbucketUser`
 - Added `Get-BitbucketUsersByGroup`
-- Added test for returning API version
-- Added test for `Get-BitbucketUser`
-- Added test for `Get-BitbucketUserByGroup`
+- Added additional test coverage
 
 0.20.0
 -----
