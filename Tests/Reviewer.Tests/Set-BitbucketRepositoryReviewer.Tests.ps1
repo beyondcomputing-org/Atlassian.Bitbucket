@@ -1,5 +1,4 @@
-#Import-Module '.\Atlassian.Bitbucket.Repository.Reviewer.psm1' -Force
-Import-Module 'C:\Repos\Atlassian.Bitbucket\Atlassian.Bitbucket.Repository.Reviewer.psm1' -Force
+Import-Module '.\Atlassian.Bitbucket.Repository.Reviewer.psm1' -Force
 
 Describe 'Set-BitbucketRepositoryReviewer' {
     $SpecifiedTeam = 'T'
