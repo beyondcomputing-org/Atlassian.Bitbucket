@@ -4,6 +4,15 @@
 *These will be removed in the next major release*
 - N/A
 
+0.21.0
+-----
+- Updated `Add-BitbucketRepositoryReviewer` to use uuid instead of nickname
+- Updated `Remove-BitbucketRepositoryReviewer` to use uuid instead of nickname
+- Updated `Set-BitbucketRepositoryReviewer` to use uuid instead of nickname
+- Added  `Get-BitbucketUser`
+- Added `Get-BitbucketUsersByGroup`
+- Added additional test coverage
+
 0.20.0
 -----
  - Added `Get-BitbucketRepositoryVariable`

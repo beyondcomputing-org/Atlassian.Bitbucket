@@ -67,7 +67,8 @@ class BitbucketAuth {
 
     # Test the credentials and save the user object
     hidden [Void] ValidateLoginAndSaveUser() {
-        $URI = [BitbucketSettings]::VERSION_URL + 'user'
+        [BitbucketSettings]$Settings = [BitbucketSettings]::new()
+        $URI = $Settings.VERSION_URL + 'user'
 
         try {
             $this.User = Invoke-RestMethod -Uri $URI -Method Get -Headers $this.GetAuthHeader()

@@ -93,6 +93,10 @@ To get more information on each cmdlet run `Get-Help <CMDLET Name>`
 - `Set-BitbucketRepository`
 - `Set-BitbucketRepositoryReviewer`
 
+### User CMDLETs
+- `Get-BitbucketUser`
+- `Get-BitbucketUsersByGroup`
+
 #### Reports
 - `Get-BitbucketProjectDeploymentReport`
 
