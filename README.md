@@ -77,21 +77,37 @@ To get more information on each cmdlet run `Get-Help <CMDLET Name>`
 - `New-BitbucketPullRequestComment`
 
 #### Repository CMDLETs
-- `Add-BitbucketRepositoryReviewer`
+
 - `Get-BitbucketRepository`
-- `Get-BitbucketRepositoryEnvironment`
-- `Get-BitbucketRepositoryDeployment`
-- `Get-BitbucketRepositoryReviewer`
-- `Get-BitbucketRepositoryVariable`
 - `New-BitbucketRepository`
-- `New-BitbucketRepositoryEnvironment`
-- `New-BitbucketRepositoryVariable`
 - `Remove-BitbucketRepository`
-- `Remove-BitbucketRepositoryEnvironment`
-- `Remove-BitbucketRepositoryReviewer`
-- `Remove-BitbucketRepsitoryVariable`
 - `Set-BitbucketRepository`
+
+##### Deployment CMDLETs
+- `Get-BitbucketRepositoryDeployment`
+
+##### Environment CMDLETs
+- `Get-BitbucketRepositoryEnvironment`
+- `New-BitbucketRepositoryEnvironment`
+- `Remove-BitbucketRepositoryEnvironment`
+
+##### Restriction CMDLETs
+- `Add-BitbucketRepositoryBranchRestriction`
+- `Get-BitbucketRepositoryBranchRestriction`
+- `New-BitbucketRepositoryBranchRestrictionMergeCheck`
+- `Remove-BitbucketRepositoryBranchRestriction`
+- `Set-BitbucketRepositoryBranchRestriction`
+
+##### Reviewer CMDLETs
+- `Add-BitbucketRepositoryReviewer`
+- `Get-BitbucketRepositoryReviewer`
+- `Remove-BitbucketRepositoryReviewer`
 - `Set-BitbucketRepositoryReviewer`
+
+##### Variable CMDLETs
+- `Get-BitbucketRepositoryVariable`
+- `New-BitbucketRepositoryVariable`
+- `Remove-BitbucketRepsitoryVariable`
 
 ### User CMDLETs
 - `Get-BitbucketUser`

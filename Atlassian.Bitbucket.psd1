@@ -12,7 +12,7 @@
     RootModule        = 'Atlassian.Bitbucket.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.21.0'
+    ModuleVersion     = '0.22.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @('Desktop', 'Core')
@@ -74,6 +74,7 @@
         'Atlassian.Bitbucket.PullRequest.Comment.psm1',
         'Atlassian.Bitbucket.PullRequest.psm1',
         'Atlassian.Bitbucket.Reports.psm1',
+        'Atlassian.Bitbucket.Repository.BranchRestriction.psm1',
         'Atlassian.Bitbucket.Repository.Deployment.psm1',
         'Atlassian.Bitbucket.Repository.Environment.psm1',
         'Atlassian.Bitbucket.Repository.Environment.Variable.psm1',
@@ -84,6 +85,7 @@
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport = @(
+        'Add-BitbucketRepositoryBranchRestriction',
         'Add-BitbucketRepositoryReviewer',
         'Enable-BitbucketPipelineConfig',
         'Get-BitbucketLogin',
@@ -93,6 +95,7 @@
         'Get-BitbucketPullRequest',
         'Get-BitbucketPullRequestComment',
         'Get-BitbucketRepository',
+        'Get-BitbucketRepositoryBranchRestriction',
         'Get-BitbucketRepositoryDeployment',
         'Get-BitbucketRepositoryEnvironment',
         'Get-BitbucketRepositoryEnvironmentVariable',
@@ -106,11 +109,13 @@
         'New-BitbucketPullRequest',
         'New-BitbucketPullRequestComment',
         'New-BitbucketRepository',
+        'New-BitbucketRepositoryBranchRestrictionMergeCheck',
         'New-BitbucketRepositoryEnvironment',
         'New-BitbucketRepositoryEnvironmentVariable',
         'New-BitbucketRepositoryVariable',
         'Remove-BitbucketLogin',
         'Remove-BitbucketRepository',
+        'Remove-BitbucketRepositoryBranchRestriction',
         'Remove-BitbucketRepositoryEnvironment',
         'Remove-BitbucketRepositoryEnvironmentVariable',
         'Remove-BitbucketRepositoryReviewer',
@@ -118,6 +123,7 @@
         'Save-BitbucketLogin',
         'Select-BitbucketTeam',
         'Set-BitbucketRepository',
+        'Set-BitbucketRepositoryBranchRestriction',
         'Set-BitbucketRepositoryReviewer',
         'Start-BitbucketPipeline',
         'Wait-BitbucketPipeline'

@@ -4,6 +4,14 @@
 *These will be removed in the next major release*
 - N/A
 
+0.22.0
+-----
+- Added `Add-BitbucketRepositoryBranchRestriction`
+- Added `Get-BitbucketRepositoryBranchRestriction`
+- Added `New-BitbucketRepositoryBranchRestrictionMergeCheck`
+- Added `Remove-BitbucketRepositoryBranchRestriction`
+- Added `Set-BitbucketRepositoryBranchRestriction`
+
 0.21.0
 -----
 - Updated `Add-BitbucketRepositoryReviewer` to use uuid instead of nickname
