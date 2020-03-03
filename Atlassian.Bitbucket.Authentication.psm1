@@ -98,7 +98,8 @@ function Invoke-BitbucketAPI {
         [Object]$Body,
         [Switch]$Paginated,
         [Switch]$InternalAPI,
-        [string]$API_Version
+        [String]$API_Version,
+        [String]$ContentType = 'application/json'
     )
     $Auth = [BitbucketAuth]::GetInstance()
 
@@ -124,7 +125,7 @@ function Invoke-BitbucketAPI {
         do
         {
             Write-Debug "URI: $_endpoint"
-            $return = Invoke-RestMethod -Uri $_endpoint -Method $Method -Body $Body -Headers $Auth.GetAuthHeader()  -ContentType 'application/json'
+            $return = Invoke-RestMethod -Uri $_endpoint -Method $Method -Body $Body -Headers $Auth.GetAuthHeader() -ContentType $ContentType
             $_endpoint = $return.next
             $response += $return.values
         }
@@ -135,7 +136,7 @@ function Invoke-BitbucketAPI {
         if($Body){
             Write-Debug 'Sending request with a body and content type'
             Write-Debug "Body: $Body"
-            return Invoke-RestMethod -Uri $URI -Method $Method -Body $Body -Headers $Auth.GetAuthHeader()  -ContentType 'application/json'
+            return Invoke-RestMethod -Uri $URI -Method $Method -Body $Body -Headers $Auth.GetAuthHeader() -ContentType $ContentType
         }else{
             Write-Debug 'Sending request with no body or content type'
             return Invoke-RestMethod -Uri $URI -Method $Method -Headers $Auth.GetAuthHeader()

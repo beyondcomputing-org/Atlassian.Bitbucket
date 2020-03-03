@@ -12,7 +12,7 @@
     RootModule        = 'Atlassian.Bitbucket.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.23.0'
+    ModuleVersion     = '0.24.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @('Desktop', 'Core')
@@ -78,6 +78,7 @@
         'Atlassian.Bitbucket.Repository.Deployment.psm1',
         'Atlassian.Bitbucket.Repository.Environment.psm1',
         'Atlassian.Bitbucket.Repository.Environment.Variable.psm1',
+        'Atlassian.Bitbucket.Repository.GroupPermission.psm1',
         'Atlassian.Bitbucket.Repository.psm1',
         'Atlassian.Bitbucket.Repository.Reviewer.psm1',
         'Atlassian.Bitbucket.User.psm1'
@@ -86,6 +87,7 @@
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport = @(
         'Add-BitbucketRepositoryBranchRestriction',
+        'Add-BitbucketRepositoryGroupPermission',
         'Add-BitbucketRepositoryReviewer',
         'Enable-BitbucketPipelineConfig',
         'Get-BitbucketLogin',
@@ -99,6 +101,7 @@
         'Get-BitbucketRepositoryDeployment',
         'Get-BitbucketRepositoryEnvironment',
         'Get-BitbucketRepositoryEnvironmentVariable',
+        'Get-BitbucketRepositoryGroupPermission',
         'Get-BitbucketRepositoryReviewer',
         'Get-BitbucketRepositoryVariable',
         'Get-BitbucketSelectedTeam',
@@ -112,18 +115,21 @@
         'New-BitbucketRepositoryBranchRestrictionMergeCheck',
         'New-BitbucketRepositoryEnvironment',
         'New-BitbucketRepositoryEnvironmentVariable',
+        'New-BitbucketRepositoryGroupPermission',
         'New-BitbucketRepositoryVariable',
         'Remove-BitbucketLogin',
         'Remove-BitbucketRepository',
         'Remove-BitbucketRepositoryBranchRestriction',
         'Remove-BitbucketRepositoryEnvironment',
         'Remove-BitbucketRepositoryEnvironmentVariable',
+        'Remove-BitbucketRepositoryGroupPermission',
         'Remove-BitbucketRepositoryReviewer',
         'Remove-BitbucketRepositoryVariable',
         'Save-BitbucketLogin',
         'Select-BitbucketTeam',
         'Set-BitbucketRepository',
         'Set-BitbucketRepositoryBranchRestriction',
+        'Set-BitbucketRepositoryGroupPermission',
         'Set-BitbucketRepositoryReviewer',
         'Start-BitbucketPipeline',
         'Wait-BitbucketPipeline'
