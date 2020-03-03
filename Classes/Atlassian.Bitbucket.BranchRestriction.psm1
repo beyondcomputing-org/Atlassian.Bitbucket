@@ -21,10 +21,12 @@ class BranchRestriction {
 
 class MergeCheck : BranchRestriction {
   [ValidateSet(
+    'enforce_merge_checks',
     'require_approvals_to_merge',
     'require_default_reviewer_approvals_to_merge',
     'require_passing_builds_to_merge',
-    'require_tasks_to_be_completed'
+    'require_tasks_to_be_completed',
+    'reset_pullrequest_approvals_on_change'
   )]
   [string]$kind
   [Nullable[int]]$value

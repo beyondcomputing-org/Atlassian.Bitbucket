@@ -4,6 +4,11 @@
 *These will be removed in the next major release*
 - N/A
 
+0.23.0
+-----
+- Updated to support premium checks in branch restriction code
+- Added WhatIf support to `Add-BitbucketRepositoryBranchRestriction`
+
 0.22.0
 -----
 - Added `Add-BitbucketRepositoryBranchRestriction`

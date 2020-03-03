@@ -24,7 +24,7 @@ function Get-BitbucketRepositoryBranchRestriction {
 }
 
 function Add-BitbucketRepositoryBranchRestriction {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
     param(
         [Parameter( ValueFromPipelineByPropertyName=$true,
                     HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
@@ -49,7 +49,9 @@ function Add-BitbucketRepositoryBranchRestriction {
 
         $body = $Restriction | ConvertTo-Json -Depth 3 -Compress
 
-        Return Invoke-BitbucketAPI -Path $endpoint -Method Post -Body $body
+        if ($pscmdlet.ShouldProcess("branch restriction: $($Restriction.kind) in $RepoSlug", 'add')){
+            Return Invoke-BitbucketAPI -Path $endpoint -Method Post -Body $body
+        }
     }
 }
 
@@ -174,8 +176,8 @@ function ConvertTo-BranchRestriction {
     )
 
     Process {
-        switch -Wildcard ($Object.kind) {
-            'require_*' { [MergeCheck]::New($Object) }
+        switch -regex ($Object.kind) {
+            '^require_|enforce_|reset_' { [MergeCheck]::New($Object) }
             Default { [PermissionCheck]::New($Object) }
         }
     }
