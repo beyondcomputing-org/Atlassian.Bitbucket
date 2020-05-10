@@ -151,6 +151,10 @@ To get more information on each cmdlet run `Get-Help <CMDLET Name>`
 
 - `Get-BitbucketProjectDeploymentReport`
 
+##### HTML Formatted Report Example
+* The screenshot doesn't show the repo names or expanded cards.  When expanded the cards show the pipeline #, last commit and date and are clickable to take you directly to the pipeline run in Bitbucket.
+![](Images/HTMLDashboard.PNG)
+
 ## Changes
 
 See [CHANGELOG](CHANGELOG.md) for more information.

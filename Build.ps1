@@ -24,7 +24,7 @@ Copy-Item -Path 'LICENSE.md' -Destination $BuildFolder -Force
 Copy-Item -Path '*' -Destination $BuildFolder -Recurse -Include '*.psm1' -Force
 
 # Copy in non-excluded subdirectories
-$Directories = Get-ChildItem -Directory -Exclude 'Build','Tests','Icon'
+$Directories = Get-ChildItem -Directory -Exclude 'Build','Tests','Icon','Images'
 foreach ($Directory in $Directories) {
     $Directory | Copy-Item -Destination $BuildFolder -Recurse -Force
 }
