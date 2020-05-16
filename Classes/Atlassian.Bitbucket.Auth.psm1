@@ -158,7 +158,13 @@ class BitbucketAuth {
     # Load Saved Credentials
     hidden static [BitbucketAuth] Load(){
         if(Test-Path([BitbucketSettings]::SAVE_PATH)){
-            $Import = Import-CliXml -Path ([BitbucketSettings]::SAVE_PATH)
+            try {
+                $Import = Import-CliXml -Path ([BitbucketSettings]::SAVE_PATH)
+            }
+            catch {
+                Write-Warning 'Failed to load settings'
+                Return $null
+            }
             $Auth = [BitbucketAuth]::new()
 
             $Auth.User = $Import.User

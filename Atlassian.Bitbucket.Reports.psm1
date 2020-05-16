@@ -54,14 +54,14 @@ function Get-BitbucketProjectDeploymentReport {
         for ($r = 0; $r -lt $_repos.Count; $r++) {
             $_repo = $_repos[$r]
             Write-Progress -Id 0 -Activity "Getting Deployments for Repo: $($_repo.name)" -PercentComplete ((($r + 1) / $_repos.Count)*100)
-            $_env = Get-BitbucketRepositoryEnvironment -RepoSlug $_repo.slug | Where-Object {$_.Name -in $Environments}
+            $_env = Get-BitbucketRepositoryEnvironment -Team $Team -RepoSlug $_repo.slug | Where-Object {$_.Name -in $Environments}
 
             $envList = @()
 
             for ($e = 0; $e -lt $_env.Count; $e++) {
                 Write-Progress -Id 1 -Activity "Environment: $($_env[$e].name)" -PercentComplete ((($e + 1) / $_env.Count)*100)
                 $Fields = ('values.deployable.commit.message', 'values.deployable.commit.date', 'values.deployable.commit.author.user')
-                $deployment = Get-BitbucketRepositoryDeployment -RepoSlug $_repo.slug -EnvironmentUUID $_env[$e].uuid -Limit 1 -Fields $Fields
+                $deployment = Get-BitbucketRepositoryDeployment -Team $Team -RepoSlug $_repo.slug -EnvironmentUUID $_env[$e].uuid -Limit 1 -Fields $Fields
 
                 if($deployment){
                     $envList += [PSCustomObject]@{
