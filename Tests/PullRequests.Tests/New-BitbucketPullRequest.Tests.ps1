@@ -39,6 +39,7 @@ Describe 'New-BitbucketPullRequest' {
                             name = $Source
                         }
                     }
+                    reviewers = @()
                 } | ConvertTo-Json -Depth 3 -Compress) -eq $Body
             }
         }
@@ -48,7 +49,11 @@ Describe 'New-BitbucketPullRequest' {
         $Description = 'Description'
         $Close = $false
         $Destination = 'DBranch'
-        New-BitbucketPullRequest -Team $Team -RepoSlug $Repo -Title $Title -SourceBranch $Source -Description $Description -CloseBranch $Close -DestinationBranch $Destination
+        $Reviewers = @([PSCustomObject]@{
+            uuid = 'testid'
+        })
+
+        New-BitbucketPullRequest -Team $Team -RepoSlug $Repo -Title $Title -SourceBranch $Source -Description $Description -CloseBranch $Close -DestinationBranch $Destination -Reviewers $Reviewers
 
         It 'Uses Post Method' {
             Assert-MockCalled Invoke-BitbucketAPI -Exactly 1 -ModuleName Atlassian.Bitbucket.PullRequest -ParameterFilter {
@@ -73,6 +78,7 @@ Describe 'New-BitbucketPullRequest' {
                             name = $Source
                         }
                     }
+                    reviewers = $Reviewers
                     destination = @{
                         branch = @{
                             name = $Destination
