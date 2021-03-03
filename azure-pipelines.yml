@@ -1,10 +1,10 @@
 jobs:
-  - job: Build_PS_Win2019
+  - job: Build_PS_Windows
     pool:
-      vmImage: windows-2019
+      vmImage: windows-latest
     steps:
-    - powershell: |
-        .\Build.ps1
+    - pwsh: |
+        .\Build.ps1 -NonInteractive -NoLogo -NoProfile
       displayName: 'Test'
 
     - task: PublishTestResults@2
@@ -13,7 +13,7 @@ jobs:
       inputs:
         testRunner: 'NUnit'
         testResultsFiles: '**/TestResults.xml'
-        testRunTitle: 'PS_Win2019'
+        testRunTitle: 'PS_Windows'
 
     - task: ArchiveFiles@2
       displayName: 'Archive Build'
@@ -28,19 +28,19 @@ jobs:
         ArtifactName: 'drop'
         publishLocation: 'Container'
 
-  - job: Build_PSCore_Ubuntu1804
+  - job: Build_PSCore_Ubuntu
     pool:
-      vmImage: ubuntu-18.04
+      vmImage: ubuntu-latest
     steps:
     - script: |
-        pwsh -c '.\Build.ps1'
+        pwsh -c '.\Build.ps1' -NonInteractive -NoLogo -NoProfile
       displayName: 'Test'
 
     - task: PublishTestResults@2
       inputs:
         testRunner: 'NUnit'
         testResultsFiles: '**/TestResults.xml'
-        testRunTitle: 'PSCore_Ubuntu1804'
+        testRunTitle: 'PSCore_Ubuntu'
       condition: always()
       displayName: 'Publish Test Results'
 
@@ -49,13 +49,13 @@ jobs:
       vmImage: macOS-latest
     steps:
     - script: |
-        pwsh -c '.\Build.ps1'
+        pwsh -c '.\Build.ps1' -NonInteractive -NoLogo -NoProfile
       displayName: 'Test'
 
     - task: PublishTestResults@2
       inputs:
         testRunner: 'NUnit'
         testResultsFiles: '**/TestResults.xml'
-        testRunTitle: 'PSCore_MacOSLatest'
+        testRunTitle: 'PSCore_MacOS'
       condition: always()
       displayName: 'Publish Test Results'
