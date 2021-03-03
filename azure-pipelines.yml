@@ -44,7 +44,7 @@ jobs:
       condition: always()
       displayName: 'Publish Test Results'
 
-  - job: Build_PSCore_MacLatest
+  - job: Build_PSCore_Mac
     pool:
       vmImage: macOS-latest
     steps:
