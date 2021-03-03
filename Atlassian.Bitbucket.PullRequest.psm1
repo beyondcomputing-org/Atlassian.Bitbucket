@@ -72,6 +72,11 @@ function Get-BitbucketPullRequest {
         C:\PS> New-BitbucketPullRequest -RepoSlug 'Repo' -Title 'Markdown' -SourceBranch 'BranchName' -Description "# Heading1 `n * Item1 `n * Item2"
         Creates a PR with markdown in the Description.  Includes an h1 heading and bullet items.
 
+    .EXAMPLE
+        C:\PS> New-BitbucketPullRequest -RepoSlug 'Repo' -Title 'Reviewers' -SourceBranch 'BranchName' -Description "..." -ReviewerIDs (Get-BitbucketRepositoryReviewer <repo>)
+        Creates a PR and includes the default reviewers for the repo on the PR.
+        The user creating the PR can not be included in the reviewers list.
+
     .PARAMETER Team
         Name of the team in Bitbucket.  Defaults to selected team if not provided.
 
@@ -92,6 +97,9 @@ function Get-BitbucketPullRequest {
 
     .PARAMETER DestinationBranch
         The destination branch for the PR.  Defaults to the repositories main branch specified in Bitbucket.
+
+    .PARAMETER Reviewers
+        Array of user objects of the reviewers to add to the PR.  Uses the uuid property on the object.  Defaults to no reviewers.  To include the default list use the (Get-BitbucketRepositoryReviewer <repo>) command.
 #>
 function New-BitbucketPullRequest {
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Low')]
@@ -122,7 +130,10 @@ function New-BitbucketPullRequest {
         [bool]$CloseBranch = $true,
         [Parameter( ValueFromPipelineByPropertyName = $true,
                     HelpMessage = 'The destination branch for the PR.  Defaults to the repositories main branch specified in Bitbucket.')]
-        [string]$DestinationBranch
+        [string]$DestinationBranch,
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+                    HelpMessage = 'An array of user objects to include on the PR.  Only needs the uuid property on the object.')]
+        [psobject[]]$Reviewers = @()
     )
 
     Process {
@@ -137,6 +148,7 @@ function New-BitbucketPullRequest {
                     name = $SourceBranch
                 }
             }
+            reviewers = $Reviewers
         }
 
         if($DestinationBranch){

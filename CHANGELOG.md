@@ -6,6 +6,9 @@ _These will be removed in the next major release_
 
 - N/A
 
+## 0.25.0
+- Added Reviewers to `New-BitbucketPullRequest`
+
 ## 0.24.1
 - Fixed `Get-BitbucketProjectDeploymentReport` to use passed in team if provided
 - Improved error handling for authentication loading
