@@ -6,6 +6,10 @@ _These will be removed in the next major release_
 
 - N/A
 
+## 0.25.1
+- Fixed example for `New-BitbucketPullRequest`
+- Updated readme to call out use of App Passwords for basic auth
+
 ## 0.25.0
 - Added Reviewers to `New-BitbucketPullRequest`
 

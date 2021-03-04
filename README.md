@@ -38,6 +38,8 @@ The module supports both Basic authentication and OAuth 2.0 for the Bitbucket AP
 
 ##### Basic Auth
 
+For basic auth I recommend you use [App Passwords](https://bitbucket.org/account/settings/app-passwords/) along with your username.  When generating the App Password make sure to include read access to the account and workspace membership for login validation.
+
 ```powershell
 Login-Bitbucket
 ```

@@ -73,7 +73,7 @@ function Get-BitbucketPullRequest {
         Creates a PR with markdown in the Description.  Includes an h1 heading and bullet items.
 
     .EXAMPLE
-        C:\PS> New-BitbucketPullRequest -RepoSlug 'Repo' -Title 'Reviewers' -SourceBranch 'BranchName' -Description "..." -ReviewerIDs (Get-BitbucketRepositoryReviewer <repo>)
+        C:\PS> New-BitbucketPullRequest -RepoSlug 'Repo' -Title 'Reviewers' -SourceBranch 'BranchName' -Description "..." -Reviewers (Get-BitbucketRepositoryReviewer <repo>)
         Creates a PR and includes the default reviewers for the repo on the PR.
         The user creating the PR can not be included in the reviewers list.
 
