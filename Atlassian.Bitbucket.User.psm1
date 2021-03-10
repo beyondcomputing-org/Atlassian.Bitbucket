@@ -53,3 +53,59 @@ function Get-BitbucketUsersByGroup {
         return Invoke-BitbucketAPI -Path $endpoint -API_Version '1.0'
     }
 }
+<#
+.Synopsis
+   Gets the list of user groups.
+.DESCRIPTION
+   This function returns a list of all the user groups. If no team is specified,
+   defaults to the selected team.
+.EXAMPLE
+   Get-BitbucketUserGroup
+   Returns a list of groups for the default team.
+.EXAMPLE
+   Get-BitbucketUserGroup -Team $Team
+   Returns a list of groups for the specified team.
+#>
+function Get-BitbucketUserGroup {
+   [CmdletBinding()]
+   param(
+       [Parameter( ValueFromPipelineByPropertyName=$true,
+                   HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
+       [string]$Team = (Get-BitbucketSelectedTeam)
+   )
+
+   Process {
+       $endpoint = "groups/$Team"
+       return Invoke-BitbucketAPI -Path $endpoint -API_Version '1.0' -Paginated
+   }
+}
+<#
+.Synopsis
+   Add a user to a group
+.DESCRIPTION
+   This function adds an existing user to an existing group. If no team is specified,
+   defaults to the selected team.
+.EXAMPLE
+   Add-BitbucketUserToGroup -GroupSlug $GroupSlug -UserUuid $UserUuid
+   Adds user to group within the default team.
+.EXAMPLE
+   Add-BitbucketUserToGroup -GroupSlug $GroupSlug -UserUuid $UserUuid -Team $Team
+   Adds user to group within the specified team.
+#>
+function Add-BitbucketUserToGroup {
+   [CmdletBinding()]
+   param(
+       [Parameter( ValueFromPipelineByPropertyName=$true,
+                   HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
+       [string]$Team = (Get-BitbucketSelectedTeam),
+       [Parameter (HelpMessage='The group slug')]
+       [string]$GroupSlug,
+       [Parameter (HelpMessage='The user UUID')]
+       [string]$UserUuid
+   )
+
+   Process {
+       $endpoint = "groups/$Team/$GroupSlug/members/$UserUuid"
+       return Invoke-BitbucketAPI -Path $endpoint -API_Version '1.0' -Method 'Put'
+   }
+}
