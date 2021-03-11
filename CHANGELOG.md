@@ -8,7 +8,7 @@ _These will be removed in the next major release_
 
 ## 0.26.0
 - Added `Add-BitbucketUserToGroup`
-- Added `Get-BitbucketGroups`
+- Added `Get-BitbucketGroup`
 
 ## 0.25.1
 - Fixed example for `New-BitbucketPullRequest`
