@@ -66,7 +66,7 @@ function Get-BitbucketUsersByGroup {
    Get-BitbucketUserGroup -Team $Team
    Returns a list of groups for the specified team.
 #>
-function Get-BitbucketUserGroup {
+function Get-BitbucketGroup {
    [CmdletBinding()]
    param(
        [Parameter( ValueFromPipelineByPropertyName=$true,

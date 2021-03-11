@@ -1,11 +1,11 @@
 Import-Module '.\Atlassian.Bitbucket.User.psm1' -Force
 
-Describe 'Get-BitbucketUserGroup' {
+Describe 'Get-BitbucketGroup' {
     $Team = 'T'
 
     Mock Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.User {}
 
-    Get-BitbucketUserGroup -Team $Team
+    Get-BitbucketGroup -Team $Team
 
     It 'Has a valid path' {
         Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.User -ParameterFilter {
