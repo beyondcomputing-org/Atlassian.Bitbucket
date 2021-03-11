@@ -6,6 +6,10 @@ _These will be removed in the next major release_
 
 - N/A
 
+## 0.26.0
+- Added `Add-BitbucketUserToGroup`
+- Added `Get-BitbucketGroups`
+
 ## 0.25.1
 - Fixed example for `New-BitbucketPullRequest`
 - Updated readme to call out use of App Passwords for basic auth
