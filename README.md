@@ -146,6 +146,8 @@ To get more information on each cmdlet run `Get-Help <CMDLET Name>`
 
 ### User CMDLETs
 
+- `Add-BitbucketUserToGroup`
+- `Get-BitbucketGroup`
 - `Get-BitbucketUser`
 - `Get-BitbucketUsersByGroup`
 
