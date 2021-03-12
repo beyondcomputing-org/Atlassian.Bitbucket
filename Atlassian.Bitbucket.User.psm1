@@ -60,10 +60,10 @@ function Get-BitbucketUsersByGroup {
    This function returns a list of all the user groups. If no team is specified,
    defaults to the selected team.
 .EXAMPLE
-   Get-BitbucketUserGroup
+   Get-BitbucketGroup
    Returns a list of groups for the default team.
 .EXAMPLE
-   Get-BitbucketUserGroup -Team $Team
+   Get-BitbucketGroup -Team $Team
    Returns a list of groups for the specified team.
 #>
 function Get-BitbucketGroup {
