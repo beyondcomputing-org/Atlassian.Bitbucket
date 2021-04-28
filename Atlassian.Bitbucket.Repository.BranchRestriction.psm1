@@ -89,6 +89,7 @@ function Set-BitbucketRepositoryBranchRestriction {
 
             if($extra)
             {
+                Write-Verbose "Removing Restriction: $($current.kind)"
                 Remove-BitbucketRepositoryBranchRestriction -RepoSlug $RepoSlug -Team $Team -RestrictionID $current.id
             }
             else
@@ -152,23 +153,87 @@ function New-BitbucketRepositoryBranchRestrictionMergeCheck {
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Low')]
     param(
         [ValidateSet(
+            'allow_auto_merge_when_builds_pass',
+            'enforce_merge_checks',
+            'require_all_dependencies_merged',
             'require_approvals_to_merge',
             'require_default_reviewer_approvals_to_merge',
+            'require_no_changes_requested',
             'require_passing_builds_to_merge',
-            'require_tasks_to_be_completed'
+            'require_tasks_to_be_completed',
+            'reset_pullrequest_approvals_on_change',
+            'reset_pullrequest_changes_requested_on_change'
         )]
         [string]$Kind,
+        [Nullable[int]]$Value,
+
+        [Parameter(ParameterSetName = "glob")]
         [string]$Pattern,
-        [int]$Value
+        
+        [Parameter(ParameterSetName = "branchtype")]
+        [ValidateSet(
+            'feature',
+            'bugfix',
+            'release',
+            'hotfix',
+            'development',
+            'production'
+        )]
+        [string]$BranchType
+        
     )
     if ($pscmdlet.ShouldProcess('MergeCheck Object', 'create')){
-        Return [MergeCheck]::New($kind, $pattern, $value)
+        if (-not ([string]::IsNullOrEmpty($BranchType))){
+            Return [MergeCheck]::New($kind, $branchtype, $value, $false)
+        }
+
+        Return [MergeCheck]::New($kind, $pattern, $value, $true)
+    }
+}
+
+function New-BitbucketRepositoryBranchRestrictionPermissionCheck {
+    [OutputType([PermissionCheck])]
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Low')]
+    param (
+        [ValidateSet(
+            'delete',
+            'force',
+            'push',
+            'restrict_merges'
+        )]
+        [string]$Kind,
+        [string]$UUID,
+
+        [Parameter(ParameterSetName = "glob")]
+        [string]$Pattern,
+        
+        [Parameter(ParameterSetName = "branchtype")]
+        [ValidateSet(
+            'feature',
+            'bugfix',
+            'release',
+            'hotfix',
+            'development',
+            'production'
+        )]
+        [string]$BranchType,
+
+        [switch]$IsGroup
+    )
+
+    [string]$target = $Pattern
+    [bool]$isGlob = $true
+    if (-not ([string]::IsNullOrEmpty($BranchType))) {
+        $target = $BranchType
+        $isGlob = $false
+    }
+
+    if ($pscmdlet.ShouldProcess('PermissionCheck Object', 'create')){
+        Return [PermissionCheck]::New($kind, $uuid, $target, $isGlob, $isgroup)
     }
 }
 
 function ConvertTo-BranchRestriction {
-    [OutputType([MergeCheck])]
-    [OutputType([PermissionCheck])]
     [CmdletBinding()]
     param(
         [Parameter( Mandatory=$true,
