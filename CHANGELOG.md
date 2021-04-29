@@ -6,6 +6,10 @@ _These will be removed in the next major release_
 
 - N/A
 
+## 0.27.0
+- Added `Add-BitbucketRepositoryBranch` to create a new branch in a repo
+- Added `New-BitbucketRepositoryBranchRestrictionPermissionCheck`
+
 ## 0.26.0
 - Added `Add-BitbucketUserToGroup`
 - Added `Get-BitbucketGroup`
