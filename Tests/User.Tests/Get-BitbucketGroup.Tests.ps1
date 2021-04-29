@@ -19,12 +19,6 @@ Describe 'Get-BitbucketGroup' {
         }
     }
 
-    It 'Is paginated' {
-        Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.User -ParameterFilter {
-            $Paginated -eq $true
-        }
-    }
-
     It 'Uses v1 API'{
         Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.User -ParameterFilter {
             '1.0' -eq $API_Version

@@ -313,3 +313,79 @@ function Remove-BitbucketRepository {
         }
     }
 }
+
+<#
+    .SYNOPSIS
+        Creates a new branch
+
+    .DESCRIPTION
+        Creates a branch in the specified repository. If no parent is specified, branch will be created from the latest commit of the default branch.
+
+    .EXAMPLE
+        C:\PS> Add-BitBucketRepositoryBranch -Branch 'NewBranch' -Team 'MyTeam' -RepoSlug 'Repo1'
+        Adds new branch from the last commit of the default branch
+
+    .EXAMPLE
+        C:\PS> Add-BitBucketRepositoryBranch -Branch 'NewBranch' -Parent 'CommitHash'
+        Adds new branch from the specified commit
+
+    .EXAMPLE
+        C:\PS> Add-BitBucketRepositoryBranch -Branch 'NewBranch' -Message 'Create new branch'
+        Adds new branch with specified commit message
+
+    .PARAMETER Team
+        Name of the team in Bitbucket.  Defaults to selected team if not provided.
+
+    .PARAMETER RepoSlug
+        Name of the repo in Bitbucket.
+
+    .PARAMETER Branch
+        Name of the branch to create
+
+    .PARAMETER Parent
+        Optional hash of the commit to create the branch from
+
+    .PARAMETER Message
+        Optional commit message for the new branch
+#>
+function Add-BitbucketRepositoryBranch {
+    [CmdletBinding()]
+    param(
+        [Parameter( ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
+        [string]$Team = (Get-BitbucketSelectedTeam),
+        [Parameter( Mandatory=$true,
+                    Position=0,
+                    ValueFromPipeline=$true,
+                    ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='The repository slug.')]
+        [Alias('Slug')]
+        [string]$RepoSlug,
+        [Parameter( Mandatory=$true,
+                    Position=1,
+                    ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='Name of the branch to create.')]
+        [string]$Branch,
+        [Parameter(HelpMessage='Hash of the commit to create the branch from.')]
+        [string]$Parent,
+        [Parameter(HelpMessage='Commit message for the new branch.')]
+        [string]$Message
+    )
+
+    Process {
+        $endpoint = "repositories/$Team/$RepoSlug/src/"
+
+        $body = [ordered]@{branch=$Branch}
+
+        if ($Parent) {
+            $body.Add("parents", $parent)
+        }
+
+        if ($Message) {
+            $body.Add("message", $message)
+        }
+
+        return Invoke-BitbucketAPI -Path $endpoint -Body $body -Method Post -ContentType 'application/x-www-form-urlencoded'
+    }
+}
+

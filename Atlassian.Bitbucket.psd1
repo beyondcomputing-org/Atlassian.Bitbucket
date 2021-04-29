@@ -12,7 +12,7 @@
     RootModule        = 'Atlassian.Bitbucket.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.26.0'
+    ModuleVersion     = '0.27.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @('Desktop', 'Core')
@@ -86,6 +86,7 @@
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport = @(
+        'Add-BitbucketRepositoryBranch',
         'Add-BitbucketRepositoryBranchRestriction',
         'Add-BitbucketRepositoryGroupPermission',
         'Add-BitbucketRepositoryReviewer',
@@ -115,6 +116,7 @@
         'New-BitbucketPullRequestComment',
         'New-BitbucketRepository',
         'New-BitbucketRepositoryBranchRestrictionMergeCheck',
+        'New-BitbucketRepositoryBranchRestrictionPermissionCheck',
         'New-BitbucketRepositoryEnvironment',
         'New-BitbucketRepositoryEnvironmentVariable',
         'New-BitbucketRepositoryGroupPermission',

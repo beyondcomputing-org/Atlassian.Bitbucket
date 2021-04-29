@@ -76,7 +76,7 @@ function Get-BitbucketGroup {
 
    Process {
        $endpoint = "groups/$Team"
-       return Invoke-BitbucketAPI -Path $endpoint -API_Version '1.0' -Paginated
+       return Invoke-BitbucketAPI -Path $endpoint -API_Version '1.0'
    }
 }
 <#
