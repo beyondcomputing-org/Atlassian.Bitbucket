@@ -7,7 +7,7 @@ Describe 'Set-BitbucketRepositoryBranchRestriction' {
     $Team = 'T'
     $Repo = 'R'
     
-    Context 'Matching Restriction' {
+    Context 'Matching Glob Restriction' {
         Mock Get-BitbucketRepositoryBranchRestriction -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction { 
             return New-Object PSObject -Property @{
                 id = 123
@@ -20,6 +20,31 @@ Describe 'Set-BitbucketRepositoryBranchRestriction' {
         }
 
         $MergeCheck = New-BitbucketRepositoryBranchRestrictionMergeCheck -Kind 'require_approvals_to_merge' -Pattern 'master' -Value 2
+        Set-BitbucketRepositoryBranchRestriction -Team $Team -RepoSlug $Repo -Restriction $MergeCheck
+
+        It 'Does not add restriction' {
+            Assert-MockCalled Add-BitbucketRepositoryBranchRestriction -Exactly 0 -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction
+        }
+
+        It 'Does not remove restriction' {
+            Assert-MockCalled Remove-BitbucketRepositoryBranchRestriction -Exactly 0 -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction
+        }
+    }
+
+    Context 'Matching branching_model Restriction' {
+        Mock Get-BitbucketRepositoryBranchRestriction -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction { 
+            return New-Object PSObject -Property @{
+                id = 123
+                kind = 'require_approvals_to_merge'
+                pattern = ''
+                value = 2
+                branch_match_kind = 'branching_model'
+                branch_type = 'development'
+                type = 'branchrestriction'
+            } | ConvertTo-BranchRestriction
+        }
+
+        $MergeCheck = New-BitbucketRepositoryBranchRestrictionMergeCheck -Kind 'require_approvals_to_merge' -BranchType 'development' -Value 2
         Set-BitbucketRepositoryBranchRestriction -Team $Team -RepoSlug $Repo -Restriction $MergeCheck
 
         It 'Does not add restriction' {
@@ -108,6 +133,7 @@ Describe 'Set-BitbucketRepositoryBranchRestriction' {
         
         $MergeCheck = @()
         $MergeCheck += New-BitbucketRepositoryBranchRestrictionMergeCheck -Kind $response1.kind -Pattern $response1.pattern -Value $response1.value
+        $MergeCheck += New-BitbucketRepositoryBranchRestrictionPermissionCheck -Kind 'push' -BranchType 'hotfix' -UUID '{12a1a123-a1ab-1234-a12a-1abc12345a12}'
         $MergeCheck += New-Object PSObject -Property @{
             id = 124
             kind = 'delete'
@@ -121,9 +147,12 @@ Describe 'Set-BitbucketRepositoryBranchRestriction' {
         Set-BitbucketRepositoryBranchRestriction -Team $Team -RepoSlug $Repo -Restriction $MergeCheck
 
         It 'Adds correct restriction' {
-            Assert-MockCalled Add-BitbucketRepositoryBranchRestriction -Exactly 1 -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction
+            Assert-MockCalled Add-BitbucketRepositoryBranchRestriction -Exactly 2 -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction
             Assert-MockCalled Add-BitbucketRepositoryBranchRestriction -Exactly 1 -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction -ParameterFilter {
                 $Restriction -eq $MergeCheck[1]
+            }
+            Assert-MockCalled Add-BitbucketRepositoryBranchRestriction -Exactly 1 -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction -ParameterFilter {
+                $Restriction -eq $MergeCheck[2]
             }
         }
 

@@ -115,6 +115,7 @@
         'New-BitbucketPullRequestComment',
         'New-BitbucketRepository',
         'New-BitbucketRepositoryBranchRestrictionMergeCheck',
+        'New-BitbucketRepositoryBranchRestrictionPermissionCheck',
         'New-BitbucketRepositoryEnvironment',
         'New-BitbucketRepositoryEnvironmentVariable',
         'New-BitbucketRepositoryGroupPermission',
