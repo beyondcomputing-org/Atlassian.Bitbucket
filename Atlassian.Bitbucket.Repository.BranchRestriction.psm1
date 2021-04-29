@@ -47,7 +47,14 @@ function Add-BitbucketRepositoryBranchRestriction {
             throw 'Do not use the base type BranchRestriction object.  Instead use the MergeCheck or PermissionCheck object type.'
         }
 
-        $body = $Restriction | ConvertTo-Json -Depth 3 -Compress
+        # If the branch_match_kind is Glob, remove branch_type property, otherwise the Bitbucket API will throw an exception
+        if ($Restriction.branch_match_kind -eq 'Glob') {
+            $globRestriction = $Restriction | Select-Object -ExcludeProperty branch_type
+            $body = $globRestriction | ConvertTo-Json -Depth 3 -Compress
+        }
+        else {
+            $body = $Restriction | ConvertTo-Json -Depth 3 -Compress
+        }
 
         if ($pscmdlet.ShouldProcess("branch restriction: $($Restriction.kind) in $RepoSlug", 'add')){
             Return Invoke-BitbucketAPI -Path $endpoint -Method Post -Body $body
@@ -80,6 +87,7 @@ function Set-BitbucketRepositoryBranchRestriction {
             $extra = $true
             foreach ($new in $Restrictions)
             {
+                Write-Debug "Comparing $($current.kind) with $($new.kind)"
                 if(Compare-CustomObject $current $new -IgnoreProperty 'id')
                 {
                     $extra = $false
@@ -104,7 +112,7 @@ function Set-BitbucketRepositoryBranchRestriction {
             $missing = $true
             foreach ($current in $currentRestrictions)
             {
-                if(Compare-CustomObject $new $current -IgnoreProperty 'id')
+                if(Compare-CustomObject $new $current -IgnoreProperty 'id' -Debug)
                 {
                     $missing = $false
                     break
@@ -169,7 +177,7 @@ function New-BitbucketRepositoryBranchRestrictionMergeCheck {
 
         [Parameter(ParameterSetName = "glob")]
         [string]$Pattern,
-        
+
         [Parameter(ParameterSetName = "branchtype")]
         [ValidateSet(
             'feature',
@@ -180,7 +188,7 @@ function New-BitbucketRepositoryBranchRestrictionMergeCheck {
             'production'
         )]
         [string]$BranchType
-        
+
     )
     if ($pscmdlet.ShouldProcess('MergeCheck Object', 'create')){
         if (-not ([string]::IsNullOrEmpty($BranchType))){
@@ -206,7 +214,7 @@ function New-BitbucketRepositoryBranchRestrictionPermissionCheck {
 
         [Parameter(ParameterSetName = "glob")]
         [string]$Pattern,
-        
+
         [Parameter(ParameterSetName = "branchtype")]
         [ValidateSet(
             'feature',

@@ -1,9 +1,9 @@
 class BranchRestriction {
   [Nullable[int]]$id
   [string]$kind
-  [string]$pattern
+  [string]$pattern = ""
   [string]$branch_match_kind = 'glob'
-  [string]$branch_type
+  [string]$branch_type = ""
   [string]$type = 'branchrestriction'
 
   BranchRestriction([PSCustomObject]$Object) {
@@ -23,7 +23,7 @@ class BranchRestriction {
     else{
       $this.branch_match_kind = 'branching_model'
       $this.branch_type = $Target
-    }    
+    }
   }
 }
 
