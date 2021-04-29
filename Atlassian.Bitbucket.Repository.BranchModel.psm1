@@ -135,7 +135,7 @@ function Set-BitbucketRepositoryBranchModel {
         [Parameter(HelpMessage = 'Enable the specified item (development is always enabled)')]
         [switch]$Enabled
     )
-    
+
     Process {
         $endpoint = "repositories/$Team/$RepoSlug/branching-model/settings"
 
