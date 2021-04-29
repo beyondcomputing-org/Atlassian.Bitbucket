@@ -112,7 +112,7 @@ function Set-BitbucketRepositoryBranchRestriction {
             $missing = $true
             foreach ($current in $currentRestrictions)
             {
-                if(Compare-CustomObject $new $current -IgnoreProperty 'id' -Debug)
+                if(Compare-CustomObject $new $current -IgnoreProperty 'id')
                 {
                     $missing = $false
                     break
