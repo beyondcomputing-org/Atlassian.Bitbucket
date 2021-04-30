@@ -12,6 +12,7 @@ _These will be removed in the next major release_
 - Added `Get-BitbucketRepositoryBranchModel` to get Branching Model in a repo
 - Added `Set-BitbucketRepositoryBranchModel` to modify Branching Model in a repo
 - Added `New-BitbucketRepositoryBranchRestrictionPermissionCheck`
+- Added `-Name` Parameter to `New-BitbucketRepository` and `Set-BitbucketRepository`
 - Updated `New-BitbucketRepositoryBranchRestrictionMergeCheck` with missing merge checks
 - Updated BranchRestriction Class to support branching_model matching type
 - Updated Pester Tests
