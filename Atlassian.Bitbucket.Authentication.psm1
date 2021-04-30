@@ -120,13 +120,21 @@ function Invoke-BitbucketAPI {
 
     if($Paginated){
         $_endpoint = $URI
-
+        $counter = 0
         # Process Pagination
         do
         {
             Write-Debug "URI: $_endpoint"
             $return = Invoke-RestMethod -Uri $_endpoint -Method $Method -Body $Body -Headers $Auth.GetAuthHeader() -ContentType $ContentType
-            $_endpoint = $return.next
+
+            # Workaround bug BCLOUD-20796 (https://jira.atlassian.com/browse/BCLOUD-20796) - Incorrect URL in next property on /repositories/{workspace}/{repo_slug}/deployments/ endpoint
+            If ($return.next -like '*bitbucket-pipelines.prod.public.atl-paas.net*') {
+              $counter++
+              $_endpoint = $_endpoint -replace('bitbucket-pipelines.prod.public.atl-paas.net','api.bitbucket.org') -replace ("page=$counter", "page=$($counter+1)")
+            }
+            Else {
+              $_endpoint = $return.next
+            }
             $response += $return.values
         }
         while ($return.next)

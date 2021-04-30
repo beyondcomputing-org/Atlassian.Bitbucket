@@ -6,6 +6,9 @@ _These will be removed in the next major release_
 
 - N/A
 
+## 0.27.0
+- Added work around to Invoke-BitbucketAPI for bug [BCLOUD-20796](https://jira.atlassian.com/browse/BCLOUD-20796)
+
 ## 0.26.0
 - Added `Add-BitbucketUserToGroup`
 - Added `Get-BitbucketGroup`
