@@ -389,3 +389,50 @@ function Add-BitbucketRepositoryBranch {
     }
 }
 
+<#
+    .SYNOPSIS
+        Returns the branches in a specified repository.
+
+    .DESCRIPTION
+        Returns the branches in a specified repository.
+
+    .EXAMPLE
+        C:\ PS> Get-BitbucketRepositoryBranch -RepoSlug 'repo'
+        Returns all the branches in the Repository named repo
+
+    .EXAMPLE
+        C:\ PS> Get-BitbucketRepositoryBranch -RepoSlug 'repo' -Name 'feature'
+        Returns all the branches in the Repository named repo with the word feature in their name
+
+    .PARAMETER Team
+        Name of the team in Bitbucket.  Defaults to selected team if not provided.
+
+    .PARAMETER RepoSlug
+        Name of the repo in Bitbucket.
+
+    .PARAMETER Name
+        Name of the branch to search for.
+#>
+function Get-BitbucketRepositoryBranch {
+    [CmdletBinding()]
+    param (
+        [Parameter( ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
+        [string]$Team = (Get-BitbucketSelectedTeam),
+        [Parameter( Mandatory=$true,
+                    Position=0,
+                    ValueFromPipeline=$true,
+                    ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='The repository slug.')]
+        [Alias('Slug')]
+        [string]$RepoSlug,
+        [Parameter(HelpMessage='Search for the specified branch name')]
+        [string]$Name
+    )
+
+    Process {
+        $endpoint = "repositories/$Team/$RepoSlug/refs/branches?q=name~`"$Name`""
+
+        return Invoke-BitbucketAPI -Path $endpoint -Paginated
+    }
+}

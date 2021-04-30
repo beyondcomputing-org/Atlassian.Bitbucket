@@ -100,6 +100,7 @@
         'Get-BitbucketPullRequest',
         'Get-BitbucketPullRequestComment',
         'Get-BitbucketRepository',
+        'Get-BitbucketRepositoryBranch',
 		'Get-BitbucketRepositoryBranchModel',
         'Get-BitbucketRepositoryBranchRestriction',
         'Get-BitbucketRepositoryDeployment',
