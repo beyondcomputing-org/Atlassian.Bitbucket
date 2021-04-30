@@ -102,6 +102,7 @@ To get more information on each cmdlet run `Get-Help <CMDLET Name>`
 
 - `Add-BitbucketRepositoryBranch`
 - `Get-BitbucketRepository`
+- `Get-BitbucketRepositoryBranch`
 - `Get-BitbucketRepositoryBranchModel`
 - `New-BitbucketRepository`
 - `Remove-BitbucketRepository`
