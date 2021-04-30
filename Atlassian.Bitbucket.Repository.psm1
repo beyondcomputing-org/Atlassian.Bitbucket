@@ -76,6 +76,9 @@ function Get-BitbucketRepository {
     .PARAMETER RepoSlug
         Name of the repo in Bitbucket.
 
+    .PARAMETER Name
+        Sets a Friendly Name for the Repository
+
     .PARAMETER ProjectKey
         Project key in Bitbucket.
 
@@ -105,6 +108,10 @@ function New-BitbucketRepository {
         [Alias('Slug')]
         [string]$RepoSlug,
         [Parameter( ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='Specify a Friendly Name for the Repo')]
+        [ValidateNotNullOrEmpty()]
+        [string]$Name,
+        [Parameter( ValueFromPipelineByPropertyName=$true,
                     HelpMessage='Project key in Bitbucket')]
         [string]$ProjectKey,
         [Parameter( ValueFromPipelineByPropertyName=$true,
@@ -133,6 +140,7 @@ function New-BitbucketRepository {
                     key = $ProjectKey
                 }
                 is_private = $Private
+                name = if ($Name) { $Name } else { $RepoSlug }
                 description = $Description
                 language = $Language
                 fork_policy = $ForkPolicy
@@ -141,6 +149,7 @@ function New-BitbucketRepository {
             $body = [ordered]@{
                 scm = 'git'
                 is_private = $Private
+                name = if ($Name) { $Name } else { $RepoSlug }
                 description = $Description
                 language = $Language
                 fork_policy = $ForkPolicy
@@ -174,6 +183,9 @@ function New-BitbucketRepository {
     .PARAMETER RepoSlug
         Name of the repo in Bitbucket.
 
+    .PARAMETER Name
+        Rename the repo in Bitbucket. Also renames the Slug.
+
     .PARAMETER ProjectKey
         Project key in Bitbucket.
 
@@ -202,6 +214,9 @@ function Set-BitbucketRepository {
                     HelpMessage='The repository slug.')]
         [Alias('Slug')]
         [string]$RepoSlug,
+        [Parameter( HelpMessage='Set the Friendly Name of the Repository')]
+        [ValidateNotNullOrEmpty()]
+        [string]$Name,
         [Parameter( HelpMessage='Project key in Bitbucket')]
         [string]$ProjectKey,
         [Parameter( HelpMessage='Is the repo private?')]
@@ -230,6 +245,11 @@ function Set-BitbucketRepository {
         if($Private){
             $body += [ordered]@{
                 is_private = $Private
+            }
+        }
+        if ($Name){
+            $body += [ordered]@{
+                name = $Name
             }
         }
         if($Description){
