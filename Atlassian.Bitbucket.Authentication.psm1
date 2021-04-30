@@ -119,24 +119,26 @@ function Invoke-BitbucketAPI {
     }
 
     if($Paginated){
-        $_endpoint = $URI
         $counter = 0
+        $baseURL = ($URI.split('?'))[0]
+        $_endpoint = $URI
 
         # Process Pagination
         do
         {
+            # Avoid any sort of redirect to a separate hostname or endpoint and only follow the new query parameters for pagination
+            $counter++
+            $_endpoint = "$($baseUrl)?$(($_endpoint.split('?'))[1])"
             Write-Debug "URI: $_endpoint"
             $return = Invoke-RestMethod -Uri $_endpoint -Method $Method -Body $Body -Headers $Auth.GetAuthHeader() -ContentType $ContentType
 
             # Workaround bug BCLOUD-20796 (https://jira.atlassian.com/browse/BCLOUD-20796) - Incorrect URL in next property on /repositories/{workspace}/{repo_slug}/deployments/ endpoint
-            If ($return.next -like '*bitbucket-pipelines.prod.public.atl-paas.net*') {
-              $counter++
-              $_endpoint = $_endpoint -replace ("page=$counter", "page=$($counter+1)")
+            If ($baseURL -match '.*\/repositories\/.*\/.*\/deployments\/') {
+                $_endpoint = $_endpoint -replace ("page=$counter", "page=$($counter+1)")
             }
             Else {
-              $_endpoint = $return.next
+                $_endpoint = $return.next
             }
-            $response += $return.values
         }
         while ($return.next)
 
