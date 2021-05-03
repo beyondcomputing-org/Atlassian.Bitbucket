@@ -135,13 +135,15 @@ function Invoke-BitbucketAPI {
                 $queryParts = $_endpoint.split('?')
                 $queryString = $queryParts[1..$($queryParts.count)] -join('')
                 $_endpoint = "$($baseURL)?$queryString"
+
+                # Workaround bug BCLOUD-20796 (https://jira.atlassian.com/browse/BCLOUD-20796) - Incorrect URL in next property on /repositories/{workspace}/{repo_slug}/deployments/ endpoint
+                If ($baseURL -match '2\.0\/repositories\/[^\/]*\/[^\/]*\/deployments\/$') {
+                    $counter++
+                    $_endpoint = $_endpoint -replace ("page=$counter", "page=$($counter+1)")
+                }
             }
 
-            # Workaround bug BCLOUD-20796 (https://jira.atlassian.com/browse/BCLOUD-20796) - Incorrect URL in next property on /repositories/{workspace}/{repo_slug}/deployments/ endpoint
-            $counter++
-            If ($baseURL -match '2\.0\/repositories\/[^\/]*\/[^\/]*\/deployments\/$') {
-                $_endpoint = $_endpoint -replace ("page=$counter", "page=$($counter+1)")
-            }
+
         }
         while ($return.next)
 
