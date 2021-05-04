@@ -142,8 +142,7 @@ function Invoke-BitbucketAPI {
                     $_endpoint = $_endpoint -replace ("page=$counter", "page=$($counter+1)")
                 }
             }
-
-
+            $response += $return.values
         }
         while ($return.next)
 
