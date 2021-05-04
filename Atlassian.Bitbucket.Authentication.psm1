@@ -97,6 +97,7 @@ function Invoke-BitbucketAPI {
         [Microsoft.PowerShell.Commands.WebRequestMethod]$Method = 'Get',
         [Object]$Body,
         [Switch]$Paginated,
+        [Int32]$MaxPages = 2147483647,
         [Switch]$InternalAPI,
         [String]$API_Version,
         [String]$ContentType = 'application/json'
@@ -120,6 +121,7 @@ function Invoke-BitbucketAPI {
 
     if($Paginated){
         $counter = 0
+
         $baseURL = ($URI.split('?'))[0]
         $_endpoint = $URI
 
@@ -127,23 +129,19 @@ function Invoke-BitbucketAPI {
         do
         {
             Write-Debug "URI: $_endpoint"
+            $counter++
+            Write-Progress -Activity "Fetching page $counter"
             $return = Invoke-RestMethod -Uri $_endpoint -Method $Method -Body $Body -Headers $Auth.GetAuthHeader() -ContentType $ContentType
 
             # Avoid any sort of redirect to a separate hostname or endpoint and only follow the new query parameters for pagination
             If ($return.next) {
                 $queryParts = $return.next.split('?')
                 $queryString = $queryParts[1..$($queryParts.count-1)] -join('')
-
-                # Workaround bug BCLOUD-20796 (https://jira.atlassian.com/browse/BCLOUD-20796) - Incorrect URL in next property on /repositories/{workspace}/{repo_slug}/deployments/ endpoint
-                If ($baseURL -match '2\.0\/repositories\/[^\/]*\/[^\/]*\/deployments\/$') {
-                  $counter++
-                  $queryString = $queryString -replace ("page=$counter", "page=$($counter+1)")
-                }
-                $_endpoint = "$($baseURL)?$queryString"
+                $_endpoint = "$baseURL`?$queryString"
             }
             $response += $return.values
         }
-        while ($return.next)
+        while ($return.next -and $counter -lt $MaxPages)
 
         return $response
     }else{

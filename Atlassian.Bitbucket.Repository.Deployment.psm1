@@ -44,6 +44,6 @@ function Get-BitbucketRepositoryDeployment {
             }
         }
 
-        return Invoke-BitbucketAPI -Path $endpoint -Paginated
+        return (Invoke-BitbucketAPI -Path $endpoint).values
     }
 }
