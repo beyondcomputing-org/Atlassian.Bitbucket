@@ -7,7 +7,8 @@ _These will be removed in the next major release_
 - N/A
 
 ## 0.27.0
-- Added work around to Invoke-BitbucketAPI for bug [BCLOUD-20796](https://jira.atlassian.com/browse/BCLOUD-20796)
+- Updated pagination to build up the next page URL and avoid redirects to hostnames other than the original API, such as in this bug [BCLOUD-20796](https://jira.atlassian.com/browse/BCLOUD-20796)
+- Fixed deployment endpoint to properly return only the number of items specified in limit
 
 ## 0.26.0
 - Added `Add-BitbucketUserToGroup`
