@@ -6,17 +6,6 @@ _These will be removed in the next major release_
 
 - N/A
 
-## 0.27.0
-- Added `Add-BitbucketRepositoryBranch` to create a new branch in a repo
-- Added `Get-BitbucketRepositoryBranch` to return branches in a repo
-- Added `Get-BitbucketRepositoryBranchModel` to get Branching Model in a repo
-- Added `Set-BitbucketRepositoryBranchModel` to modify Branching Model in a repo
-- Added `New-BitbucketRepositoryBranchRestrictionPermissionCheck`
-- Added `-Name` Parameter to `New-BitbucketRepository` and `Set-BitbucketRepository`
-- Updated `New-BitbucketRepositoryBranchRestrictionMergeCheck` with missing merge checks
-- Updated BranchRestriction Class to support branching_model matching type
-- Updated Pester Tests
-
 ## 0.26.0
 - Added `Add-BitbucketUserToGroup`
 - Added `Get-BitbucketGroup`
