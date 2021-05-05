@@ -16,6 +16,7 @@ _These will be removed in the next major release_
 - Updated `New-BitbucketRepositoryBranchRestrictionMergeCheck` with missing merge checks
 - Updated BranchRestriction Class to support branching_model matching type
 - Updated Pester Tests
+- Removed pagination from `Get-BitbucketGroup`
 
 ## 0.27.0
 - Updated pagination to build up the next page URL and avoid redirects to hostnames other than the original API, such as in this bug [BCLOUD-20796](https://jira.atlassian.com/browse/BCLOUD-20796)
