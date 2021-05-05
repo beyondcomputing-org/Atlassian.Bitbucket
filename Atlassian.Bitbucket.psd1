@@ -12,7 +12,7 @@
     RootModule        = 'Atlassian.Bitbucket.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.27.0'
+    ModuleVersion     = '0.28.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @('Desktop', 'Core')
@@ -101,7 +101,7 @@
         'Get-BitbucketPullRequestComment',
         'Get-BitbucketRepository',
         'Get-BitbucketRepositoryBranch',
-		'Get-BitbucketRepositoryBranchModel',
+	'Get-BitbucketRepositoryBranchModel',
         'Get-BitbucketRepositoryBranchRestriction',
         'Get-BitbucketRepositoryDeployment',
         'Get-BitbucketRepositoryEnvironment',
