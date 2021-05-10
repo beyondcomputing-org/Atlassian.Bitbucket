@@ -31,6 +31,7 @@ Describe 'New-BitbucketRepository' {
                 ([ordered]@{
                     scm = 'git'
                     is_private = $true
+                    name = $Repo
                     description = ''
                     language = ''
                     fork_policy = 'no_forks'
@@ -51,6 +52,7 @@ Describe 'New-BitbucketRepository' {
                         key = $Key
                     }
                     is_private = $true
+                    name = $Repo
                     description = ''
                     language = ''
                     fork_policy = 'no_forks'
@@ -60,12 +62,13 @@ Describe 'New-BitbucketRepository' {
     }
 
     Context 'Create new repo with all properties specified' {
+        $Name = 'Repo Name'
         $Key = 'K'
         $Private = $false
         $Description = 'desc'
         $Language = 'powershell'
         $Fork = 'allow_forks'
-        New-BitbucketRepository -Team $Team -RepoSlug $Repo -ProjectKey $Key -Private $Private -Description $Description -Language $Language -ForkPolicy $Fork
+        New-BitbucketRepository -Team $Team -RepoSlug $Repo -Name $Name -ProjectKey $Key -Private $Private -Description $Description -Language $Language -ForkPolicy $Fork
 
         It 'Has a valid body'{
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
@@ -75,6 +78,7 @@ Describe 'New-BitbucketRepository' {
                         key = $Key
                     }
                     is_private = $Private
+                    name = $Name
                     description = $Description
                     language = $Language
                     fork_policy = $Fork

@@ -100,10 +100,14 @@ To get more information on each cmdlet run `Get-Help <CMDLET Name>`
 
 #### Repository CMDLETs
 
+- `Add-BitbucketRepositoryBranch`
 - `Get-BitbucketRepository`
+- `Get-BitbucketRepositoryBranch`
+- `Get-BitbucketRepositoryBranchModel`
 - `New-BitbucketRepository`
 - `Remove-BitbucketRepository`
 - `Set-BitbucketRepository`
+- `Set-BitbucketRepositoryBranchModel`
 
 ##### Deployment CMDLETs
 
@@ -128,6 +132,7 @@ To get more information on each cmdlet run `Get-Help <CMDLET Name>`
 - `Add-BitbucketRepositoryBranchRestriction`
 - `Get-BitbucketRepositoryBranchRestriction`
 - `New-BitbucketRepositoryBranchRestrictionMergeCheck`
+- `New-BitbucketRepositoryBranchRestrictionPermissionCheck`
 - `Remove-BitbucketRepositoryBranchRestriction`
 - `Set-BitbucketRepositoryBranchRestriction`
 

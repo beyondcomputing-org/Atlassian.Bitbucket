@@ -6,6 +6,18 @@ _These will be removed in the next major release_
 
 - N/A
 
+## 0.28.0
+- Added `Add-BitbucketRepositoryBranch` to create a new branch in a repo
+- Added `Get-BitbucketRepositoryBranch` to return branches in a repo
+- Added `Get-BitbucketRepositoryBranchModel` to get Branching Model in a repo
+- Added `Set-BitbucketRepositoryBranchModel` to modify Branching Model in a repo
+- Added `New-BitbucketRepositoryBranchRestrictionPermissionCheck`
+- Added `-Name` Parameter to `New-BitbucketRepository` and `Set-BitbucketRepository`
+- Updated `New-BitbucketRepositoryBranchRestrictionMergeCheck` with missing merge checks
+- Updated BranchRestriction Class to support branching_model matching type
+- Updated Pester Tests
+- Removed pagination from `Get-BitbucketGroup`
+
 ## 0.27.0
 - Updated pagination to build up the next page URL and avoid redirects to hostnames other than the original API, such as in this bug [BCLOUD-20796](https://jira.atlassian.com/browse/BCLOUD-20796)
 - Fixed deployment endpoint to properly return only the number of items specified in limit

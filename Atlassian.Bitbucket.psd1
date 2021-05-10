@@ -12,7 +12,7 @@
     RootModule        = 'Atlassian.Bitbucket.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.27.0'
+    ModuleVersion     = '0.28.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @('Desktop', 'Core')
@@ -74,6 +74,7 @@
         'Atlassian.Bitbucket.PullRequest.Comment.psm1',
         'Atlassian.Bitbucket.PullRequest.psm1',
         'Atlassian.Bitbucket.Reports.psm1',
+        'Atlassian.Bitbucket.Repository.BranchModel.psm1',
         'Atlassian.Bitbucket.Repository.BranchRestriction.psm1',
         'Atlassian.Bitbucket.Repository.Deployment.psm1',
         'Atlassian.Bitbucket.Repository.Environment.psm1',
@@ -86,6 +87,7 @@
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport = @(
+        'Add-BitbucketRepositoryBranch',
         'Add-BitbucketRepositoryBranchRestriction',
         'Add-BitbucketRepositoryGroupPermission',
         'Add-BitbucketRepositoryReviewer',
@@ -98,6 +100,8 @@
         'Get-BitbucketPullRequest',
         'Get-BitbucketPullRequestComment',
         'Get-BitbucketRepository',
+        'Get-BitbucketRepositoryBranch',
+	'Get-BitbucketRepositoryBranchModel',
         'Get-BitbucketRepositoryBranchRestriction',
         'Get-BitbucketRepositoryDeployment',
         'Get-BitbucketRepositoryEnvironment',
@@ -115,6 +119,7 @@
         'New-BitbucketPullRequestComment',
         'New-BitbucketRepository',
         'New-BitbucketRepositoryBranchRestrictionMergeCheck',
+        'New-BitbucketRepositoryBranchRestrictionPermissionCheck',
         'New-BitbucketRepositoryEnvironment',
         'New-BitbucketRepositoryEnvironmentVariable',
         'New-BitbucketRepositoryGroupPermission',
@@ -130,6 +135,7 @@
         'Save-BitbucketLogin',
         'Select-BitbucketTeam',
         'Set-BitbucketRepository',
+        'Set-BitbucketRepositoryBranchModel',
         'Set-BitbucketRepositoryBranchRestriction',
         'Set-BitbucketRepositoryGroupPermission',
         'Set-BitbucketRepositoryReviewer',

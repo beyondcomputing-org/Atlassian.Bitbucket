@@ -76,6 +76,9 @@ function Get-BitbucketRepository {
     .PARAMETER RepoSlug
         Name of the repo in Bitbucket.
 
+    .PARAMETER Name
+        Sets a Friendly Name for the Repository
+
     .PARAMETER ProjectKey
         Project key in Bitbucket.
 
@@ -105,6 +108,10 @@ function New-BitbucketRepository {
         [Alias('Slug')]
         [string]$RepoSlug,
         [Parameter( ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='Specify a Friendly Name for the Repo')]
+        [ValidateNotNullOrEmpty()]
+        [string]$Name,
+        [Parameter( ValueFromPipelineByPropertyName=$true,
                     HelpMessage='Project key in Bitbucket')]
         [string]$ProjectKey,
         [Parameter( ValueFromPipelineByPropertyName=$true,
@@ -133,6 +140,7 @@ function New-BitbucketRepository {
                     key = $ProjectKey
                 }
                 is_private = $Private
+                name = if ($Name) { $Name } else { $RepoSlug }
                 description = $Description
                 language = $Language
                 fork_policy = $ForkPolicy
@@ -141,6 +149,7 @@ function New-BitbucketRepository {
             $body = [ordered]@{
                 scm = 'git'
                 is_private = $Private
+                name = if ($Name) { $Name } else { $RepoSlug }
                 description = $Description
                 language = $Language
                 fork_policy = $ForkPolicy
@@ -174,6 +183,9 @@ function New-BitbucketRepository {
     .PARAMETER RepoSlug
         Name of the repo in Bitbucket.
 
+    .PARAMETER Name
+        Rename the repo in Bitbucket. Also renames the Slug.
+
     .PARAMETER ProjectKey
         Project key in Bitbucket.
 
@@ -202,6 +214,9 @@ function Set-BitbucketRepository {
                     HelpMessage='The repository slug.')]
         [Alias('Slug')]
         [string]$RepoSlug,
+        [Parameter( HelpMessage='Set the Friendly Name of the Repository')]
+        [ValidateNotNullOrEmpty()]
+        [string]$Name,
         [Parameter( HelpMessage='Project key in Bitbucket')]
         [string]$ProjectKey,
         [Parameter( HelpMessage='Is the repo private?')]
@@ -230,6 +245,11 @@ function Set-BitbucketRepository {
         if($Private){
             $body += [ordered]@{
                 is_private = $Private
+            }
+        }
+        if ($Name){
+            $body += [ordered]@{
+                name = $Name
             }
         }
         if($Description){
@@ -311,5 +331,128 @@ function Remove-BitbucketRepository {
         if ($pscmdlet.ShouldProcess($RepoSlug, 'permanently delete')){
             return Invoke-BitbucketAPI -Path $endpoint -Method Delete
         }
+    }
+}
+
+<#
+    .SYNOPSIS
+        Creates a new branch
+
+    .DESCRIPTION
+        Creates a branch in the specified repository. If no parent is specified, branch will be created from the latest commit of the default branch.
+
+    .EXAMPLE
+        C:\PS> Add-BitBucketRepositoryBranch -Branch 'NewBranch' -Team 'MyTeam' -RepoSlug 'Repo1'
+        Adds new branch from the last commit of the default branch
+
+    .EXAMPLE
+        C:\PS> Add-BitBucketRepositoryBranch -Branch 'NewBranch' -Parent 'CommitHash'
+        Adds new branch from the specified commit
+
+    .EXAMPLE
+        C:\PS> Add-BitBucketRepositoryBranch -Branch 'NewBranch' -Message 'Create new branch'
+        Adds new branch with specified commit message
+
+    .PARAMETER Team
+        Name of the team in Bitbucket.  Defaults to selected team if not provided.
+
+    .PARAMETER RepoSlug
+        Name of the repo in Bitbucket.
+
+    .PARAMETER Branch
+        Name of the branch to create
+
+    .PARAMETER Parent
+        Optional hash of the commit to create the branch from
+
+    .PARAMETER Message
+        Optional commit message for the new branch
+#>
+function Add-BitbucketRepositoryBranch {
+    [CmdletBinding()]
+    param(
+        [Parameter( ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
+        [string]$Team = (Get-BitbucketSelectedTeam),
+        [Parameter( Mandatory=$true,
+                    Position=0,
+                    ValueFromPipeline=$true,
+                    ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='The repository slug.')]
+        [Alias('Slug')]
+        [string]$RepoSlug,
+        [Parameter( Mandatory=$true,
+                    Position=1,
+                    ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='Name of the branch to create.')]
+        [string]$Branch,
+        [Parameter(HelpMessage='Hash of the commit to create the branch from.')]
+        [string]$Parent,
+        [Parameter(HelpMessage='Commit message for the new branch.')]
+        [string]$Message
+    )
+
+    Process {
+        $endpoint = "repositories/$Team/$RepoSlug/src/"
+
+        $body = [ordered]@{branch=$Branch}
+
+        if ($Parent) {
+            $body.Add("parents", $parent)
+        }
+
+        if ($Message) {
+            $body.Add("message", $message)
+        }
+
+        return Invoke-BitbucketAPI -Path $endpoint -Body $body -Method Post -ContentType 'application/x-www-form-urlencoded'
+    }
+}
+
+<#
+    .SYNOPSIS
+        Returns the branches in a specified repository.
+
+    .DESCRIPTION
+        Returns the branches in a specified repository.
+
+    .EXAMPLE
+        C:\ PS> Get-BitbucketRepositoryBranch -RepoSlug 'repo'
+        Returns all the branches in the Repository named repo
+
+    .EXAMPLE
+        C:\ PS> Get-BitbucketRepositoryBranch -RepoSlug 'repo' -Name 'feature'
+        Returns all the branches in the Repository named repo with the word feature in their name
+
+    .PARAMETER Team
+        Name of the team in Bitbucket.  Defaults to selected team if not provided.
+
+    .PARAMETER RepoSlug
+        Name of the repo in Bitbucket.
+
+    .PARAMETER Name
+        Name of the branch to search for.
+#>
+function Get-BitbucketRepositoryBranch {
+    [CmdletBinding()]
+    param (
+        [Parameter( ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
+        [string]$Team = (Get-BitbucketSelectedTeam),
+        [Parameter( Mandatory=$true,
+                    Position=0,
+                    ValueFromPipeline=$true,
+                    ValueFromPipelineByPropertyName=$true,
+                    HelpMessage='The repository slug.')]
+        [Alias('Slug')]
+        [string]$RepoSlug,
+        [Parameter(HelpMessage='Search for the specified branch name')]
+        [string]$Name
+    )
+
+    Process {
+        $endpoint = "repositories/$Team/$RepoSlug/refs/branches?q=name~`"$Name`""
+
+        return Invoke-BitbucketAPI -Path $endpoint -Paginated
     }
 }
