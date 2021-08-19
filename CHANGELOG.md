@@ -6,6 +6,9 @@ _These will be removed in the next major release_
 
 - N/A
 
+## 0.28.1
+- Fixed issue running `Add-BitbucketRepositoryBranchRestriction` that caused error `branch_type is only valid when branch_match_kind is branching_model`
+
 ## 0.28.0
 - Added `Add-BitbucketRepositoryBranch` to create a new branch in a repo
 - Added `Get-BitbucketRepositoryBranch` to return branches in a repo
