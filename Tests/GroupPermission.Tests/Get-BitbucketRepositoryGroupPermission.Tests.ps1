@@ -3,7 +3,7 @@ Import-Module '.\Atlassian.Bitbucket.Repository.GroupPermission.psm1' -Force
 Describe 'Get-BitbucketRepositoryGroupPermission' {
     Mock Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository.GroupPermission { 
         $Response = New-Object PSObject -Property @{
-            group = @{
+            group     = @{
                 slug = 'group-slug'
             }
             privilege = 'read'
@@ -11,11 +11,11 @@ Describe 'Get-BitbucketRepositoryGroupPermission' {
         return $Response
     }
 
-    $Team = 'T'
+    $Workspace = 'T'
     $Repo = 'R'
     
     Context 'Get Permissions' {
-        Get-BitbucketRepositoryGroupPermission -Team $Team -RepoSlug $Repo
+        Get-BitbucketRepositoryGroupPermission -Workspace $Workspace -RepoSlug $Repo
 
         It 'Uses default GET Method' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository.GroupPermission -ParameterFilter {
@@ -25,11 +25,11 @@ Describe 'Get-BitbucketRepositoryGroupPermission' {
 
         It 'Has a valid path' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository.GroupPermission -ParameterFilter {
-                $Path -eq "group-privileges/$Team/$Repo"
+                $Path -eq "group-privileges/$Workspace/$Repo"
             }
         }
 
-        It 'Has no body'{
+        It 'Has no body' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository.GroupPermission -ParameterFilter {
                 $Body -eq $null
             }

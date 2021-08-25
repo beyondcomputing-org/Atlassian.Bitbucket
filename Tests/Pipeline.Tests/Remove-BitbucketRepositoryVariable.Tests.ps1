@@ -1,24 +1,24 @@
 Import-Module '.\Atlassian.Bitbucket.Pipeline.Variable.psm1' -Force
 
 Describe "Remove-BitbucketRepositoryVariable" {
-  $Team = 'T'
+  $Workspace = 'T'
   $Repo = 'R'
   $Key = 'K'
   $UUID = 'abc'
   Mock Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Pipeline.Variable {}
   Mock Get-BitbucketRepositoryVariable -ModuleName Atlassian.Bitbucket.Pipeline.Variable {
     $Data = [pscustomobject]@{
-      key = 'K'
+      key  = 'K'
       uuid = 'abc'
     }
     Return $Data
   }
 
-  Remove-BitbucketRepositoryVariable -RepoSlug $Repo -Team $Team -Key $Key
+  Remove-BitbucketRepositoryVariable -RepoSlug $Repo -Workspace $Workspace -Key $Key
 
   It 'Has a valid path' {
     Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Pipeline.Variable -ParameterFilter {
-        $Path -eq "repositories/$Team/$Repo/pipelines_config/variables/abc"
+      $Path -eq "repositories/$Workspace/$Repo/pipelines_config/variables/abc"
     }
   }
 

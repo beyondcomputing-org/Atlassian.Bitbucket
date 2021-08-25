@@ -8,13 +8,13 @@ Describe 'New-BitbucketPullRequestComment' {
         return $Response
     }
 
-    $Team = 'T'
+    $Workspace = 'T'
     $Repo = 'R'
     $ID = 1
     $Comment = 'Comment'
     
     Context 'Create plain comment' {
-        New-BitbucketPullRequestComment -Team $Team -RepoSlug $Repo -PullRequestID $ID -Comment $Comment
+        New-BitbucketPullRequestComment -Workspace $Workspace -RepoSlug $Repo -PullRequestID $ID -Comment $Comment
 
         It 'Uses Post Method' {
             Assert-MockCalled Invoke-BitbucketAPI -Exactly 1 -ModuleName Atlassian.Bitbucket.PullRequest.Comment -ParameterFilter {
@@ -24,17 +24,17 @@ Describe 'New-BitbucketPullRequestComment' {
 
         It 'Has a valid path' {
             Assert-MockCalled Invoke-BitbucketAPI -Exactly 1 -ModuleName Atlassian.Bitbucket.PullRequest.Comment -ParameterFilter {
-                $Path -eq "repositories/$Team/$Repo/pullrequests/$ID/comments"
+                $Path -eq "repositories/$Workspace/$Repo/pullrequests/$ID/comments"
             }
         }
 
-        It 'Has a valid body'{
+        It 'Has a valid body' {
             Assert-MockCalled Invoke-BitbucketAPI -Exactly 1 -ModuleName Atlassian.Bitbucket.PullRequest.Comment -ParameterFilter {
                 ([ordered]@{
-                    content = [ordered]@{
-                        raw =  $Comment
-                    }
-                } | ConvertTo-Json -Depth 3 -Compress) -eq $Body
+                        content = [ordered]@{
+                            raw = $Comment
+                        }
+                    } | ConvertTo-Json -Depth 3 -Compress) -eq $Body
             }
         }
     }

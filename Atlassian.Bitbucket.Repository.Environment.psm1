@@ -11,8 +11,8 @@ using module .\Atlassian.Bitbucket.Authentication.psm1
         C:\PS> Get-BitbucketRepositoryEnvironment -RepoSlug 'Repo'
         Gets all environments in the Repo `Repo`.
 
-    .PARAMETER Team
-        Name of the team in Bitbucket.  Defaults to selected team if not provided.
+    .PARAMETER Workspace
+        Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.
 
     .PARAMETER RepoSlug
         Name of the repo in Bitbucket.
@@ -20,26 +20,28 @@ using module .\Atlassian.Bitbucket.Authentication.psm1
 function Get-BitbucketRepositoryEnvironment {
     [CmdletBinding()]
     param(
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
-        [string]$Team = (Get-BitbucketSelectedTeam),
-        [Parameter( Mandatory=$true,
-                    Position=0,
-                    ValueFromPipeline=$true,
-                    ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='The repository slug.')]
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.')]
+        [Alias("Team")]
+        [string]$Workspace = (Get-BitbucketSelectedWorkspace),
+        [Parameter( Mandatory = $true,
+            Position = 0,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'The repository slug.')]
         [Alias('Slug')]
         [string]$RepoSlug,
         [string]$EnvironmentName
     )
 
     Process {
-        $endpoint = "repositories/$Team/$RepoSlug/environments/"
+        $endpoint = "repositories/$Workspace/$RepoSlug/environments/"
         $response = Invoke-BitbucketAPI -Path $endpoint -Paginated
 
-        if($EnvironmentName){
-            return $response | Where-Object {$_.Name -eq $EnvironmentName}
-        }else{
+        if ($EnvironmentName) {
+            return $response | Where-Object { $_.Name -eq $EnvironmentName }
+        }
+        else {
             return $response
         }
     }
@@ -56,8 +58,8 @@ function Get-BitbucketRepositoryEnvironment {
         C:\PS> New-BitbucketRepositoryEnvironment -RepoSlug 'Repo' -Environment 'QA' -Type 'Test'
         Creates a new environment called QA on the repo with a type of Test.
 
-    .PARAMETER Team
-        Name of the team in Bitbucket.  Defaults to selected team if not provided.
+    .PARAMETER Workspace
+        Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.
 
     .PARAMETER RepoSlug
         Name of the repo in Bitbucket.
@@ -72,57 +74,58 @@ function Get-BitbucketRepositoryEnvironment {
         Rank of the environment.
 #>
 function New-BitbucketRepositoryEnvironment {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Low')]
+    [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Low')]
     param(
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
-        [string]$Team = (Get-BitbucketSelectedTeam),
-        [Parameter( Mandatory=$true,
-                    Position=0,
-                    ValueFromPipeline=$true,
-                    ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='The repository slug.')]
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.')]
+        [Alias("Team")]
+        [string]$Workspace = (Get-BitbucketSelectedWorkspace),
+        [Parameter( Mandatory = $true,
+            Position = 0,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'The repository slug.')]
         [Alias('Slug')]
         [string]$RepoSlug,
-        [Parameter( Mandatory=$true,
-                    Position=1,
-                    ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Name of the environment.')]
+        [Parameter( Mandatory = $true,
+            Position = 1,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Name of the environment.')]
         [string]$Environment,
-        [Parameter( Mandatory=$true,
-                    Position=2,
-                    ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Name of the environment type.')]
-        [ValidateSet('Test', 'Staging','Production')]
+        [Parameter( Mandatory = $true,
+            Position = 2,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Name of the environment type.')]
+        [ValidateSet('Test', 'Staging', 'Production')]
         [string]$Type,
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Rank of the environment.')]
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Rank of the environment.')]
         [string]$Rank = 0
     )
 
     Process {
-        $endpoint = "repositories/$Team/$RepoSlug/environments/"
+        $endpoint = "repositories/$Workspace/$RepoSlug/environments/"
         $body = [ordered]@{
-            type = 'deployment_environment'
-            name = $Environment
-            rank = $Rank
-            environment_type = @{
+            type                     = 'deployment_environment'
+            name                     = $Environment
+            rank                     = $Rank
+            environment_type         = @{
                 type = 'deployment_environment_type'
                 name = $Type
             }
-            lock = [ordered]@{
+            lock                     = [ordered]@{
                 type = 'deployment_environment_lock_open'
                 name = 'OPEN'
             }
-            restrictions = [ordered]@{
-                type = 'deployment_restrictions_configuration'
+            restrictions             = [ordered]@{
+                type       = 'deployment_restrictions_configuration'
                 admin_only = $false
             }
-            hidden = $true
+            hidden                   = $true
             environment_lock_enabled = $true
         } | ConvertTo-Json -Depth 3 -Compress
 
-        if ($pscmdlet.ShouldProcess("$Environment in $RepoSlug", 'create')){
+        if ($pscmdlet.ShouldProcess("$Environment in $RepoSlug", 'create')) {
             return Invoke-BitbucketAPI -Path $endpoint -Method Post -Body $body
         }
     }
@@ -139,8 +142,8 @@ function New-BitbucketRepositoryEnvironment {
         C:\PS> Remove-BitbucketRepositoryEnvironment -RepoSlug 'Repo' -Environment 'QA'
         Deletes the environment called QA on the Repo.
 
-    .PARAMETER Team
-        Name of the team in Bitbucket.  Defaults to selected team if not provided.
+    .PARAMETER Workspace
+        Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.
 
     .PARAMETER RepoSlug
         Name of the repo in Bitbucket.
@@ -149,32 +152,33 @@ function New-BitbucketRepositoryEnvironment {
         Name of the environment.
 #>
 function Remove-BitbucketRepositoryEnvironment {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
+    [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
     param(
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
-        [string]$Team = (Get-BitbucketSelectedTeam),
-        [Parameter( Mandatory=$true,
-                    Position=0,
-                    ValueFromPipeline=$true,
-                    ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='The repository slug.')]
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.')]
+        [Alias("Team")]
+        [string]$Workspace = (Get-BitbucketSelectedWorkspace),
+        [Parameter( Mandatory = $true,
+            Position = 0,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'The repository slug.')]
         [Alias('Slug')]
         [string]$RepoSlug,
-        [Parameter( Mandatory=$true,
-                    Position=1,
-                    ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Name of the environment.')]
+        [Parameter( Mandatory = $true,
+            Position = 1,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Name of the environment.')]
         [string]$Environment
     )
 
     Process {
-        $_environments = Get-BitbucketRepositoryEnvironment -Team $Team -RepoSlug $RepoSlug
-        $_uuid = ($_environments | Where-Object {$_.name -eq $Environment}).uuid
+        $_environments = Get-BitbucketRepositoryEnvironment -Workspace $Workspace -RepoSlug $RepoSlug
+        $_uuid = ($_environments | Where-Object { $_.name -eq $Environment }).uuid
 
-        if($_uuid){
-            $endpoint = "repositories/$Team/$RepoSlug/environments/$_uuid"
-            if ($pscmdlet.ShouldProcess("$Environment in $RepoSlug", 'delete')){
+        if ($_uuid) {
+            $endpoint = "repositories/$Workspace/$RepoSlug/environments/$_uuid"
+            if ($pscmdlet.ShouldProcess("$Environment in $RepoSlug", 'delete')) {
                 return Invoke-BitbucketAPI -Path $endpoint -Method Delete
             }
         }

@@ -8,11 +8,11 @@ Describe 'New-BitbucketRepository' {
         return $Response
     }
 
-    $Team = 'T'
+    $Workspace = 'T'
     $Repo = 'R'
     
     Context 'Create new repo with only required params' {
-        New-BitbucketRepository -Team $Team -RepoSlug $Repo
+        New-BitbucketRepository -Workspace $Workspace -RepoSlug $Repo
 
         It 'Uses POST Method' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
@@ -22,41 +22,41 @@ Describe 'New-BitbucketRepository' {
 
         It 'Has a valid path' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
-                $Path -eq "repositories/$Team/$Repo"
+                $Path -eq "repositories/$Workspace/$Repo"
             }
         }
 
-        It 'Has a valid body'{
+        It 'Has a valid body' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
                 ([ordered]@{
-                    scm = 'git'
-                    is_private = $true
-                    name = $Repo
-                    description = ''
-                    language = ''
-                    fork_policy = 'no_forks'
-                } | ConvertTo-Json -Depth 2 -Compress) -eq $Body
+                        scm         = 'git'
+                        is_private  = $true
+                        name        = $Repo
+                        description = ''
+                        language    = ''
+                        fork_policy = 'no_forks'
+                    } | ConvertTo-Json -Depth 2 -Compress) -eq $Body
             }
         }
     }
 
     Context 'Create new repo with a project specified' {
         $Key = 'K'
-        New-BitbucketRepository -Team $Team -RepoSlug $Repo -ProjectKey $Key
+        New-BitbucketRepository -Workspace $Workspace -RepoSlug $Repo -ProjectKey $Key
 
-        It 'Has a valid body'{
+        It 'Has a valid body' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
                 ([ordered]@{
-                    scm = 'git'
-                    project = [ordered]@{
-                        key = $Key
-                    }
-                    is_private = $true
-                    name = $Repo
-                    description = ''
-                    language = ''
-                    fork_policy = 'no_forks'
-                } | ConvertTo-Json -Depth 2 -Compress) -eq $Body
+                        scm         = 'git'
+                        project     = [ordered]@{
+                            key = $Key
+                        }
+                        is_private  = $true
+                        name        = $Repo
+                        description = ''
+                        language    = ''
+                        fork_policy = 'no_forks'
+                    } | ConvertTo-Json -Depth 2 -Compress) -eq $Body
             }
         }
     }
@@ -68,21 +68,21 @@ Describe 'New-BitbucketRepository' {
         $Description = 'desc'
         $Language = 'powershell'
         $Fork = 'allow_forks'
-        New-BitbucketRepository -Team $Team -RepoSlug $Repo -Name $Name -ProjectKey $Key -Private $Private -Description $Description -Language $Language -ForkPolicy $Fork
+        New-BitbucketRepository -Workspace $Workspace -RepoSlug $Repo -Name $Name -ProjectKey $Key -Private $Private -Description $Description -Language $Language -ForkPolicy $Fork
 
-        It 'Has a valid body'{
+        It 'Has a valid body' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
                 ([ordered]@{
-                    scm = 'git'
-                    project = [ordered]@{
-                        key = $Key
-                    }
-                    is_private = $Private
-                    name = $Name
-                    description = $Description
-                    language = $Language
-                    fork_policy = $Fork
-                } | ConvertTo-Json -Depth 2 -Compress) -eq $Body
+                        scm         = 'git'
+                        project     = [ordered]@{
+                            key = $Key
+                        }
+                        is_private  = $Private
+                        name        = $Name
+                        description = $Description
+                        language    = $Language
+                        fork_policy = $Fork
+                    } | ConvertTo-Json -Depth 2 -Compress) -eq $Body
             }
         }
     }

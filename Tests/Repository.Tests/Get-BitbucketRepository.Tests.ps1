@@ -8,11 +8,11 @@ Describe 'Get-BitbucketRepository' {
         return $Response
     }
 
-    $Team = 'T'
+    $Workspace = 'T'
     
     Context 'Get single repo' {
         $Repo = 'R'
-        Get-BitbucketRepository -Team $Team -RepoSlug $Repo
+        Get-BitbucketRepository -Workspace $Workspace -RepoSlug $Repo
 
         It 'Uses default GET Method' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
@@ -22,11 +22,11 @@ Describe 'Get-BitbucketRepository' {
 
         It 'Has a valid path' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
-                $Path -eq "repositories/$Team/$Repo"
+                $Path -eq "repositories/$Workspace/$Repo"
             }
         }
 
-        It 'Has no body'{
+        It 'Has no body' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
                 $Body -eq $null
             }
@@ -40,11 +40,11 @@ Describe 'Get-BitbucketRepository' {
     }
 
     Context 'Get all repos' {
-        Get-BitbucketRepository -Team $Team
+        Get-BitbucketRepository -Workspace $Workspace
 
         It 'Has a valid path' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
-                $Path -eq "repositories/$Team"
+                $Path -eq "repositories/$Workspace"
             }
         }
 
@@ -57,11 +57,11 @@ Describe 'Get-BitbucketRepository' {
 
     Context 'Get all project repos' {
         $Key = 'K'
-        Get-BitbucketRepository -Team $Team -ProjectKey $Key
+        Get-BitbucketRepository -Workspace $Workspace -ProjectKey $Key
 
         It 'Has a valid path' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
-                $Path -eq "repositories/$($Team)?q=project.key=%22$Key%22"
+                $Path -eq "repositories/$($Workspace)?q=project.key=%22$Key%22"
             }
         }
 

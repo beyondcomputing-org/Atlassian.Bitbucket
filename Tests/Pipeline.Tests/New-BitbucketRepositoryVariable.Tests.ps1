@@ -1,18 +1,18 @@
 Import-Module '.\Atlassian.Bitbucket.Pipeline.Variable.psm1' -Force
 
 Describe "New-BitbucketRepositoryVariable" {
-  $Team = 'T'
+  $Workspace = 'T'
   $Repo = 'R'
   $Key = 'K'
   $Value = 'V'
 
   Mock Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Pipeline.Variable {}
 
-  New-BitbucketRepositoryVariable -RepoSlug $Repo -Team $Team -Key $Key -Value $Value
+  New-BitbucketRepositoryVariable -RepoSlug $Repo -Workspace $Workspace -Key $Key -Value $Value
 
   It 'Has a valid path' {
     Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Pipeline.Variable -ParameterFilter {
-        $Path -eq "repositories/$Team/$Repo/pipelines_config/variables/"
+      $Path -eq "repositories/$Workspace/$Repo/pipelines_config/variables/"
     }
   }
 

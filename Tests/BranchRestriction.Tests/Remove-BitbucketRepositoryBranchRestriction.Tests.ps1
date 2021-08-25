@@ -5,12 +5,12 @@ Describe 'Remove-BitbucketRepositoryBranchRestriction' {
         return $null
     }
 
-    $Team = 'T'
+    $Workspace = 'T'
     $Repo = 'R'
     $ID = 123
     
     Context 'Remove Branch Restriction' {
-        Remove-BitbucketRepositoryBranchRestriction -Team $Team -RepoSlug $Repo -RestrictionID $ID -Confirm:$false
+        Remove-BitbucketRepositoryBranchRestriction -Workspace $Workspace -RepoSlug $Repo -RestrictionID $ID -Confirm:$false
 
         It 'Uses DELETE Method' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction -ParameterFilter {
@@ -20,11 +20,11 @@ Describe 'Remove-BitbucketRepositoryBranchRestriction' {
 
         It 'Has a valid path' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction -ParameterFilter {
-                $Path -eq "repositories/$Team/$Repo/branch-restrictions/$ID"
+                $Path -eq "repositories/$Workspace/$Repo/branch-restrictions/$ID"
             }
         }
 
-        It 'Has no body'{
+        It 'Has no body' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction -ParameterFilter {
                 $Body -eq $null
             }
@@ -36,17 +36,17 @@ Describe 'Remove-BitbucketRepositoryBranchRestriction' {
             id = 123
         }
 
-        $Restriction | Remove-BitbucketRepositoryBranchRestriction -Team $Team -RepoSlug $Repo -Confirm:$false
+        $Restriction | Remove-BitbucketRepositoryBranchRestriction -Workspace $Workspace -RepoSlug $Repo -Confirm:$false
 
         It 'Has a valid path' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction -ParameterFilter {
-                $Path -eq "repositories/$Team/$($Repo)/branch-restrictions/$ID"
+                $Path -eq "repositories/$Workspace/$($Repo)/branch-restrictions/$ID"
             }
         }
     }
 
     Context 'Supports WhatIf' {
-        Remove-BitbucketRepositoryBranchRestriction -Team $Team -RepoSlug $Repo -RestrictionID $ID -WhatIf
+        Remove-BitbucketRepositoryBranchRestriction -Workspace $Workspace -RepoSlug $Repo -RestrictionID $ID -WhatIf
 
         It 'Does not call the mock' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction -Exactly 0
