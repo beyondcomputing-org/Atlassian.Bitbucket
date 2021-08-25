@@ -12,7 +12,7 @@
     RootModule        = 'Atlassian.Bitbucket.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.28.0'
+    ModuleVersion     = '0.29.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @('Desktop', 'Core')
@@ -101,7 +101,7 @@
         'Get-BitbucketPullRequestComment',
         'Get-BitbucketRepository',
         'Get-BitbucketRepositoryBranch',
-	'Get-BitbucketRepositoryBranchModel',
+        'Get-BitbucketRepositoryBranchModel',
         'Get-BitbucketRepositoryBranchRestriction',
         'Get-BitbucketRepositoryDeployment',
         'Get-BitbucketRepositoryEnvironment',
@@ -109,9 +109,9 @@
         'Get-BitbucketRepositoryGroupPermission',
         'Get-BitbucketRepositoryReviewer',
         'Get-BitbucketRepositoryVariable',
-        'Get-BitbucketSelectedTeam',
+        'Get-BitbucketSelectedWorkspace',
         'Get-BitbucketGroup',
-        'Get-BitbucketTeam',
+        'Get-BitbucketWorkspace',
         'Get-BitbucketUser',
         'Get-BitbucketUsersByGroup',
         'New-BitbucketLogin',
@@ -133,7 +133,7 @@
         'Remove-BitbucketRepositoryReviewer',
         'Remove-BitbucketRepositoryVariable',
         'Save-BitbucketLogin',
-        'Select-BitbucketTeam',
+        'Select-BitbucketWorkspace',
         'Set-BitbucketRepository',
         'Set-BitbucketRepositoryBranchModel',
         'Set-BitbucketRepositoryBranchRestriction',
@@ -150,7 +150,13 @@
     VariablesToExport = @()
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport   = @('Login-Bitbucket')
+    # Team aliases point to workspace functions. https://developer.atlassian.com/cloud/bitbucket/bitbucket-api-teams-deprecation/
+    AliasesToExport   = @(
+        'Get-BitbucketTeam',
+        'Get-BitbucketSelectedTeam',
+        'Login-Bitbucket',
+        'Select-BitbucketTeam'
+    )
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()
