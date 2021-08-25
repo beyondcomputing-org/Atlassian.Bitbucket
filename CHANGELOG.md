@@ -6,6 +6,9 @@ _These will be removed in the next major release_
 
 - N/A
 
+## 0.29.0
+- Updated team cmdlets to workspace while retaining old names with alias https://developer.atlassian.com/cloud/bitbucket/bitbucket-api-teams-deprecation/
+
 ## 0.28.0
 - Added `Add-BitbucketRepositoryBranch` to create a new branch in a repo
 - Added `Get-BitbucketRepositoryBranch` to return branches in a repo

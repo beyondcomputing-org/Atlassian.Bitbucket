@@ -1,6 +1,6 @@
 Import-Module '.\Atlassian.Bitbucket.Authentication.psm1' -Force
 
-Describe 'Get-BitbucketTeam' {
+Describe 'Get-BitbucketWorkspace' {
     Mock Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Authentication { 
         $Response = New-Object PSObject -Property @{
             values = 'Value1'
@@ -8,8 +8,8 @@ Describe 'Get-BitbucketTeam' {
         return $Response
     }
     
-    Context 'Get-BitbucketTeam' {
-        $result = Get-BitbucketTeam
+    Context 'Get-BitbucketWorkspace' {
+        $result = Get-BitbucketWorkspace
 
         It 'Uses default GET Method' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Authentication -ParameterFilter {
@@ -19,7 +19,7 @@ Describe 'Get-BitbucketTeam' {
 
         It 'Has a valid path' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Authentication -ParameterFilter {
-                $Path -eq "teams?role=member"
+                $Path -eq "workspaces?role=member"
             }
         }
 

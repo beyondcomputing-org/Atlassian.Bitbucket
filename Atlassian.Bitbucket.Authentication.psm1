@@ -53,7 +53,7 @@ function New-BitbucketLogin {
 
         Write-Output "Welcome $($Auth.User.display_name)"
 
-        Select-BitbucketTeam
+        Select-BitbucketWorkspace
 
         if($Save){
             Save-BitbucketLogin
@@ -94,7 +94,7 @@ function Invoke-BitbucketAPI {
     [CmdletBinding()]
     param(
         [String]$Path = '',
-        [Microsoft.PowerShell.Commands.WebRequestMethod]$Method = 'Get',
+        [String]$Method = 'Get',
         [Object]$Body,
         [Switch]$Paginated,
         [Int32]$MaxPages = 2147483647,
@@ -156,19 +156,21 @@ function Invoke-BitbucketAPI {
     }
 }
 
-function Get-BitbucketTeam {
+function Get-BitbucketWorkspace {
     [CmdletBinding()]
+    [Alias("Get-BitbucketTeam")]
     param(
-        [ValidateSet('admin', 'contributor', 'member')]
+        [ValidateSet('owner', 'collaborator', 'member')]
         [String]$Role = 'member'
     )
-    $endpoint = "teams?role=$Role"
+    $endpoint = "workspaces?role=$Role"
 
     return (Invoke-BitbucketAPI -Path $endpoint).values
 }
 
-function Get-BitbucketSelectedTeam {
+function Get-BitbucketSelectedWorkspace {
     [CmdletBinding()]
+    [Alias("Get-BitbucketSelectedTeam")]
     param(
     )
 
@@ -176,26 +178,28 @@ function Get-BitbucketSelectedTeam {
     return $Auth.Team
 }
 
-function Select-BitbucketTeam {
+function Select-BitbucketWorkspace {
     [CmdletBinding()]
+    [Alias("Select-BitbucketTeam")]
     param(
-        [String]$Team
+        [Alias("Team")]
+        [String]$Workspace
     )
 
-    if(!$Team){
-        $Teams = Get-BitbucketTeam
+    if(!$Workspace){
+        $Workspaces = Get-BitbucketWorkspace
         $index = 0
 
-        if($Teams.count -gt 1){
+        if($Workspaces.count -gt 1){
 
-            for ($i = 0; $i -lt $Teams.Count; $i++) {
-                Write-Output "$i - $($Teams[$i].username)"
+            for ($i = 0; $i -lt $Workspaces.Count; $i++) {
+                Write-Output "$i - $($Workspaces[$i].name)"
             }
-            [int]$index = Read-Host 'Which team would you like to use?'
+            [int]$index = Read-Host 'Which workspace would you like to use?'
         }
-        $Team = $Teams[$index].username
+        $Workspace = $Workspaces[$index].slug
     }
 
     $Auth = [BitbucketAuth]::GetInstance()
-    $Auth.Team = $Team
+    $Auth.Team = $Workspace
 }
