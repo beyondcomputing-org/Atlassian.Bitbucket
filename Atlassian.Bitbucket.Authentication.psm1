@@ -175,7 +175,7 @@ function Get-BitbucketSelectedWorkspace {
     )
 
     $Auth = [BitbucketAuth]::GetInstance()
-    return $Auth.Team
+    return $Auth.Workspace
 }
 
 function Select-BitbucketWorkspace {
@@ -201,5 +201,5 @@ function Select-BitbucketWorkspace {
     }
 
     $Auth = [BitbucketAuth]::GetInstance()
-    $Auth.Team = $Workspace
+    $Auth.Workspace = $Workspace
 }

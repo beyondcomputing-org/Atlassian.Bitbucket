@@ -5,11 +5,11 @@ Describe 'Remove-BitbucketRepository' {
         return $null
     }
 
-    $Team = 'T'
+    $Workspace = 'T'
     $Repo = 'R'
     
     Context 'Remove Repo' {
-        Remove-BitbucketRepository -Team $Team -RepoSlug $Repo -Confirm:$false
+        Remove-BitbucketRepository -Workspace $Workspace -RepoSlug $Repo -Confirm:$false
 
         It 'Uses DELETE Method' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
@@ -19,11 +19,11 @@ Describe 'Remove-BitbucketRepository' {
 
         It 'Has a valid path' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
-                $Path -eq "repositories/$Team/$Repo"
+                $Path -eq "repositories/$Workspace/$Repo"
             }
         }
 
-        It 'Has no body'{
+        It 'Has no body' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
                 $Body -eq $null
             }
@@ -32,24 +32,24 @@ Describe 'Remove-BitbucketRepository' {
 
     Context 'Accepts pipeline input' {
         $Repo = New-Object PSObject -Property @{
-            scm = 'git'
-            uuid = (New-Guid)
-            slug = 'reponame'
+            scm         = 'git'
+            uuid        = (New-Guid)
+            slug        = 'reponame'
             description = 'desc'
-            language = 'powershell'
+            language    = 'powershell'
         }
 
-        $Repo | Remove-BitbucketRepository -Team $Team -Confirm:$false
+        $Repo | Remove-BitbucketRepository -Workspace $Workspace -Confirm:$false
 
         It 'Has a valid path' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
-                $Path -eq "repositories/$Team/$($Repo.slug)"
+                $Path -eq "repositories/$Workspace/$($Repo.slug)"
             }
         }
     }
 
     Context 'Supports WhatIf' {
-        Remove-BitbucketRepository -Team $Team -RepoSlug $Repo -WhatIf
+        Remove-BitbucketRepository -Workspace $Workspace -RepoSlug $Repo -WhatIf
 
         It 'Does not call the mock' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -Exactly 0

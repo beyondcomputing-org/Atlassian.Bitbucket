@@ -7,7 +7,7 @@ class BitbucketAuth {
     # Parameters
     [PSCredential]$Credential
     [Object]$User
-    [String]$Team
+    [String]$Workspace
     [String]$AuthType
 
     # OAuth Parameters
@@ -31,7 +31,7 @@ class BitbucketAuth {
     }
 
     # OAuth 2 Instantiator
-    static [BitbucketAuth] NewInstance([PSCredential]$AtlassianCredential, [PSCredential]$OAuthConsumer){
+    static [BitbucketAuth] NewInstance([PSCredential]$AtlassianCredential, [PSCredential]$OAuthConsumer) {
         # Remove existing instance
         [BitbucketAuth]::ClearInstance()
 
@@ -47,7 +47,7 @@ class BitbucketAuth {
         return [BitbucketAuth]::instance
     }
 
-    static [Void] ClearInstance(){
+    static [Void] ClearInstance() {
         [BitbucketAuth]::instance = $null
     }
 
@@ -55,12 +55,14 @@ class BitbucketAuth {
     static [BitbucketAuth] GetInstance() {
         if ($null -eq [BitbucketAuth]::instance) {
             # Try loading saved settings
-            if([BitbucketAuth]::load()){
+            if ([BitbucketAuth]::load()) {
                 return [BitbucketAuth]::instance
-            }else{
+            }
+            else {
                 throw 'You are not logged in.  Please login with Login-Bitbucket.'
             }
-        }else{
+        }
+        else {
             return [BitbucketAuth]::instance
         }
     }
@@ -83,13 +85,13 @@ class BitbucketAuth {
         switch ($this.AuthType) {
             'Basic' {
                 $basicAuth = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $this.Credential.GetNetworkCredential().UserName, $this.Credential.GetNetworkCredential().Password)))
-                return @{Authorization = "Basic $basicAuth"}
+                return @{Authorization = "Basic $basicAuth" }
             }
             'Bearer' {
-                if($this.Token.expires -le (Get-Date)){
+                if ($this.Token.expires -le (Get-Date)) {
                     $this.GetAuthToken()
                 }
-                return @{Authorization = "Bearer $($this.Token.accessToken)"}
+                return @{Authorization = "Bearer $($this.Token.accessToken)" }
             }
             Default {
                 Throw "Unknown Authentication Type: $($this.AuthType)"
@@ -102,14 +104,14 @@ class BitbucketAuth {
     hidden [Void] GetAuthToken() {
         $body = @{
             grant_type = 'password'
-            username = $this.AtlassianCredential.GetNetworkCredential().UserName
-            password = $this.AtlassianCredential.GetNetworkCredential().Password
+            username   = $this.AtlassianCredential.GetNetworkCredential().UserName
+            password   = $this.AtlassianCredential.GetNetworkCredential().Password
         }
 
         # Generate the Authentication Header using the ClientID / Secret
         # Not using -Authentication as older versions of Invoke-RestMethod don't support it
         $basicAuth = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $this.OAuthConsumer.GetNetworkCredential().UserName, $this.OAuthConsumer.GetNetworkCredential().Password)))
-        $header = @{Authorization = "Basic $basicAuth"}
+        $header = @{Authorization = "Basic $basicAuth" }
 
         # Get the token from Bitbucket
         $response = Invoke-RestMethod 'https://bitbucket.org/site/oauth2/access_token' -Method Post -Headers $header -Body $body
@@ -121,43 +123,43 @@ class BitbucketAuth {
             $parts = $scope -split ':'
 
             $scopes += [PSCustomObject]@{
-                Name = $parts[0]
+                Name       = $parts[0]
                 Permission = $parts[1]
             }
         }
 
         # Store the token
         $this.Token = [PSCustomObject]@{
-            accessToken = $response.access_token
-            scopes = $scopes
-            expires = (Get-Date).AddSeconds($response.expires_in)
+            accessToken  = $response.access_token
+            scopes       = $scopes
+            expires      = (Get-Date).AddSeconds($response.expires_in)
             refreshToken = $response.refresh_token
-            tokenType = $response.token_type
+            tokenType    = $response.token_type
         }
     }
 
     # Save the settings to the local system
-    [void] Save(){
-        if(!(Test-Path([BitbucketSettings]::SAVE_DIR))){
+    [void] Save() {
+        if (!(Test-Path([BitbucketSettings]::SAVE_DIR))) {
             New-Item -Type Directory -Path ([BitbucketSettings]::SAVE_DIR)
         }
 
         # Create a filtered object to save
         $Save = [PSCustomObject]@{
-            User = $this.User
-            Team = $this.Team
-            Credential = $this.Credential
+            User                = $this.User
+            Workspace           = $this.Workspace
+            Credential          = $this.Credential
             AtlassianCredential = $this.AtlassianCredential
-            OAuthConsumer = $this.OAuthConsumer
-            AuthType = $this.AuthType
+            OAuthConsumer       = $this.OAuthConsumer
+            AuthType            = $this.AuthType
         }
 
         $Save | Export-CliXml -Path ([BitbucketSettings]::SAVE_PATH)  -Encoding 'utf8' -Force
     }
 
     # Load Saved Credentials
-    hidden static [BitbucketAuth] Load(){
-        if(Test-Path([BitbucketSettings]::SAVE_PATH)){
+    hidden static [BitbucketAuth] Load() {
+        if (Test-Path([BitbucketSettings]::SAVE_PATH)) {
             try {
                 $Import = Import-CliXml -Path ([BitbucketSettings]::SAVE_PATH)
             }
@@ -168,7 +170,13 @@ class BitbucketAuth {
             $Auth = [BitbucketAuth]::new()
 
             $Auth.User = $Import.User
-            $Auth.Team = $Import.Team
+            
+            # Support migration from team to workspace
+            if($import.Team){
+                $Auth.Workspace = $Import.Team
+            } else {
+                $Auth.Workspace = $Import.Workspace
+            }
             $Auth.Credential = $Import.Credential
             $Auth.AtlassianCredential = $Import.AtlassianCredential
             $Auth.OAuthConsumer = $Import.OAuthConsumer

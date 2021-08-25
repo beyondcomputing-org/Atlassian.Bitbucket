@@ -6,17 +6,17 @@ Describe 'Set-BitbucketRepositoryGroupPermission' {
     Mock Add-BitbucketRepositoryGroupPermission -ModuleName Atlassian.Bitbucket.Repository.GroupPermission { }
     Mock Remove-BitbucketRepositoryGroupPermission -ModuleName Atlassian.Bitbucket.Repository.GroupPermission { }
 
-    $Team = 'T'
+    $Workspace = 'T'
     $Repo = 'R'
     
     Context 'Matching Permission' {
-        $response = [GroupPermissionV1]::New('group-slug','read')
+        $response = [GroupPermissionV1]::New('group-slug', 'read')
         Mock Get-BitbucketRepositoryGroupPermission -ModuleName Atlassian.Bitbucket.Repository.GroupPermission { 
             return $response
         }.GetNewClosure()
 
-        $Permission = [GroupPermissionV1]::New($response.groupslug,$response.privilege)
-        Set-BitbucketRepositoryGroupPermission -Team $Team -RepoSlug $Repo -Permissions $Permission
+        $Permission = [GroupPermissionV1]::New($response.groupslug, $response.privilege)
+        Set-BitbucketRepositoryGroupPermission -Workspace $Workspace -RepoSlug $Repo -Permissions $Permission
 
         It 'Does not add Permission' {
             Assert-MockCalled Add-BitbucketRepositoryGroupPermission -Exactly 0 -ModuleName Atlassian.Bitbucket.Repository.GroupPermission
@@ -28,13 +28,13 @@ Describe 'Set-BitbucketRepositoryGroupPermission' {
     }
 
     Context 'Mismatched Permission' {
-        $response = [GroupPermissionV1]::New('group-slug','read')
+        $response = [GroupPermissionV1]::New('group-slug', 'read')
         Mock Get-BitbucketRepositoryGroupPermission -ModuleName Atlassian.Bitbucket.Repository.GroupPermission { 
             return $response
         }.GetNewClosure()
         
-        $Permission = [GroupPermissionV1]::New($response.groupslug,'write')
-        Set-BitbucketRepositoryGroupPermission -Team $Team -RepoSlug $Repo -Permissions $Permission
+        $Permission = [GroupPermissionV1]::New($response.groupslug, 'write')
+        Set-BitbucketRepositoryGroupPermission -Workspace $Workspace -RepoSlug $Repo -Permissions $Permission
 
         It 'Adds Permission' {
             Assert-MockCalled Add-BitbucketRepositoryGroupPermission -Exactly 1 -ModuleName Atlassian.Bitbucket.Repository.GroupPermission
@@ -56,8 +56,8 @@ Describe 'Set-BitbucketRepositoryGroupPermission' {
             return $null
         }
         
-        $Permission = [GroupPermissionV1]::New('group-slug','write')
-        Set-BitbucketRepositoryGroupPermission -Team $Team -RepoSlug $Repo -Permission $Permission
+        $Permission = [GroupPermissionV1]::New('group-slug', 'write')
+        Set-BitbucketRepositoryGroupPermission -Workspace $Workspace -RepoSlug $Repo -Permission $Permission
 
         It 'Adds Permission' {
             Assert-MockCalled Add-BitbucketRepositoryGroupPermission -Exactly 1 -ModuleName Atlassian.Bitbucket.Repository.GroupPermission
@@ -72,18 +72,18 @@ Describe 'Set-BitbucketRepositoryGroupPermission' {
     }
 
     Context 'Complex Permissions' {
-        $response1 = [GroupPermissionV1]::New('group-admin','admin')
-        $response2 = [GroupPermissionV1]::New('group','read')
+        $response1 = [GroupPermissionV1]::New('group-admin', 'admin')
+        $response2 = [GroupPermissionV1]::New('group', 'read')
 
         Mock Get-BitbucketRepositoryGroupPermission -ModuleName Atlassian.Bitbucket.Repository.GroupPermission {
             return @($response1, $response2)
         }.GetNewClosure()
         
         $Permissions = @()
-        $Permissions += [GroupPermissionV1]::New('group-admin','admin')
-        $Permissions += [GroupPermissionV1]::New('group','write')
+        $Permissions += [GroupPermissionV1]::New('group-admin', 'admin')
+        $Permissions += [GroupPermissionV1]::New('group', 'write')
 
-        Set-BitbucketRepositoryGroupPermission -Team $Team -RepoSlug $Repo -Permission $Permissions
+        Set-BitbucketRepositoryGroupPermission -Workspace $Workspace -RepoSlug $Repo -Permission $Permissions
 
         It 'Adds correct Permission' {
             Assert-MockCalled Add-BitbucketRepositoryGroupPermission -Exactly 1 -ModuleName Atlassian.Bitbucket.Repository.GroupPermission

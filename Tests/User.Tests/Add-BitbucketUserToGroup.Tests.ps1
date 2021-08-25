@@ -1,13 +1,13 @@
 Import-Module '.\Atlassian.Bitbucket.User.psm1' -Force
 
 Describe 'Add-BitbucketUserToGroup' {
-    $Team = 'T'
+    $Workspace = 'T'
     $GroupSlug = 'G'
     $UserUuid = 'U'
 
     Mock Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.User {}
 
-    Add-BitbucketUserToGroup -Team $Team -GroupSlug $GroupSlug -UserUuid $UserUuid
+    Add-BitbucketUserToGroup -Workspace $Workspace -GroupSlug $GroupSlug -UserUuid $UserUuid
 
     It 'Uses PUT Method' {
         Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.User -ParameterFilter {
@@ -17,7 +17,7 @@ Describe 'Add-BitbucketUserToGroup' {
     
     It 'Has a valid path' {
         Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.User -ParameterFilter {
-            $Path -eq "groups/$Team/$GroupSlug/members/$UserUuid"
+            $Path -eq "groups/$Workspace/$GroupSlug/members/$UserUuid"
         }
     }
 
@@ -27,7 +27,7 @@ Describe 'Add-BitbucketUserToGroup' {
         }
     }
 
-    It 'Uses v1 API'{
+    It 'Uses v1 API' {
         Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.User -ParameterFilter {
             '1.0' -eq $API_Version
         }

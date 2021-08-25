@@ -3,17 +3,17 @@ Import-Module '.\Atlassian.Bitbucket.Repository.BranchRestriction.psm1' -Force
 Describe 'Get-BitbucketRepositoryBranchRestriction' {
     Mock Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction { 
         $Response = New-Object PSObject -Property @{
-            id = 123
+            id   = 123
             kind = 'delete'
         }
         return $Response
     }
 
-    $Team = 'T'
+    $Workspace = 'T'
     $Repo = 'R'
     
     Context 'Get restrictions' {
-        Get-BitbucketRepositoryBranchRestriction -Team $Team -RepoSlug $Repo
+        Get-BitbucketRepositoryBranchRestriction -Workspace $Workspace -RepoSlug $Repo
 
         It 'Uses default GET Method' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction -ParameterFilter {
@@ -23,11 +23,11 @@ Describe 'Get-BitbucketRepositoryBranchRestriction' {
 
         It 'Has a valid path' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction -ParameterFilter {
-                $Path -eq "repositories/$Team/$Repo/branch-restrictions/"
+                $Path -eq "repositories/$Workspace/$Repo/branch-restrictions/"
             }
         }
 
-        It 'Has no body'{
+        It 'Has no body' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction -ParameterFilter {
                 $Body -eq $null
             }
