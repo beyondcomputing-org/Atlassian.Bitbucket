@@ -153,7 +153,7 @@
     # Team aliases point to workspace functions. https://developer.atlassian.com/cloud/bitbucket/bitbucket-api-teams-deprecation/
     AliasesToExport   = @(
         'Get-BitbucketTeam',
-        'Get-BitbucketSelectedTeam',   
+        'Get-BitbucketSelectedTeam',
         'Login-Bitbucket',
         'Select-BitbucketTeam'
     )
