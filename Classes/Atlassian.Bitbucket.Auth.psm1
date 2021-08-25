@@ -170,7 +170,7 @@ class BitbucketAuth {
             $Auth = [BitbucketAuth]::new()
 
             $Auth.User = $Import.User
-            
+
             # Support migration from team to workspace
             if($import.Team){
                 $Auth.Workspace = $Import.Team

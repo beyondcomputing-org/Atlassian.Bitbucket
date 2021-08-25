@@ -9,7 +9,7 @@ Describe 'Get-BitbucketUser' {
 
     It 'Has a valid path' {
         Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.User -ParameterFilter {
-            $Path -eq "users/$Workspace/members"
+            $Path -eq "workspaces/$Workspace/members"
         }
     }
 
