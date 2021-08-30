@@ -1,7 +1,7 @@
 Import-Module '.\Atlassian.Bitbucket.Repository.BranchRestriction.psm1' -Force
 
 Describe 'Add-BitbucketRepositoryBranchRestriction' {
-    Mock Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction { 
+    Mock Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction {
         $Response = New-Object PSObject -Property @{
             id = (New-Guid).Guid
         }
@@ -10,7 +10,7 @@ Describe 'Add-BitbucketRepositoryBranchRestriction' {
 
     $Workspace = 'T'
     $Repo = 'R'
-    
+
     Context 'Create new Glob based branch restriction' {
         $MergeCheck = New-BitbucketRepositoryBranchRestrictionMergeCheck -Kind 'require_approvals_to_merge' -Pattern 'master' -Value 2
         Add-BitbucketRepositoryBranchRestriction -Workspace $Workspace -RepoSlug $Repo -Restriction $MergeCheck
@@ -30,6 +30,12 @@ Describe 'Add-BitbucketRepositoryBranchRestriction' {
         It 'Has a valid body' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction -ParameterFilter {
                 ($MergeCheck | Select-Object -ExcludeProperty branch_type | ConvertTo-Json -Depth 2 -Compress) -eq $Body
+            }
+        }
+
+        It "Removes the branch_type property when branch_match_kind equals 'glob'" {
+            Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction -ParameterFilter {
+                $null -eq ($Body | ConvertFrom-Json -Depth 3).branch_match_kind
             }
         }
     }
