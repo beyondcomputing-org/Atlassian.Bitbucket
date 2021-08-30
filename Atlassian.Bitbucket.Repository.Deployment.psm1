@@ -3,14 +3,15 @@ using module .\Atlassian.Bitbucket.Authentication.psm1
 function Get-BitbucketRepositoryDeployment {
     [CmdletBinding()]
     param(
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
-        [string]$Team = (Get-BitbucketSelectedTeam),
-        [Parameter( Mandatory=$true,
-                    Position=0,
-                    ValueFromPipeline=$true,
-                    ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='The repository slug.')]
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.')]
+        [Alias("Team")]
+        [string]$Workspace = (Get-BitbucketSelectedWorkspace),
+        [Parameter( Mandatory = $true,
+            Position = 0,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'The repository slug.')]
         [Alias('Slug')]
         [string]$RepoSlug,
         [ValidateSet('COMPLETED', 'IN_PROGRESS', 'UNDEPLOYED')]
@@ -23,22 +24,23 @@ function Get-BitbucketRepositoryDeployment {
     )
 
     Process {
-        $endpoint = "repositories/$Team/$RepoSlug/deployments/?sort=$Sort&page=$Page&pagelen=$Limit"
+        $endpoint = "repositories/$Workspace/$RepoSlug/deployments/?sort=$Sort&page=$Page&pagelen=$Limit"
 
-        if($State){
+        if ($State) {
             $endpoint += "&state.name=$State"
         }
 
-        if($EnvironmentUUID){
+        if ($EnvironmentUUID) {
             $endpoint += "&environment=$EnvironmentUUID"
         }
 
-        if($Fields){
+        if ($Fields) {
             $endpoint += '&fields='
             for ($i = 0; $i -lt $Fields.Count; $i++) {
-                if($i -lt ($Fields.Count -1)){
+                if ($i -lt ($Fields.Count - 1)) {
                     $endpoint += "%2B$($Fields[$i])%2C"
-                }else{
+                }
+                else {
                     $endpoint += "%2B$($Fields[$i])"
                 }
             }

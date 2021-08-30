@@ -4,8 +4,9 @@ function Get-BitbucketRepositoryReviewer {
     [CmdletBinding()]
     Param (
         [Parameter( ValueFromPipelineByPropertyName = $true,
-            HelpMessage = 'Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
-        [string]$Team = (Get-BitbucketSelectedTeam),
+            HelpMessage = 'Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.')]
+        [Alias("Team")]
+        [string]$Workspace = (Get-BitbucketSelectedWorkspace),
         [Parameter( Mandatory = $true,
             Position = 0,
             ValueFromPipeline = $true,
@@ -15,7 +16,7 @@ function Get-BitbucketRepositoryReviewer {
         [string]$RepoSlug
     )
     Process {
-        $endpoint = "repositories/$Team/$RepoSlug/default-reviewers"
+        $endpoint = "repositories/$Workspace/$RepoSlug/default-reviewers"
         return Invoke-BitbucketAPI -Path $endpoint -Method Get -Paginated
     }
 }
@@ -25,8 +26,9 @@ function Add-BitbucketRepositoryReviewer {
         ConfirmImpact = 'Medium')]
     Param (
         [Parameter( ValueFromPipelineByPropertyName = $true,
-            HelpMessage = 'Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
-        [string]$Team = (Get-BitbucketSelectedTeam),
+            HelpMessage = 'Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.')]
+        [Alias("Team")]
+        [string]$Workspace = (Get-BitbucketSelectedWorkspace),
         [Parameter( Mandatory = $true,
             Position = 0,
             ValueFromPipeline = $true,
@@ -41,7 +43,7 @@ function Add-BitbucketRepositoryReviewer {
         [string]$UUID
     )
     Process {
-        $endpoint = "repositories/$Team/$RepoSlug/default-reviewers/$UUID"
+        $endpoint = "repositories/$Workspace/$RepoSlug/default-reviewers/$UUID"
 
         if ($pscmdlet.ShouldProcess($RepoSlug, "Add $UUID to default reviewers")) {
             $response = Invoke-BitbucketAPI -Path $endpoint -Method Put
@@ -49,7 +51,7 @@ function Add-BitbucketRepositoryReviewer {
             if ($response) {
                 return [pscustomobject]@{
                     UUID     = $UUID
-                    Team     = $Team
+                    Workspace = $Workspace
                     RepoSlug = $RepoSlug
                     Action   = 'Added'
                 }
@@ -67,8 +69,9 @@ function Remove-BitbucketRepositoryReviewer {
         ConfirmImpact = 'High')]
     Param (
         [Parameter( ValueFromPipelineByPropertyName = $true,
-            HelpMessage = 'Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
-        [string]$Team = (Get-BitbucketSelectedTeam),
+            HelpMessage = 'Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.')]
+        [Alias("Team")]
+        [string]$Workspace = (Get-BitbucketSelectedWorkspace),
         [Parameter( Mandatory = $true,
             Position = 0,
             ValueFromPipeline = $true,
@@ -83,14 +86,14 @@ function Remove-BitbucketRepositoryReviewer {
         [string]$UUID
     )
     Process {
-        $endpoint = "repositories/$Team/$RepoSlug/default-reviewers/$UUID"
+        $endpoint = "repositories/$Workspace/$RepoSlug/default-reviewers/$UUID"
 
         if ($pscmdlet.ShouldProcess($RepoSlug, "Remove $UUID from default reviewers")) {
             Invoke-BitbucketAPI -Path $endpoint -Method Delete
 
             [pscustomobject]@{
                 UUID     = $UUID
-                Team     = $Team
+                Workspace = $Workspace
                 RepoSlug = $RepoSlug
                 Action   = 'Deleted'
             }
@@ -103,8 +106,9 @@ function Set-BitbucketRepositoryReviewer {
         ConfirmImpact = 'High')]
     Param (
         [Parameter( ValueFromPipelineByPropertyName = $true,
-            HelpMessage = 'Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
-        [string]$Team = (Get-BitbucketSelectedTeam),
+            HelpMessage = 'Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.')]
+        [Alias("Team")]
+        [string]$Workspace = (Get-BitbucketSelectedWorkspace),
         [Parameter( Mandatory = $true,
             Position = 0,
             ValueFromPipeline = $true,
@@ -119,11 +123,11 @@ function Set-BitbucketRepositoryReviewer {
         [string[]]$UUIDs
     )
     Process {
-        $existingUsers = Get-BitbucketRepositoryReviewer -Team $Team -RepoSlug $RepoSlug
+        $existingUsers = Get-BitbucketRepositoryReviewer -Workspace $Workspace -RepoSlug $RepoSlug
 
         if ($existingUsers.Count -eq 0) {
             foreach ($uuid in $UUIDs) {
-                Add-BitbucketRepositoryReviewer -Team $Team -RepoSlug $RepoSlug -UUID $uuid
+                Add-BitbucketRepositoryReviewer -Workspace $Workspace -RepoSlug $RepoSlug -UUID $uuid
             }
         }
         else {
@@ -135,7 +139,7 @@ function Set-BitbucketRepositoryReviewer {
 
             if ($missingUsers) {
                 foreach ($missingUser in $missingUsers) {
-                    Add-BitbucketRepositoryReviewer -Team $Team -RepoSlug $RepoSlug -UUID $missingUser
+                    Add-BitbucketRepositoryReviewer -Workspace $Workspace -RepoSlug $RepoSlug -UUID $missingUser
                 }
             }
 
@@ -144,7 +148,7 @@ function Set-BitbucketRepositoryReviewer {
 
             if ($extraUsers) {
                 foreach ($extraUser in $extraUsers) {
-                    Remove-BitbucketRepositoryReviewer -Team $Team -RepoSlug $RepoSlug -UUID $extraUser
+                    Remove-BitbucketRepositoryReviewer -Workspace $Workspace -RepoSlug $RepoSlug -UUID $extraUser
                 }
             }
         }

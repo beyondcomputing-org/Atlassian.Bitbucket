@@ -62,9 +62,9 @@ Login-Bitbucket -AtlassianCredential $Cred -OAuthConsumer $OAuth
 
 Use `Login-Bitbucket -Save` when logging in or `Save-BitbucketLogin` at any time to save the information to an encrypted file that will be automatically loaded when you start a new session.
 
-#### Teams
+#### Workspaces
 
-The module will automatically select your team if you have 1 when logging in or prompt you to choose from a list of teams. Cmdlets will default to the team selected unless specified. If you wish to change the team run `Select-BitbucketTeam`. If you want to save the change run `Save-BitbucketLogin` again.
+The module will automatically select your workspace if you have 1 when logging in or prompt you to choose from a list of workspaces. Cmdlets will default to the workspace selected unless specified. If you wish to change the workspace run `Select-BitbucketWorkspace`. If you want to save the change run `Save-BitbucketLogin` again.
 
 ### CMDLETs
 
@@ -73,12 +73,12 @@ To get more information on each cmdlet run `Get-Help <CMDLET Name>`
 #### Authentication CMDLETs
 
 - `Get-BitbucketLogin`
-- `Get-BitbucketSelectedTeam`
-- `Get-BitbucketTeam`
+- `Get-BitbucketSelectedWorkspace`
+- `Get-BitbucketWorkspace`
 - `New-BitbucketLogin`
 - `Remove-BitbucketLogin`
 - `Save-BitbucketLogin`
-- `Select-BitbucketTeam`
+- `Select-BitbucketWorkspace`
 
 #### Pipeline CMDLETs
 

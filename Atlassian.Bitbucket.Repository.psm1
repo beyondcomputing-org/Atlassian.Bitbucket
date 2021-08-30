@@ -2,21 +2,21 @@ using module .\Atlassian.Bitbucket.Authentication.psm1
 
 <#
     .SYNOPSIS
-        Returns all Repositories in the team.
+        Returns all Repositories in the workspace.
 
     .DESCRIPTION
-        Returns all the Bitbucket Repositories in the team, or all repositories in the specific project.
+        Returns all the Bitbucket Repositories in the workspace, or all repositories in the specific project.
 
     .EXAMPLE
         C:\PS> Get-BitbucketRepository
-        Returns all repositories for the currently selected team.
+        Returns all repositories for the currently selected workspace.
 
     .EXAMPLE
         C:\PS> Get-BitbucketRepository -ProjectKey 'KEY'
         Returns all repositories for the specified project.
 
-    .PARAMETER Team
-        Name of the team in Bitbucket.  Defaults to selected team if not provided.
+    .PARAMETER Workspace
+        Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.
 
     .PARAMETER RepoSlug
         Name of the repo in Bitbucket.
@@ -27,27 +27,29 @@ using module .\Atlassian.Bitbucket.Authentication.psm1
 function Get-BitbucketRepository {
     [CmdletBinding()]
     param(
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
-        [string]$Team = (Get-BitbucketSelectedTeam),
-        [Parameter( Position=0,
-                    ValueFromPipeline=$true,
-                    ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='The repository slug.')]
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.')]
+        [Alias("Team")]
+        [string]$Workspace = (Get-BitbucketSelectedWorkspace),
+        [Parameter( Position = 0,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'The repository slug.')]
         [Alias('Slug')]
         [string]$RepoSlug,
-        [Parameter( Position=1,
-                    ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Project key in Bitbucket')]
+        [Parameter( Position = 1,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Project key in Bitbucket')]
         [string]$ProjectKey
     )
 
     Process {
-        $endpoint = "repositories/$Team"
+        $endpoint = "repositories/$Workspace"
 
-        if($RepoSlug){
+        if ($RepoSlug) {
             return Invoke-BitbucketAPI -Path "$endpoint/$RepoSlug"
-        }elseif($ProjectKey){
+        }
+        elseif ($ProjectKey) {
             # Filter to a specific project
             $endpoint += "?q=project.key=%22$ProjectKey%22"
         }
@@ -57,21 +59,21 @@ function Get-BitbucketRepository {
 
 <#
     .SYNOPSIS
-        Creates a new repositories in the team.
+        Creates a new repositories in the workspace.
 
     .DESCRIPTION
-        Creates a new Bitbucket repositories in the team, and in a specific project if specified.
+        Creates a new Bitbucket repositories in the workspace, and in a specific project if specified.
 
     .EXAMPLE
         C:\PS> New-BitbucketRepository -RepoSlug 'NewRepo'
-        Creates a new repository in Bitbucket called NewRepo.  Since a project wasn't specified the repository is automatically assigned to the oldest project in the team.
+        Creates a new repository in Bitbucket called NewRepo.  Since a project wasn't specified the repository is automatically assigned to the oldest project in the workspace.
 
     .EXAMPLE
         C:\PS> New-BitbucketRepository -RepoSlug 'NewRepo' -ProjectKey 'KEY'
         Creates a new repository in Bitbucket called NewRepo and puts it in the KEY project.
 
-    .PARAMETER Team
-        Name of the team in Bitbucket.  Defaults to selected team if not provided.
+    .PARAMETER Workspace
+        Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.
 
     .PARAMETER RepoSlug
         Name of the repo in Bitbucket.
@@ -95,68 +97,70 @@ function Get-BitbucketRepository {
         Fork policy of the repo.  [allow_forks, no_public_forks, no_forks]
 #>
 function New-BitbucketRepository {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Low')]
+    [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Low')]
     param(
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
-        [string]$Team = (Get-BitbucketSelectedTeam),
-        [Parameter( Mandatory=$true,
-                    Position=0,
-                    ValueFromPipeline=$true,
-                    ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='The repository slug.')]
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.')]
+        [Alias("Team")]
+        [string]$Workspace = (Get-BitbucketSelectedWorkspace),
+        [Parameter( Mandatory = $true,
+            Position = 0,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'The repository slug.')]
         [Alias('Slug')]
         [string]$RepoSlug,
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Specify a Friendly Name for the Repo')]
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Specify a Friendly Name for the Repo')]
         [ValidateNotNullOrEmpty()]
         [string]$Name,
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Project key in Bitbucket')]
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Project key in Bitbucket')]
         [string]$ProjectKey,
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Is the repo private?')]
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Is the repo private?')]
         [boolean]$Private = $true,
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Description for the repo')]
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Description for the repo')]
         [string]$Description = '',
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Programming language used in the repo')]
-        [ValidateSet('java', 'javascript','python','ruby','php','powershell')]
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Programming language used in the repo')]
+        [ValidateSet('java', 'javascript', 'python', 'ruby', 'php', 'powershell')]
         [string]$Language = '',
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Fork policy of the repo.  [allow_forks, no_public_forks, no_forks]')]
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Fork policy of the repo.  [allow_forks, no_public_forks, no_forks]')]
         [ValidateSet('allow_forks', 'no_public_forks', 'no_forks')]
         [string]$ForkPolicy = 'no_forks'
     )
 
     Process {
-        $endpoint = "repositories/$Team/$RepoSlug"
+        $endpoint = "repositories/$Workspace/$RepoSlug"
 
-        if($ProjectKey){
+        if ($ProjectKey) {
             $body = [ordered]@{
-                scm = 'git'
-                project = [ordered]@{
+                scm         = 'git'
+                project     = [ordered]@{
                     key = $ProjectKey
                 }
-                is_private = $Private
-                name = if ($Name) { $Name } else { $RepoSlug }
+                is_private  = $Private
+                name        = if ($Name) { $Name } else { $RepoSlug }
                 description = $Description
-                language = $Language
+                language    = $Language
                 fork_policy = $ForkPolicy
             } | ConvertTo-Json -Depth 2 -Compress
-        }else{
+        }
+        else {
             $body = [ordered]@{
-                scm = 'git'
-                is_private = $Private
-                name = if ($Name) { $Name } else { $RepoSlug }
+                scm         = 'git'
+                is_private  = $Private
+                name        = if ($Name) { $Name } else { $RepoSlug }
                 description = $Description
-                language = $Language
+                language    = $Language
                 fork_policy = $ForkPolicy
             } | ConvertTo-Json -Depth 2 -Compress
         }
 
-        if ($pscmdlet.ShouldProcess($RepoSlug, 'create')){
+        if ($pscmdlet.ShouldProcess($RepoSlug, 'create')) {
             return Invoke-BitbucketAPI -Path $endpoint -Body $body  -Method Post
         }
     }
@@ -177,8 +181,8 @@ function New-BitbucketRepository {
         C:\PS> Set-BitbucketRepository -RepoSlug 'Repo' -ProjectKey 'KEY'
         Moves the repo to the Project 'KEY'
 
-    .PARAMETER Team
-        Name of the team in Bitbucket.  Defaults to selected team if not provided.
+    .PARAMETER Workspace
+        Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.
 
     .PARAMETER RepoSlug
         Name of the repo in Bitbucket.
@@ -202,78 +206,79 @@ function New-BitbucketRepository {
         Fork policy of the repo.  [allow_forks, no_public_forks, no_forks]
 #>
 function Set-BitbucketRepository {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
+    [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
     param(
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
-        [string]$Team = (Get-BitbucketSelectedTeam),
-        [Parameter( Mandatory=$true,
-                    Position=0,
-                    ValueFromPipeline=$true,
-                    ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='The repository slug.')]
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.')]
+        [Alias("Team")]
+        [string]$Workspace = (Get-BitbucketSelectedWorkspace),
+        [Parameter( Mandatory = $true,
+            Position = 0,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'The repository slug.')]
         [Alias('Slug')]
         [string]$RepoSlug,
-        [Parameter( HelpMessage='Set the Friendly Name of the Repository')]
+        [Parameter( HelpMessage = 'Set the Friendly Name of the Repository')]
         [ValidateNotNullOrEmpty()]
         [string]$Name,
-        [Parameter( HelpMessage='Project key in Bitbucket')]
+        [Parameter( HelpMessage = 'Project key in Bitbucket')]
         [string]$ProjectKey,
-        [Parameter( HelpMessage='Is the repo private?')]
+        [Parameter( HelpMessage = 'Is the repo private?')]
         [boolean]$Private,
-        [Parameter( HelpMessage='Description for the repo')]
+        [Parameter( HelpMessage = 'Description for the repo')]
         [string]$Description,
-        [Parameter( HelpMessage='Programming language used in the repo')]
-        [ValidateSet('java', 'javascript','python','ruby','php','powershell')]
+        [Parameter( HelpMessage = 'Programming language used in the repo')]
+        [ValidateSet('java', 'javascript', 'python', 'ruby', 'php', 'powershell')]
         [string]$Language,
-        [Parameter( HelpMessage='Fork policy of the repo.  [allow_forks, no_public_forks, no_forks]')]
+        [Parameter( HelpMessage = 'Fork policy of the repo.  [allow_forks, no_public_forks, no_forks]')]
         [ValidateSet('allow_forks', 'no_public_forks', 'no_forks')]
         [string]$ForkPolicy
     )
 
     Process {
-        $endpoint = "repositories/$Team/$RepoSlug"
+        $endpoint = "repositories/$Workspace/$RepoSlug"
         $body = [ordered]@{}
 
-        if($ProjectKey){
+        if ($ProjectKey) {
             $body += [ordered]@{
                 project = [ordered]@{
                     key = $ProjectKey
                 }
             }
         }
-        if($Private){
+        if ($Private) {
             $body += [ordered]@{
                 is_private = $Private
             }
         }
-        if ($Name){
+        if ($Name) {
             $body += [ordered]@{
                 name = $Name
             }
         }
-        if($Description){
+        if ($Description) {
             $body += [ordered]@{
                 description = $Description
             }
         }
-        if($Language){
+        if ($Language) {
             $body += [ordered]@{
                 language = $Language
             }
         }
-        if($ForkPolicy){
+        if ($ForkPolicy) {
             $body += [ordered]@{
                 fork_policy = $ForkPolicy
             }
         }
-        if($body.Count -eq 0){
+        if ($body.Count -eq 0) {
             throw "No settings provided to update"
         }
 
         $body = $body | ConvertTo-Json -Depth 2 -Compress
 
-        if ($pscmdlet.ShouldProcess($RepoSlug, 'update')){
+        if ($pscmdlet.ShouldProcess($RepoSlug, 'update')) {
             return Invoke-BitbucketAPI -Path $endpoint -Body $body -Method Put
         }
     }
@@ -294,8 +299,8 @@ function Set-BitbucketRepository {
         C:\PS> Remove-BitbucketRepository -RepoSlug 'Repo1' -Redirect 'NewURL'
         Deletes the repository named Repo1 and leaves a redirect message for future visitors.
 
-    .PARAMETER Team
-        Name of the team in Bitbucket.  Defaults to selected team if not provided.
+    .PARAMETER Workspace
+        Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.
 
     .PARAMETER RepoSlug
         Name of the repo in Bitbucket.
@@ -304,31 +309,32 @@ function Set-BitbucketRepository {
         If a repository has been moved to a new location, use this parameter to show users a friendly message in the Bitbucket UI that the repository has moved to a new location. However, a GET to this endpoint will still return a 404.
 #>
 function Remove-BitbucketRepository {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
+    [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
     param(
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
-        [string]$Team = (Get-BitbucketSelectedTeam),
-        [Parameter( Mandatory=$true,
-                    Position=0,
-                    ValueFromPipeline=$true,
-                    ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='The repository slug.')]
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.')]
+        [Alias("Team")]
+        [string]$Workspace = (Get-BitbucketSelectedWorkspace),
+        [Parameter( Mandatory = $true,
+            Position = 0,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'The repository slug.')]
         [Alias('Slug')]
         [string]$RepoSlug,
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Redirect string')]
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Redirect string')]
         [string]$Redirect
     )
 
     Process {
-        $endpoint = "repositories/$Team/$RepoSlug"
+        $endpoint = "repositories/$Workspace/$RepoSlug"
 
-        if($Redirect){
+        if ($Redirect) {
             $endpoint += "?redirect_to=$Redirect"
         }
 
-        if ($pscmdlet.ShouldProcess($RepoSlug, 'permanently delete')){
+        if ($pscmdlet.ShouldProcess($RepoSlug, 'permanently delete')) {
             return Invoke-BitbucketAPI -Path $endpoint -Method Delete
         }
     }
@@ -342,7 +348,7 @@ function Remove-BitbucketRepository {
         Creates a branch in the specified repository. If no parent is specified, branch will be created from the latest commit of the default branch.
 
     .EXAMPLE
-        C:\PS> Add-BitBucketRepositoryBranch -Branch 'NewBranch' -Team 'MyTeam' -RepoSlug 'Repo1'
+        C:\PS> Add-BitBucketRepositoryBranch -Branch 'NewBranch' -Workspace 'MyWorkspace' -RepoSlug 'Repo1'
         Adds new branch from the last commit of the default branch
 
     .EXAMPLE
@@ -353,8 +359,8 @@ function Remove-BitbucketRepository {
         C:\PS> Add-BitBucketRepositoryBranch -Branch 'NewBranch' -Message 'Create new branch'
         Adds new branch with specified commit message
 
-    .PARAMETER Team
-        Name of the team in Bitbucket.  Defaults to selected team if not provided.
+    .PARAMETER Workspace
+        Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.
 
     .PARAMETER RepoSlug
         Name of the repo in Bitbucket.
@@ -371,31 +377,32 @@ function Remove-BitbucketRepository {
 function Add-BitbucketRepositoryBranch {
     [CmdletBinding()]
     param(
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
-        [string]$Team = (Get-BitbucketSelectedTeam),
-        [Parameter( Mandatory=$true,
-                    Position=0,
-                    ValueFromPipeline=$true,
-                    ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='The repository slug.')]
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.')]
+        [Alias("Team")]
+        [string]$Workspace = (Get-BitbucketSelectedWorkspace),
+        [Parameter( Mandatory = $true,
+            Position = 0,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'The repository slug.')]
         [Alias('Slug')]
         [string]$RepoSlug,
-        [Parameter( Mandatory=$true,
-                    Position=1,
-                    ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Name of the branch to create.')]
+        [Parameter( Mandatory = $true,
+            Position = 1,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Name of the branch to create.')]
         [string]$Branch,
-        [Parameter(HelpMessage='Hash of the commit to create the branch from.')]
+        [Parameter(HelpMessage = 'Hash of the commit to create the branch from.')]
         [string]$Parent,
-        [Parameter(HelpMessage='Commit message for the new branch.')]
+        [Parameter(HelpMessage = 'Commit message for the new branch.')]
         [string]$Message
     )
 
     Process {
-        $endpoint = "repositories/$Team/$RepoSlug/src/"
+        $endpoint = "repositories/$Workspace/$RepoSlug/src/"
 
-        $body = [ordered]@{branch=$Branch}
+        $body = [ordered]@{branch = $Branch }
 
         if ($Parent) {
             $body.Add("parents", $parent)
@@ -424,8 +431,8 @@ function Add-BitbucketRepositoryBranch {
         C:\ PS> Get-BitbucketRepositoryBranch -RepoSlug 'repo' -Name 'feature'
         Returns all the branches in the Repository named repo with the word feature in their name
 
-    .PARAMETER Team
-        Name of the team in Bitbucket.  Defaults to selected team if not provided.
+    .PARAMETER Workspace
+        Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.
 
     .PARAMETER RepoSlug
         Name of the repo in Bitbucket.
@@ -436,22 +443,23 @@ function Add-BitbucketRepositoryBranch {
 function Get-BitbucketRepositoryBranch {
     [CmdletBinding()]
     param (
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
-        [string]$Team = (Get-BitbucketSelectedTeam),
-        [Parameter( Mandatory=$true,
-                    Position=0,
-                    ValueFromPipeline=$true,
-                    ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='The repository slug.')]
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.')]
+        [Alias("Team")]
+        [string]$Workspace = (Get-BitbucketSelectedWorkspace),
+        [Parameter( Mandatory = $true,
+            Position = 0,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'The repository slug.')]
         [Alias('Slug')]
         [string]$RepoSlug,
-        [Parameter(HelpMessage='Search for the specified branch name')]
+        [Parameter(HelpMessage = 'Search for the specified branch name')]
         [string]$Name
     )
 
     Process {
-        $endpoint = "repositories/$Team/$RepoSlug/refs/branches?q=name~`"$Name`""
+        $endpoint = "repositories/$Workspace/$RepoSlug/refs/branches?q=name~`"$Name`""
 
         return Invoke-BitbucketAPI -Path $endpoint -Paginated
     }

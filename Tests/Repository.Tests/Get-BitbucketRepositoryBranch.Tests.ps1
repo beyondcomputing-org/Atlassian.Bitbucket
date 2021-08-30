@@ -8,12 +8,12 @@ Describe 'Get-BitbucketRepositoryBranch' {
         return $Response
     }
 
-    $Team = 'T'
+    $Workspace = 'T'
     $Repo = 'R'
     $Name = 'feature'
 
     Context 'Get all branches' {
-        Get-BitbucketRepositoryBranch -Team $Team -RepoSlug $Repo
+        Get-BitbucketRepositoryBranch -Workspace $Workspace -RepoSlug $Repo
 
         It 'Uses default GET Method' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
@@ -23,11 +23,11 @@ Describe 'Get-BitbucketRepositoryBranch' {
 
         It 'Has a valid path' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
-                $Path -eq "repositories/$Team/$Repo/refs/branches?q=name~`"`""
+                $Path -eq "repositories/$Workspace/$Repo/refs/branches?q=name~`"`""
             }
         }
 
-        It 'Has no body'{
+        It 'Has no body' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
                 $Body -eq $null
             }
@@ -41,7 +41,7 @@ Describe 'Get-BitbucketRepositoryBranch' {
     }
 
     Context 'Get specified branches' {
-        Get-BitbucketRepositoryBranch -Team $Team -RepoSlug $Repo -Name $Name
+        Get-BitbucketRepositoryBranch -Workspace $Workspace -RepoSlug $Repo -Name $Name
 
         It 'Uses default GET Method' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
@@ -51,11 +51,11 @@ Describe 'Get-BitbucketRepositoryBranch' {
 
         It 'Has a valid path' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
-                $Path -eq "repositories/$Team/$Repo/refs/branches?q=name~`"$Name`""
+                $Path -eq "repositories/$Workspace/$Repo/refs/branches?q=name~`"$Name`""
             }
         }
 
-        It 'Has no body'{
+        It 'Has no body' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
                 $Body -eq $null
             }

@@ -11,8 +11,8 @@ using module .\Atlassian.Bitbucket.Authentication.psm1
         C:\PS> Get-BitbucketPullRequestComment -RepoSlug 'Repo' -PullRequestID 1
         Returns all the comments on PR 1 in the `Repo` repository
 
-    .PARAMETER Team
-        Name of the team in Bitbucket.  Defaults to selected team if not provided.
+    .PARAMETER Workspace
+        Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.
 
     .PARAMETER RepoSlug
         Name of the repo in Bitbucket.
@@ -23,25 +23,26 @@ using module .\Atlassian.Bitbucket.Authentication.psm1
 function Get-BitbucketPullRequestComment {
     [CmdletBinding()]
     param(
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
-        [string]$Team = (Get-BitbucketSelectedTeam),
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.')]
+        [Alias("Team")]
+        [string]$Workspace = (Get-BitbucketSelectedWorkspace),
         [Parameter( Mandatory = $true,
-                    Position = 0,
-                    ValueFromPipelineByPropertyName = $true,
-                    HelpMessage = 'The repository slug.')]
+            Position = 0,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'The repository slug.')]
         [Alias('Slug')]
         [string]$RepoSlug,
         [Parameter( Mandatory = $true,
-                    Position = 1,
-                    ValueFromPipelineByPropertyName = $true,
-                    HelpMessage = 'The ID of the Pull Request')]
+            Position = 1,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'The ID of the Pull Request')]
         [Alias('ID')]
         [string]$PullRequestID
     )
 
     Process {
-        $endpoint = "repositories/$Team/$RepoSlug/pullrequests/$PullRequestID/comments"
+        $endpoint = "repositories/$Workspace/$RepoSlug/pullrequests/$PullRequestID/comments"
 
         return Invoke-BitbucketAPI -Path $endpoint -Paginated
     }
@@ -62,8 +63,8 @@ function Get-BitbucketPullRequestComment {
         C:\PS> New-BitbucketPullRequestComment -RepoSlug 'Repo' -PullRequestID 1 -Comment "# Heading1 `n * Item1 `n * Item2"
         Creates a new comment with markdown against the PR as the authenticated user.  Includes an h1 heading and bullet items.
 
-    .PARAMETER Team
-        Name of the team in Bitbucket.  Defaults to selected team if not provided.
+    .PARAMETER Workspace
+        Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.
 
     .PARAMETER RepoSlug
         Name of the repo in Bitbucket.
@@ -75,40 +76,41 @@ function Get-BitbucketPullRequestComment {
         The text to use in the comment.  Supports Markdown.
 #>
 function New-BitbucketPullRequestComment {
-    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Low')]
+    [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Low')]
     param(
-        [Parameter( ValueFromPipelineByPropertyName=$true,
-                    HelpMessage='Name of the team in Bitbucket.  Defaults to selected team if not provided.')]
-        [string]$Team = (Get-BitbucketSelectedTeam),
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.')]
+        [Alias("Team")]
+        [string]$Workspace = (Get-BitbucketSelectedWorkspace),
         [Parameter( Mandatory = $true,
-                    Position = 0,
-                    ValueFromPipelineByPropertyName = $true,
-                    HelpMessage = 'The repository slug.')]
+            Position = 0,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'The repository slug.')]
         [Alias('Slug')]
         [string]$RepoSlug,
         [Parameter( Mandatory = $true,
-                    Position = 1,
-                    ValueFromPipelineByPropertyName = $true,
-                    HelpMessage = 'The ID of the Pull Request')]
+            Position = 1,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'The ID of the Pull Request')]
         [Alias('ID')]
         [string]$PullRequestID,
         [Parameter( Mandatory = $true,
-                    Position = 2,
-                    ValueFromPipelineByPropertyName = $true,
-                    HelpMessage = 'Comment to add to the Pull Request.  Supports Markdown for formatting.')]
+            Position = 2,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Comment to add to the Pull Request.  Supports Markdown for formatting.')]
         [string]$Comment
     )
 
     Process {
-        $endpoint = "repositories/$Team/$RepoSlug/pullrequests/$PullRequestID/comments"
+        $endpoint = "repositories/$Workspace/$RepoSlug/pullrequests/$PullRequestID/comments"
 
         $body = [ordered]@{
             content = [ordered]@{
-                raw =  $Comment
+                raw = $Comment
             }
         } | ConvertTo-Json -Depth 2 -Compress
 
-        if ($pscmdlet.ShouldProcess("PR $PullRequestID in $RepoSlug", 'create pull request comment')){
+        if ($pscmdlet.ShouldProcess("PR $PullRequestID in $RepoSlug", 'create pull request comment')) {
             return Invoke-BitbucketAPI -Path $endpoint -Body $body -Method Post
         }
     }

@@ -3,13 +3,13 @@ Import-Module '.\Atlassian.Bitbucket.Repository.psm1' -Force
 Describe 'Add-BitbucketRepositoryBranch' {
     Mock Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository {}
 
-    $Team = 'T'
+    $Workspace = 'T'
     $RepoSlug = 'R'
     $Branch = 'B'
     $Parent = 'P'
     $Message = 'M'
     
-    Add-BitbucketRepositoryBranch -Team $Team -RepoSlug $RepoSlug -Branch $Branch -Parent $Parent -Message $Message
+    Add-BitbucketRepositoryBranch -Workspace $Workspace -RepoSlug $RepoSlug -Branch $Branch -Parent $Parent -Message $Message
 
     It 'Uses POST Method' {
         Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
@@ -19,7 +19,7 @@ Describe 'Add-BitbucketRepositoryBranch' {
 
     It 'Has a valid path' {
         Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
-            $Path -eq "repositories/$Team/$RepoSlug/src/"
+            $Path -eq "repositories/$Workspace/$RepoSlug/src/"
         }
     }
 
@@ -29,10 +29,10 @@ Describe 'Add-BitbucketRepositoryBranch' {
         }
     }
 
-    It 'Has a valid body'{
+    It 'Has a valid body' {
         Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
-            $testBody = [ordered]@{branch=$Branch; parents=$Parent; message=$Message}
-            ($testBody.Keys.Count -eq $Body.Keys.Count) -and ($testBody.Keys | ForEach-Object {$testBody[$_] -eq $Body[$_]})
+            $testBody = [ordered]@{branch = $Branch; parents = $Parent; message = $Message }
+            ($testBody.Keys.Count -eq $Body.Keys.Count) -and ($testBody.Keys | ForEach-Object { $testBody[$_] -eq $Body[$_] })
         }
     }
 

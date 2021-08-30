@@ -8,11 +8,11 @@ Describe 'Get-BitbucketRepositoryBranchModel' {
         return $Response
     }
 
-    $Team = 'T'
+    $Workspace = 'T'
     $Repo = 'R'
 
     Context 'Get Branching Model' {
-        Get-BitbucketRepositoryBranchModel -Team $Team -RepoSlug $Repo
+        Get-BitbucketRepositoryBranchModel -Workspace $Workspace -RepoSlug $Repo
         
         It 'Uses default GET Method' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository.BranchModel -ParameterFilter {
@@ -22,11 +22,11 @@ Describe 'Get-BitbucketRepositoryBranchModel' {
 
         It 'Has a valid path' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository.BranchModel -ParameterFilter {
-                $Path -eq "repositories/$Team/$Repo/branching-model"
+                $Path -eq "repositories/$Workspace/$Repo/branching-model"
             }
         }
 
-        It 'Has no body'{
+        It 'Has no body' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository.BranchModel -ParameterFilter {
                 $Body -eq $null
             }

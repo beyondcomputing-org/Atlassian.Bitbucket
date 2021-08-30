@@ -8,12 +8,12 @@ Describe 'Set-BitbucketRepository' {
         return $Response
     }
 
-    $Team = 'T'
+    $Workspace = 'T'
     $Repo = 'R'
     
     Context 'Updating Project' {
         $Key = 'K'
-        Set-BitbucketRepository -Team $Team -RepoSlug $Repo -ProjectKey $Key
+        Set-BitbucketRepository -Workspace $Workspace -RepoSlug $Repo -ProjectKey $Key
 
         It 'Uses PUT Method' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
@@ -23,17 +23,17 @@ Describe 'Set-BitbucketRepository' {
 
         It 'Has a valid path' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
-                $Path -eq "repositories/$Team/$Repo"
+                $Path -eq "repositories/$Workspace/$Repo"
             }
         }
 
-        It 'Has a valid body'{
+        It 'Has a valid body' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
                 ([ordered]@{
-                    project = [ordered]@{
-                        key = $Key
-                    }
-                } | ConvertTo-Json -Compress) -eq $Body
+                        project = [ordered]@{
+                            key = $Key
+                        }
+                    } | ConvertTo-Json -Compress) -eq $Body
             }
         }
     }
@@ -41,51 +41,51 @@ Describe 'Set-BitbucketRepository' {
     Context 'Updating Project and Language' {
         $Key = 'K'
         $Language = 'powershell'
-        Set-BitbucketRepository -Team $Team -RepoSlug $Repo -ProjectKey $Key -Language $Language
+        Set-BitbucketRepository -Workspace $Workspace -RepoSlug $Repo -ProjectKey $Key -Language $Language
 
-        It 'Has a valid body'{
+        It 'Has a valid body' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
                 ([ordered]@{
-                    project  = [ordered]@{
-                        key  = $Key
-                    }
-                    language = $Language
-                } | ConvertTo-Json -Compress) -eq $Body
+                        project  = [ordered]@{
+                            key = $Key
+                        }
+                        language = $Language
+                    } | ConvertTo-Json -Compress) -eq $Body
             }
         }
     }
 
     Context 'Provides no properties to set' {
         It 'Should throw an error' {
-            {Set-BitbucketRepository -Team $Team -RepoSlug $Repo} | Should -Throw
+            { Set-BitbucketRepository -Workspace $Workspace -RepoSlug $Repo } | Should -Throw
         }
     }
 
     Context 'Accepts pipeline input only for slug' {
         $Key = 'K'
         $Repo = New-Object PSObject -Property @{
-            scm = 'git'
-            uuid = (New-Guid)
-            slug = 'reponame'
+            scm         = 'git'
+            uuid        = (New-Guid)
+            slug        = 'reponame'
             description = 'desc'
-            language = 'powershell'
+            language    = 'powershell'
         }
 
-        $Repo | Set-BitbucketRepository -Team $Team -ProjectKey $Key
+        $Repo | Set-BitbucketRepository -Workspace $Workspace -ProjectKey $Key
 
         It 'Has a valid path' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
-                $Path -eq "repositories/$Team/$($Repo.slug)"
+                $Path -eq "repositories/$Workspace/$($Repo.slug)"
             }
         }
 
-        It 'Has a valid body with no other properties'{
+        It 'Has a valid body with no other properties' {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository -ParameterFilter {
                 ([ordered]@{
-                    project  = [ordered]@{
-                        key  = $Key
-                    }
-                } | ConvertTo-Json -Compress) -eq $Body
+                        project = [ordered]@{
+                            key = $Key
+                        }
+                    } | ConvertTo-Json -Compress) -eq $Body
             }
         }
     }

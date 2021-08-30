@@ -8,13 +8,13 @@ Describe 'New-BitbucketPullRequest' {
         return $Response
     }
 
-    $Team = 'T'
+    $Workspace = 'T'
     $Repo = 'R'
     $Title = 'Title'
     $Source = 'SBranch'
     
     Context 'Create Basic PR' {
-        New-BitbucketPullRequest -Team $Team -RepoSlug $Repo -Title $Title -SourceBranch $Source
+        New-BitbucketPullRequest -Workspace $Workspace -RepoSlug $Repo -Title $Title -SourceBranch $Source
 
         It 'Uses Post Method' {
             Assert-MockCalled Invoke-BitbucketAPI -Exactly 1 -ModuleName Atlassian.Bitbucket.PullRequest -ParameterFilter {
@@ -24,23 +24,23 @@ Describe 'New-BitbucketPullRequest' {
 
         It 'Has a valid path' {
             Assert-MockCalled Invoke-BitbucketAPI -Exactly 1 -ModuleName Atlassian.Bitbucket.PullRequest -ParameterFilter {
-                $Path -eq "repositories/$Team/$Repo/pullrequests"
+                $Path -eq "repositories/$Workspace/$Repo/pullrequests"
             }
         }
 
-        It 'Has a valid body'{
+        It 'Has a valid body' {
             Assert-MockCalled Invoke-BitbucketAPI -Exactly 1 -ModuleName Atlassian.Bitbucket.PullRequest -ParameterFilter {
                 ([ordered]@{
-                    title =  $Title
-                    description = ''
-                    close_source_branch = $true
-                    source = [ordered]@{
-                        branch = [ordered]@{
-                            name = $Source
+                        title               = $Title
+                        description         = ''
+                        close_source_branch = $true
+                        source              = [ordered]@{
+                            branch = [ordered]@{
+                                name = $Source
+                            }
                         }
-                    }
-                    reviewers = @()
-                } | ConvertTo-Json -Depth 3 -Compress) -eq $Body
+                        reviewers           = @()
+                    } | ConvertTo-Json -Depth 3 -Compress) -eq $Body
             }
         }
     }
@@ -50,10 +50,10 @@ Describe 'New-BitbucketPullRequest' {
         $Close = $false
         $Destination = 'DBranch'
         $Reviewers = @([PSCustomObject]@{
-            uuid = 'testid'
-        })
+                uuid = 'testid'
+            })
 
-        New-BitbucketPullRequest -Team $Team -RepoSlug $Repo -Title $Title -SourceBranch $Source -Description $Description -CloseBranch $Close -DestinationBranch $Destination -Reviewers $Reviewers
+        New-BitbucketPullRequest -Workspace $Workspace -RepoSlug $Repo -Title $Title -SourceBranch $Source -Description $Description -CloseBranch $Close -DestinationBranch $Destination -Reviewers $Reviewers
 
         It 'Uses Post Method' {
             Assert-MockCalled Invoke-BitbucketAPI -Exactly 1 -ModuleName Atlassian.Bitbucket.PullRequest -ParameterFilter {
@@ -63,28 +63,28 @@ Describe 'New-BitbucketPullRequest' {
 
         It 'Has a valid path' {
             Assert-MockCalled Invoke-BitbucketAPI -Exactly 1 -ModuleName Atlassian.Bitbucket.PullRequest -ParameterFilter {
-                $Path -eq "repositories/$Team/$Repo/pullrequests"
+                $Path -eq "repositories/$Workspace/$Repo/pullrequests"
             }
         }
 
-        It 'Has a valid body'{
+        It 'Has a valid body' {
             Assert-MockCalled Invoke-BitbucketAPI -Exactly 1 -ModuleName Atlassian.Bitbucket.PullRequest -ParameterFilter {
                 ([ordered]@{
-                    title =  $Title
-                    description = $Description
-                    close_source_branch = $Close
-                    source = [ordered]@{
-                        branch = [ordered]@{
-                            name = $Source
+                        title               = $Title
+                        description         = $Description
+                        close_source_branch = $Close
+                        source              = [ordered]@{
+                            branch = [ordered]@{
+                                name = $Source
+                            }
                         }
-                    }
-                    reviewers = $Reviewers
-                    destination = @{
-                        branch = @{
-                            name = $Destination
+                        reviewers           = $Reviewers
+                        destination         = @{
+                            branch = @{
+                                name = $Destination
+                            }
                         }
-                    }
-                } | ConvertTo-Json -Depth 3 -Compress) -eq $Body
+                    } | ConvertTo-Json -Depth 3 -Compress) -eq $Body
             }
         }
     }
