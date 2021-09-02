@@ -35,7 +35,7 @@ Describe 'Add-BitbucketRepositoryBranchRestriction' {
 
         It "Removes the branch_type property when branch_match_kind equals 'glob'" {
             Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Repository.BranchRestriction -ParameterFilter {
-                $null -eq ($Body | ConvertFrom-Json -Depth 3).branch_match_kind
+                $null -eq ($Body | ConvertFrom-Json -Depth 3 | Select-Object -ExpandProperty branch_type -ErrorAction Ignore)
             }
         }
     }
