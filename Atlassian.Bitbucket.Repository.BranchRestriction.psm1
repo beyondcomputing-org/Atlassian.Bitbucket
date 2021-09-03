@@ -51,7 +51,7 @@ function Add-BitbucketRepositoryBranchRestriction {
 
         # If the branch_match_kind is Glob, remove branch_type property, otherwise the Bitbucket API will throw an exception
         if ($Restriction.branch_match_kind -eq 'Glob') {
-            $globRestriction = $Restriction | Select-Object -ExcludeProperty branch_type
+            $globRestriction = $Restriction | Select-Object -ExcludeProperty branch_type -Property *
             $body = $globRestriction | ConvertTo-Json -Depth 3 -Compress
         }
         else {
