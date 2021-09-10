@@ -6,6 +6,10 @@ _These will be removed in the next major release_
 
 - N/A
 
+## 0.30.0
+- Added `Get-BitbucketPipeline` to return details on a specific pipeline or get an array of pipelines
+- Added `Get-BitbucketPipelineStep` to return details on a specific pipeline step or get an array of pipeline steps
+
 ## 0.29.1
 - Fixed issue running `Add-BitbucketRepositoryBranchRestriction` that caused error `branch_type is only valid when branch_match_kind is branching_model
 

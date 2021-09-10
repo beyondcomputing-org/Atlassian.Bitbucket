@@ -176,3 +176,139 @@ function Wait-BitbucketPipeline {
         return $response
     }
 }
+
+<#
+    .SYNOPSIS
+        Get pipeline details
+
+    .DESCRIPTION
+        Returns details for all returned pipelines.  A specific pipeline can be specified by UUID or build number.
+
+    .EXAMPLE
+        C:\PS> Get-BitbucketPipeline -Workspace 'MyWorkspace' -RepoSlug 'my.repo'
+        # Returns details for the last 20 pipeline run in 'my.repo'
+
+    .EXAMPLE
+        C:\PS> Get-BitbucketPipeline -Workspace 'MyWorkspace' -RepoSlug 'my.repo' -UUID '{d9448101-f9f3-4024-bda8-c412cb17654a}'
+        # Returns details for the pipeline with the provided UUID - Note that the UUID will take the pipeline build number as well
+
+    .PARAMETER Workspace
+        Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.
+
+    .PARAMETER Repo
+        The repo slug.
+
+    .PARAMETER UUID
+        Either the unique ID of a pipeline or a pipeline build number. If provided only returns results for the pipeline specified.
+
+    .PARAMETER State
+        The state of the pipeline.  If provided, filters results to pipelines with the specified state.
+
+    .PARAMETER Sort
+        The property to sort pipelines on prior to returning results.  Deafults to created_on.
+
+    .PARAMETER Page
+        The page number of results to return.  Defaults to 1.
+
+    .PARAMETER Limit
+        The number of results to return per page.  Defaults to 20.  Maximum is 100.
+#>
+
+function Get-BitbucketPipeline {
+    param (
+        [Parameter( ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.')]
+        [string]$Workspace = (Get-BitbucketSelectedWorkspace),
+        [Parameter( Mandatory = $true,
+            Position = 0,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true,
+            HelpMessage = 'The repository slug.')]
+        [Alias('Slug')]
+        [string]$RepoSlug,
+        [Parameter(ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true,
+            Position = 1)]
+        [Alias('Id')]
+        [string]$UUID,
+        [string]$State,
+        [string]$Sort = '-created_on',
+        [int]$Page = 1,
+        [int]$Limit = 20
+    )
+
+    Process {
+        $endpoint = "repositories/$Workspace/$RepoSlug/pipelines/"
+        if ($UUID) {
+            $endpoint += "$UUID"
+            Write-Host $endpoint
+            return @(Invoke-BitbucketAPI -Path $endpoint -Method Get)
+        }
+        else {
+            $endpoint += "?&sort=$Sort&page=$Page&pagelen=$Limit"
+            if ($State) {
+                $endpoint += "&status=$($State.ToUpper())"
+            }
+            Write-Host $endpoint
+            return (Invoke-BitbucketAPI -Path $endpoint -Method Get).values
+        }
+
+    }
+}
+
+<#
+    .SYNOPSIS
+        Get pipeline step details
+
+    .DESCRIPTION
+        Returns details for all returned pipeline steps.  A specific pipeline step can be specified by UUID.
+
+    .EXAMPLE
+        C:\PS> Get-BitbucketPipelineStep -Workspace 'MyWorkspace' -RepoSlug 'my.repo' -PipelineUUID '{d9448101-f9f3-4024-bda8-c412cb17654a}'
+        # Returns details for the steps in the pipeline specified
+
+    .EXAMPLE
+        C:\PS> Get-BitbucketPipelineStep -Workspace 'MyWorkspace' -RepoSlug 'my.repo' -PipelineUUID '{d9448101-f9f3-4024-bda8-c412cb17654a}' -UUID 'ea664fec-5cc2-4eb6-b864-aa604a2e3918
+'
+        # Returns details for the pipeline step with the provided UUID
+
+    .PARAMETER Workspace
+        Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.
+
+    .PARAMETER Repo
+        The repo slug.
+
+    .PARAMETER PipelineUUID
+        Either the unique ID of a pipeline or a pipeline build number. If provided only returns results for the pipeline specified.
+
+    .PARAMETER UUID
+        The unique ID of a pipeline step. If provided only returns results for the pipeline step specified.
+#>
+function Get-BitbucketPipelineStep {
+  param (
+      [Parameter( ValueFromPipelineByPropertyName = $true,
+          HelpMessage = 'Name of the workspace in Bitbucket.  Defaults to selected workspace if not provided.')]
+      [string]$Workspace = (Get-BitbucketSelectedWorkspace),
+      [Parameter( Mandatory = $true,
+          Position = 0,
+          ValueFromPipeline = $true,
+          ValueFromPipelineByPropertyName = $true,
+          HelpMessage = 'The repository slug.')]
+      [Alias('Slug')]
+      [string]$RepoSlug,
+      [Parameter( Mandatory = $true,
+          ValueFromPipelineByPropertyName = $true,
+          Position = 1)]
+      [string]$PipelineUUID,
+      [Parameter( ValueFromPipeline = $true,
+          ValueFromPipelineByPropertyName = $true,
+          Position = 2)]
+      [Alias('Id')]
+      [string]$UUID
+  )
+
+  Process {
+      $endpoint = "repositories/$Workspace/$RepoSlug/pipelines/$PipelineUUID/steps/$UUID`?pagelen=100"
+      return (Invoke-BitbucketAPI -Path $endpoint -Method Get -Debug).values
+  }
+}
