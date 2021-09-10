@@ -161,6 +161,9 @@ function Wait-BitbucketPipeline {
             if ($response.state.name -eq 'COMPLETED') {
                 $poll = $false
             }
+            elseif($response.state.name -in ('PENDING', 'IN_PROGRESS') -and $response.state.stage.name -in ('PAUSED', 'HALTED')){
+                Throw "The triggered pipeline was $($response.state.stage.name).  Failing Build!!"
+            }
             else {
                 if ($TimeoutSeconds -lt $SleepSeconds) {
                     Throw "The $TimeoutSeconds second timeout expired before the pipeline completed."
