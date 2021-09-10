@@ -241,7 +241,6 @@ function Get-BitbucketPipeline {
         $endpoint = "repositories/$Workspace/$RepoSlug/pipelines/"
         if ($UUID) {
             $endpoint += "$UUID"
-            Write-Host $endpoint
             return @(Invoke-BitbucketAPI -Path $endpoint -Method Get)
         }
         else {
@@ -249,7 +248,6 @@ function Get-BitbucketPipeline {
             if ($State) {
                 $endpoint += "&status=$($State.ToUpper())"
             }
-            Write-Host $endpoint
             return (Invoke-BitbucketAPI -Path $endpoint -Method Get).values
         }
 
