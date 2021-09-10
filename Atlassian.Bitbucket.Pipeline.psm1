@@ -309,6 +309,6 @@ function Get-BitbucketPipelineStep {
 
   Process {
       $endpoint = "repositories/$Workspace/$RepoSlug/pipelines/$PipelineUUID/steps/$UUID`?pagelen=100"
-      return (Invoke-BitbucketAPI -Path $endpoint -Method Get -Debug).values
+      return (Invoke-BitbucketAPI -Path $endpoint -Method Get).values
   }
 }
