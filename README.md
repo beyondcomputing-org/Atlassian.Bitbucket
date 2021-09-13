@@ -83,7 +83,9 @@ To get more information on each cmdlet run `Get-Help <CMDLET Name>`
 #### Pipeline CMDLETs
 
 - `Enable-BitbucketPipelineConfig`
+- `Get-BitbucketPipeline`
 - `Get-BitbucketPipelineConfig`
+- `Get-BitbucketPipelineStep`
 - `Start-BitbucketPipeline`
 - `Wait-BitbucketPipeline`
 
