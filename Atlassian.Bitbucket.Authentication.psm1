@@ -145,6 +145,7 @@ function Invoke-BitbucketAPI {
 
         return $response
     }else{
+        Write-Debug "URI: $URI"
         if($Body){
             Write-Debug 'Sending request with a body and content type'
             Write-Debug "Body: $Body"

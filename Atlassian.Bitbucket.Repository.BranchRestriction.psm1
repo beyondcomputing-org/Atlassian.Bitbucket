@@ -237,6 +237,7 @@ function New-BitbucketRepositoryBranchRestrictionPermissionCheck {
 }
 
 function ConvertTo-BranchRestriction {
+    [OutputType([MergeCheck])]
     [CmdletBinding()]
     param(
         [Parameter( Mandatory = $true,
