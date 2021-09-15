@@ -24,6 +24,9 @@ using module .\Classes\Atlassian.Bitbucket.Settings.psm1
 
     .PARAMETER OAuthConsumer
         Key and Secret for OAuth Consumer.  https://confluence.atlassian.com/bitbucket/oauth-on-bitbucket-cloud-238027431.html#OAuthonBitbucketCloud-Createaconsumer
+
+    .PARAMETER Workspace
+        Name of the workspace to authenticate to.  If not provided and multiple options exist the user will be prompted to select one.
 #>
 function New-BitbucketLogin {
     [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Low', DefaultParameterSetName='Basic')]
@@ -35,7 +38,8 @@ function New-BitbucketLogin {
         [PSCredential]$AtlassianCredential,
         [Parameter(Mandatory = $true, ParameterSetName = 'OAuth2')]
         [PSCredential]$OAuthConsumer,
-        [Switch]$Save
+        [Switch]$Save,
+        [String]$Workspace
     )
     if ($pscmdlet.ShouldProcess('Bitbucket Login', 'create'))
     {
@@ -53,7 +57,7 @@ function New-BitbucketLogin {
 
         Write-Output "Welcome $($Auth.User.display_name)"
 
-        Select-BitbucketWorkspace
+        Select-BitbucketWorkspace -Workspace $Workspace
 
         if($Save){
             Save-BitbucketLogin
