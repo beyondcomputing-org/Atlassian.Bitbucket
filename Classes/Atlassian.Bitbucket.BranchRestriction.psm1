@@ -57,7 +57,8 @@ class PermissionCheck : BranchRestriction {
     'delete',
     'force',
     'push',
-    'restrict_merges'
+    'restrict_merges',
+    'allow_auto_merge_when_builds_pass'
   )]
   [string]$kind
   [User[]]$users = @()

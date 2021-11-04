@@ -6,6 +6,9 @@ _These will be removed in the next major release_
 
 - N/A
 
+## 0.32.0
+- New branch restriction 'allow_auto_merge_when_builds_pass' is now supported
+
 ## 0.31.0
 - Updated `New-BitbucketLogin` to support passing in a Workspace name
 
