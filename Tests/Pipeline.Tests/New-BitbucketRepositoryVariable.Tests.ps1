@@ -12,7 +12,7 @@ Describe "New-BitbucketRepositoryVariable" {
 
   It 'Has a valid path' {
     Assert-MockCalled Invoke-BitbucketAPI -ModuleName Atlassian.Bitbucket.Pipeline.Variable -ParameterFilter {
-      $Path -eq "repositories/$Workspace/$Repo/pipelines_config/variables/"
+      $Path -eq "repositories/$Workspace/$Repo/pipelines_config/variables"
     }
   }
 
