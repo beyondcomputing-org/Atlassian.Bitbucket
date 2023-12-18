@@ -16,7 +16,7 @@ function Get-BitbucketRepositoryVariable {
         [string]$RepoSlug
     )
     Process {
-        $endpoint = "repositories/$Workspace/$RepoSlug/pipelines_config/variables/"
+        $endpoint = "repositories/$Workspace/$RepoSlug/pipelines_config/variables"
         return (Invoke-BitbucketAPI -Path $endpoint).values
     }
 }
@@ -56,7 +56,7 @@ function New-BitbucketRepositoryVariable {
             value   = $Value
         } | ConvertTo-Json -Depth 1 -Compress
 
-        $endpoint = "repositories/$Workspace/$RepoSlug/pipelines_config/variables/"
+        $endpoint = "repositories/$Workspace/$RepoSlug/pipelines_config/variables"
         if ($pscmdlet.ShouldProcess("$Key in the repo $RepoSlug", 'create')) {
             return Invoke-BitbucketAPI -Path $endpoint -Method Post -Body $body
         }
