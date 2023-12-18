@@ -6,6 +6,9 @@ _These will be removed in the next major release_
 
 - N/A
 
+## 0.32.1
+- Updated path for repo variable cmdlets to remove following `/` which recently stopped working
+
 ## 0.32.0
 - New branch restriction 'allow_auto_merge_when_builds_pass' is now supported
 
